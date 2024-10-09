@@ -6,10 +6,13 @@ namespace Repository.Context
 {
     public class ApplicationDBContext(DbContextOptions<ApplicationDBContext> options) : DbContext(options)
     {
+        public virtual DbSet<Usuarios> usuarios { get; set; }
         public virtual DbSet<Productos> productos { get; set; }
         public virtual DbSet<Productos_Etiquetas> productos_etiquetas { get; set; }
         public virtual DbSet<Fotos> fotos { get; set; }
         public virtual DbSet<Etiquetas> etiquetas { get; set; }
+        public virtual DbSet<Roles> roles { get; set; }
+        public virtual DbSet<Personas> personas { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
