@@ -1,4 +1,5 @@
 ﻿using Domain.Dto;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Services.IServices;
@@ -17,6 +18,7 @@ namespace FastMarketBackEnd.Controllers
         }
         // GET: api/<ProductosController>
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Get()
         {
             var response = await _services.ObtenerProductos();
