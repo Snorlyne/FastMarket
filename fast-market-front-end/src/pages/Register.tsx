@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, TextField, Container, Typography, Box, Paper, } from "@mui/material";
+import { TextField, Container, Typography, Box, Paper, } from "@mui/material";
 import { useHistory } from "react-router-dom";
 import "./Login.css";
 
@@ -36,7 +36,7 @@ const Register: React.FC = () => {
                         alignItems="center"
                         justifyContent="center"
                     >
-                        <Typography variant="h4" gutterBottom>
+                        <Typography variant="h4" gutterBottom  sx={{fontWeight: 'bold'}}>
                             FastMarket
                         </Typography>
                         <Typography variant="subtitle1" gutterBottom>
@@ -92,13 +92,12 @@ const Register: React.FC = () => {
                             sx={{ mb: 4 }}
                         />
 
-
-
                         <button className="button-login" style={{ width: '100%', maxWidth: '320px' }} onClick={handleRegister}>
                             <span style={{ margin: '0 auto' }}> Crear cuenta </span>
                         </button>
                         <Typography className='p' sx={{ mt: 2 }}>
-                            ¿Ya tienes cuenta?                            <span
+                            ¿Ya tienes cuenta?                            
+                            <span
                                 onClick={() => history.push('/login')}
                                 className='span'>
                                 Inicia sesión
