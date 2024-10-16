@@ -130,6 +130,7 @@ namespace Services.Services
                 await _dBContext.SaveChangesAsync();
                 await transaction.CommitAsync();
 
+
                 // Construir el DTO de respuesta
                 ProductosDto response = new ProductosDto
                 {

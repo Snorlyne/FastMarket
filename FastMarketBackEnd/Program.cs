@@ -49,6 +49,9 @@ builder.Services.AddTransient<IEtiquetasServices, EtiquetasServices>();
 builder.Services.AddTransient<IUsuariosServices, UsuariosServices>();
 builder.Services.AddTransient<IPersonasServices, PersonasServices>();
 builder.Services.AddTransient<IRegistroServices, RegistroServices>();
+builder.Services.AddTransient<IAnunciosServices, AnunciosServices>();
+builder.Services.AddTransient<ILocalizacionesServices, LocalizacionesServices>();
+builder.Services.AddTransient<IOfertasServices, OfertasServices>();
 
 // Configuración del DbContext para usar MySQL
 builder.Services.AddDbContext<ApplicationDBContext>(options =>
