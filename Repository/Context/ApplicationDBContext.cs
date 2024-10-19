@@ -13,6 +13,9 @@ namespace Repository.Context
         public virtual DbSet<Etiquetas> etiquetas { get; set; }
         public virtual DbSet<Roles> roles { get; set; }
         public virtual DbSet<Personas> personas { get; set; }
+        public virtual DbSet<Anuncios> anuncios { get; set; }
+        public virtual DbSet<Localizaciones> localizaciones { get; set; }
+        public virtual DbSet<Ofertas> ofertas { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -38,7 +41,23 @@ namespace Repository.Context
                 .WithOne(f => f.Producto)
                 .HasForeignKey(f => f.IdProducto)
                 .OnDelete(DeleteBehavior.Cascade);  // Cascada para eliminar las fotos cuando se elimina un producto
+            // Relación entre Anuncios y Localizaciones
+            modelBuilder.Entity<Anuncios>()
+                .HasOne(a => a.Localizacion)
+                .WithOne()
+                .HasForeignKey<Anuncios>(a => a.IdLocalizacion)
+                .OnDelete(DeleteBehavior.Cascade);
+            // Relación entre Anuncios y Personas
+            modelBuilder.Entity<Anuncios>()
+                .HasOne(a => a.Personas)
+                .WithMany()
+                .HasForeignKey(a => a.IdPersona);
 
+            // Relación entre Anuncios y Productos
+            modelBuilder.Entity<Anuncios>()
+                .HasOne(a => a.Productos)
+                .WithMany()
+                .HasForeignKey(a => a.IdProducto);
         }
     }
 }
