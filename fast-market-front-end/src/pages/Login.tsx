@@ -1,14 +1,26 @@
 import React, { useState } from 'react';
-import { Button, TextField, Container, Typography, Box, Paper } from '@mui/material';
+import { TextField, Container, Typography, Box, Paper } from '@mui/material';
 import { useHistory } from 'react-router-dom';
+import { googleLogout, useGoogleLogin } from '@react-oauth/google'; // Import useGoogleLogin hook
+
 import './Login.css';
 
 const Login: React.FC = () => {
     const history = useHistory();
     
-    const handlelogin = () => {
+    const handleLogin = () => {
         history.push("/Dashboard");
     };
+
+    const loginWithGoogle = useGoogleLogin({
+        onSuccess: (tokenResponse) => {
+            console.log('Login Success:');
+            history.push('/Dashboard');
+        },
+        onError: () => {
+            console.log('Login Failed');
+        },
+    });
 
     return (
         <Box
@@ -28,7 +40,7 @@ const Login: React.FC = () => {
                         alignItems="center"
                         justifyContent="center"
                     >
-                        <Typography variant="h4" gutterBottom>
+                        <Typography variant="h4" gutterBottom sx={{ fontWeight: 'bold' }}> 
                             FastMarket
                         </Typography>
                         <Typography variant="subtitle1" gutterBottom>
@@ -51,16 +63,17 @@ const Login: React.FC = () => {
                         />
                         
                         <Box display="flex" justifyContent="center" width="100%" marginBottom="10px">
-                            <button className="button-login" style={{ width: '100%', maxWidth: '320px' }} onClick={handlelogin}>
+                            <button className="button-login" style={{ width: '100%', maxWidth: '320px' }} onClick={handleLogin}>
                                 <span style={{ margin: '0 auto' }}>Iniciar Sesión</span>
                             </button>
                         </Box>
 
-                        <button className="button-login" style={{ width: '100%', marginBottom: '10px' }}>
+                        <button className="button-login" style={{ width: '100%', marginBottom: '10px' }} onClick={() => loginWithGoogle()}>
                             <svg
                                 viewBox="0 0 256 262"
                                 preserveAspectRatio="xMidYMid"
                                 xmlns="http://www.w3.org/2000/svg"
+                                style={{ marginRight: '10px' }}
                             >
                                 <path
                                     d="M255.878 133.451c0-10.734-.871-18.567-2.756-26.69H130.55v48.448h71.947c-1.45 12.04-9.283 30.172-26.69 42.356l-.244 1.622 38.755 30.023 2.685.268c24.659-22.774 38.875-56.282 38.875-96.027"
