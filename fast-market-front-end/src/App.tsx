@@ -9,6 +9,7 @@ import Dashboard from './pages/ViewDashboard';
 import ViewProducto from './pages/ViewProduct';
 import Mysale from './pages/ViewMysale';
 import VIewPerfil from './pages/ViewPerfil';
+import PerfilView from './pages/profileView';
 
 const App: React.FC = () => {
   return (
@@ -21,6 +22,11 @@ const App: React.FC = () => {
           <Route exact path="/ViewProducto" component={ViewProducto} />
           <Route exact path="/Mysale" component={Mysale} />
           <Route exact path="/VIewPerfil" component={VIewPerfil} />
+          <Route exact path="/PerfilView" component={PerfilView} />
+
+
+
+
           <Redirect exact from="/" to="/login" />
         </IonRouterOutlet>
       </IonReactRouter>

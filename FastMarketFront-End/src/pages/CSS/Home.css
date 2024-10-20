@@ -1,0 +1,27 @@
+.product-auction-container {
+    display: flex;
+  flex-wrap: wrap; 
+  justify-content: space-between; 
+  gap: 02px;    
+  padding: 05px; 
+  overflow-y: auto;
+  height: 80vh;
+
+}
+
+.auction-card {
+    padding: 05px;
+    width: 47%;
+  text-align: center;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1); /* Sombra para las tarjetas */
+}
+
+.image-placeholder {
+  height: 150px; /* Placeholder para la imagen */
+  background-color: #ccc; /* Color de fondo gris */
+  margin-bottom: 10px;
+}
+
+button {
+  margin-top: auto; /* Asegura que el botón esté en la parte inferior */
+}

@@ -5,6 +5,7 @@ import { Container, Typography, Card, CardMedia, CardContent, Box, Button, useMe
 import Header from '../components/Header';
 import Loader from '../components/Loader';
 import Menubelow from '../components/Menubelow';
+import DeleteProduct from '../components/Modals/DeleteProduct';
 
 const Mysale: React.FC = () => {
   const [loading, setLoading] = useState(true);
