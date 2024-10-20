@@ -41,7 +41,7 @@ namespace FastMarketBackEnd.Controllers
         public async Task<IActionResult> PostPersona([FromBody] PersonasDto personaDto)
         {
             var personaCreada = await _personasServices.CrearPersona(personaDto);
-            return CreatedAtAction(nameof(GetPersona), new { id = personaCreada.Id }, personaCreada);
+            return CreatedAtAction(nameof(GetPersona), new { id = personaCreada.Result.Id }, personaCreada);
         }
 
         [HttpPut("{id}")]

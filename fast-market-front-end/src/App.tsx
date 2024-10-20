@@ -21,9 +21,6 @@ const App: React.FC = () => {
           <Route exact path="/ViewProducto" component={ViewProducto} />
           <Route exact path="/Mysale" component={Mysale} />
           <Route exact path="/VIewPerfil" component={VIewPerfil} />
-
-
-
           <Redirect exact from="/" to="/login" />
         </IonRouterOutlet>
       </IonReactRouter>

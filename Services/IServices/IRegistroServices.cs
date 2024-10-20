@@ -1,10 +1,11 @@
-﻿using Domain.Dto;
+﻿using Common.Utilities;
+using Domain.Dto;
 using System.Threading.Tasks;
 
 namespace Services.IServices
 {
     public interface IRegistroServices
     {
-        Task<(UsuariosDto Usuario, PersonasDto Persona)> RegistrarUsuarioYPersona(RegistroDto registroDto);
+        Task<Response<(UsuariosDto Usuario, PersonasDto Persona)>> RegistrarUsuarioYPersona(RegistroDto registroDto);
     }
 }
