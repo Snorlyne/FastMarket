@@ -6,25 +6,32 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 
 namespace Services.Services
 {
     public class UsuariosServices : IUsuariosServices
     {
         private readonly ApplicationDBContext _context;
+        private readonly PasswordHasher<Usuarios> _passwordHasher;
 
         public UsuariosServices(ApplicationDBContext context)
         {
             _context = context;
+            _passwordHasher = new PasswordHasher<Usuarios>();
         }
 
-        // Implementación corregida de ValidarUsuario
+        // Implementación de ValidarUsuario con comparación de contraseñas cifradas
         public async Task<UsuariosDto> ValidarUsuario(string correo, string contraseña)
         {
             var usuario = await _context.usuarios
-                .SingleOrDefaultAsync(u => u.Correo == correo && u.Contraseña == contraseña);
+                .SingleOrDefaultAsync(u => u.Correo == correo);
 
             if (usuario == null) return null;
+
+            // Verificamos si la contraseña ingresada coincide con la almacenada
+            var resultado = _passwordHasher.VerifyHashedPassword(usuario, usuario.Contraseña, contraseña);
+            if (resultado == PasswordVerificationResult.Failed) return null;
 
             return new UsuariosDto
             {
@@ -33,10 +40,11 @@ namespace Services.Services
                 IdRol = usuario.IdRol
             };
         }
+
         public async Task<string> ObtenerNombreRolPorId(int idRol)
         {
             var rol = await _context.roles.FindAsync(idRol);
-            return rol?.Nombre; 
+            return rol?.Nombre;
         }
 
         public async Task<IEnumerable<UsuariosDto>> ObtenerUsuarios()
@@ -63,14 +71,17 @@ namespace Services.Services
             };
         }
 
+        // Cifrado de la contraseña en el método de creación de usuarios
         public async Task<UsuariosDto> CrearUsuario(UsuarioCreateDto usuarioDto)
         {
             var nuevoUsuario = new Usuarios
             {
                 Correo = usuarioDto.Correo,
-                Contraseña = usuarioDto.Contraseña,
                 IdRol = usuarioDto.IdRol
             };
+
+            // Ciframos la contraseña antes de guardarla
+            nuevoUsuario.Contraseña = _passwordHasher.HashPassword(nuevoUsuario, usuarioDto.Contraseña);
 
             _context.usuarios.Add(nuevoUsuario);
             await _context.SaveChangesAsync();
