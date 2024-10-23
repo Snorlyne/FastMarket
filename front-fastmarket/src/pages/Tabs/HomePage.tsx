@@ -1,7 +1,14 @@
 import React, { useState } from "react";
-import { IonPage, useIonViewDidEnter } from "@ionic/react";
+import { useIonViewDidEnter } from "@ionic/react";
 import anunciosService from "../../services/AnunciosServices";
 import { IProducto } from "../../interfaces/IProducto";
+import { IonIcon, IonPage } from "@ionic/react";
+import { searchOutline } from "ionicons/icons";
+import { useEffect } from "react";
+import { IonCard, IonCardHeader, IonCardContent, IonButton } from '@ionic/react';
+import LoadingWave from "../../components/Loader";
+import { useHistory } from "react-router";
+
 
 const HomePage: React.FC = () => {
   const [anuncios, setAnuncios] = useState<any[]>([]); // Assuming 'any' for simplicity, replace with the actual type
@@ -27,6 +34,25 @@ const HomePage: React.FC = () => {
     fetchAnuncios();
   });
 
+
+  const [isLoading, setIsLoading] = useState(true);
+  const history = useHistory();
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 1000);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (isLoading) {
+    return (
+      <div className="fixed inset-0 flex items-center justify-center bg-white">
+        <LoadingWave />
+      </div>
+    );
+  }
 
   return (
     <IonPage>

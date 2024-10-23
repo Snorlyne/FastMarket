@@ -1,16 +1,14 @@
 import React, { useState } from "react";
-import {
-  IonPage,
-} from "@ionic/react";
+import {IonPage} from "@ionic/react";
 import { useHistory } from "react-router-dom";
-// import { googleLogout, useGoogleLogin } from "@react-oauth/google";
 
 import authService from "../../services/AuthService";
-import Modal from "../../components/Modal";
+import Modal from "../../components/Modals/Modal";
 
 const LoginPage: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalData, setModalData] = useState({
     type: "info",
@@ -55,6 +53,8 @@ const LoginPage: React.FC = () => {
       contraseña: password,
     };
 
+    setIsLoading(true); // Activar loading
+
     try {
       const response = await authService.login(req.correo, req.contraseña);
       if (response.isSuccess) {
@@ -78,19 +78,11 @@ const LoginPage: React.FC = () => {
           "Ocurrió un error inesperado. Por favor, intenta de nuevo más tarde.",
         onConfirm: () => {setIsModalOpen(false);},
       });
+    } finally {
+      setIsLoading(false); // Desactivar loading
       setIsModalOpen(true);
     }
   };
-
-  //   const loginWithGoogle = useGoogleLogin({
-  //     onSuccess: (tokenResponse) => {
-  //       console.log("Login Success:");
-  //       history.replace("/dashboard");
-  //     },
-  //     onError: () => {
-  //       console.log("Login Failed");
-  //     },
-  //   });
 
   return (
     <IonPage className="bg-gray-800 h-screen w-screen flex items-center justify-center">
@@ -114,6 +106,7 @@ const LoginPage: React.FC = () => {
               value={email}
               placeholder="Correo Electrónico..."
               onChange={(e) => setEmail(e.target.value)}
+              disabled={isLoading}
             />
           </div>
 
@@ -121,27 +114,42 @@ const LoginPage: React.FC = () => {
           <div className="mb-4">
             <input
               type="password"
-              className="w-full px-4 py-2 border-b-2 text-black rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500  bg-white"
+              className="w-full px-4 py-2 border-b-2 text-black rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 bg-white"
               value={password}
               placeholder="Contraseña..."
               onChange={(e) => setPassword(e.target.value)}
+              disabled={isLoading}
             />
           </div>
 
-          {/* Botón de inicio de sesión */}
+          {/* Botón de inicio de sesión con loading spinner */}
           <button
-            className="w-full bg-green-500 text-white py-2 rounded-lg hover:bg-green-600 transition-colors mt-4"
+            className={`w-full bg-green-500 text-white py-2 rounded-lg hover:bg-green-600 transition-colors mt-4 relative ${
+              isLoading ? 'cursor-not-allowed opacity-70' : ''
+            }`}
             onClick={handleLogin}
+            disabled={isLoading}
           >
-            Iniciar Sesión
+            <span className={isLoading ? 'invisible' : ''}>
+              Iniciar Sesión
+            </span>
+            
+            {/* Loading Spinner */}
+            {isLoading && (
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white"></div>
+              </div>
+            )}
           </button>
 
           {/* Texto de registro */}
           <p className="text-center mt-4 text-gray-600">
             ¿No tienes cuenta?{" "}
             <span
-              className="text-green-500 cursor-pointer hover:underline"
-              onClick={() => history.push("/register")}
+              className={`text-green-500 cursor-pointer hover:underline ${
+                isLoading ? 'pointer-events-none opacity-70' : ''
+              }`}
+              onClick={() => !isLoading && history.push("/register")}
             >
               Regístrate
             </span>
