@@ -41,21 +41,28 @@ import "./theme/variables.css";
 import LoginPage from "./pages/auth/LoginPage";
 import RegisterPage from "./pages/auth/RegisterPage";
 import IndexTabs from "./pages/Tabs/IndexTabs";
+import {AuthProvider } from "./services/auth/AuthContext";
+import PrivateRoute from "./services/auth/PrivateRoute";
 
 
 setupIonicReact();
 
-const App: React.FC = () => (
-  <IonApp>
-    <IonReactRouter>
-      <IonRouterOutlet>
-        <Route exact path="/login" component={LoginPage} />
-        <Route exact path="/register" component={RegisterPage} />
-        <Route exact path="/dashboard" component={IndexTabs} />
-        <Redirect exact from="/" to="/login" />
-      </IonRouterOutlet>
-    </IonReactRouter>
-  </IonApp>
-);
+
+const App: React.FC = () => {
+  return (
+    <AuthProvider>
+      <IonApp>
+        <IonReactRouter>
+          <IonRouterOutlet>
+            <Route exact path="/login" component={LoginPage} />
+            <Route exact path="/register" component={RegisterPage} />
+            <PrivateRoute path="/dashboard" component={IndexTabs} />
+            <Redirect exact from="/" to="/login" />
+          </IonRouterOutlet>
+        </IonReactRouter>
+      </IonApp>
+    </AuthProvider>
+  );
+};
 
 export default App;

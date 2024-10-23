@@ -50,7 +50,6 @@ const API_URL = import.meta.env.VITE_APP_API_URL;
 const authService = {
     // Login function
     login: async (correo: string, contraseña: string): Promise<IResponse> => {
-        console.log(API_URL);
         try {
             const response = await fetch(`${API_URL}auth/login`, {
                 method: 'POST',
@@ -66,7 +65,7 @@ const authService = {
             const data = await response.json();
 
             if (data.token !== undefined) {
-                const { token } = data.token;
+                const token  = data.token;
                 await setStorageItem('token', token);
                 return { isSuccess: true, message: "Login exitoso", result: null };
             }
@@ -103,9 +102,8 @@ const authService = {
     },
 
     // Logout function
-    logout: async (navigation: any): Promise<void> => {
+    logout: async (): Promise<void> => {
         await removeStorageItem();
-        navigation.navigate('Login'); // Adjust the route to your app's login screen
     },
 
     // Function to get the token from storage

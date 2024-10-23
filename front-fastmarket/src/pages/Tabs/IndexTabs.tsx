@@ -7,7 +7,7 @@ import {
   IonLabel,
 } from "@ionic/react";
 import { IonReactRouter } from "@ionic/react-router";
-import { homeOutline, personOutline, settingsOutline } from "ionicons/icons";
+import { homeOutline, personOutline, searchOutline, settingsOutline } from "ionicons/icons";
 import { Route, Redirect } from "react-router";
 import HomePage from "./HomePage";
 import ProfilePage from "./ProfilePage";
@@ -33,6 +33,10 @@ const IndexTabs: React.FC = () => {
           <IonTabButton tab="home" href="/dashboard/home">
             <IonIcon icon={homeOutline} />
             <IonLabel>Inicio</IonLabel>
+          </IonTabButton>
+          <IonTabButton tab="busqueda" href="/dashboard/search">
+            <IonIcon icon={searchOutline} />
+            <IonLabel>Buscar</IonLabel>
           </IonTabButton>
           <IonTabButton tab="profile" href="/dashboard/profile">
             <IonIcon icon={personOutline} />

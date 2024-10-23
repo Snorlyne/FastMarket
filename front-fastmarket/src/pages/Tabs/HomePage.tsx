@@ -1,64 +1,63 @@
-import { IonIcon, IonPage } from "@ionic/react";
-import { searchOutline } from "ionicons/icons";
-import React from "react";
+import React, { useState } from "react";
+import { IonPage, useIonViewDidEnter } from "@ionic/react";
+import anunciosService from "../../services/AnunciosServices";
+import { IProducto } from "../../interfaces/IProducto";
 
 const HomePage: React.FC = () => {
+  const [anuncios, setAnuncios] = useState<any[]>([]); // Assuming 'any' for simplicity, replace with the actual type
+  const [loading, setLoading] = useState<boolean>(true);
+
+  const fetchAnuncios = async () => {
+    try {
+      const response = await anunciosService.getAll();
+      if (response.isSuccess && response.result) {
+        setAnuncios(response.result); // Set the anuncios state
+        console.log("Anuncios obtenidos:", response.result); // Log the fetched anuncios for debugging purposes
+      } else {
+        alert("Error fetching anuncios: " + response.message);
+      }
+    } catch (error) {
+      console.error("Error fetching anuncios:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useIonViewDidEnter(() => {
+    fetchAnuncios();
+  });
+
+
   return (
-    <div className="p-4 h-screen bg-white">
-      {/* Título de la página */}
-      <div className="block justify-center text-center">
-        <h2 className="text-2xl  text-black font-bold mb-1">
-          Subasta de productos
-        </h2>
-        <p className="text-md  text-black mb-4">Encuentra tus productos</p>
-      </div>
+    <IonPage>
+      <div className="p-4 h-screen bg-white">
+        <h2 className="text-2xl text-black text-center font-bold mb-1">Subasta de productos</h2>
+        <p className="text-md text-black text-center mb-4">Encuentra tus productos</p>
 
-      {/* Barra de búsqueda */}
-      <div className="relative mb-4">
-        <input
-          type="text"
-          placeholder="Buscar productos..."
-          className="w-full p-2 pl-10 pr-10 text-black border-b-2 rounded-lg bg-white border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500"
-        />
-        <span className="absolute left-3 top-1/2 transform -translate-y-1/2">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth="1.5"
-            stroke="currentColor"
-            className="w-5 h-5 text-gray-500"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
-            />
-          </svg>
-        </span>
-      </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {anuncios.map((anuncio, index) => (
+            <div key={index} className="bg-white rounded-lg shadow-lg p-4">
+              <h3 className="text-lg font-semibold">{anuncio.descripcion}</h3>
+              <p className="text-gray-600">MX${anuncio.precio_anuncio}</p>
+              
+              {/* Map over products within each anuncio */}
+                <div>
+                  <p className="text-gray-600">Producto: {anuncio.productos.nombre}</p> 
 
-      {/* Productos */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {/* Primer Producto */}
-        <div className="bg-white rounded-lg shadow-lg p-4">
-          <h3 className="text-lg font-semibold">Silla de escritorio</h3>
-          <p className="text-gray-600">MX$500</p>
-          <button className="w-full bg-green-500 text-white py-2 rounded-lg mt-2 hover:bg-green-600 transition-colors">
-            Entrar
-          </button>
-        </div>
+                  {/* Display product images */}
+                  {anuncio.productos.fotos.length > 0 && (
+                    <img src={anuncio.productos.fotos[0].url} alt={anuncio.productos.nombre} className="w-full h-32 object-cover" />
+                  )}
+                </div>
 
-        {/* Segundo Producto */}
-        <div className="bg-white rounded-lg shadow-lg p-4">
-          <h3 className="text-lg font-semibold">Silla de escritorio</h3>
-          <p className="text-gray-600">MX$500</p>
-          <button className="w-full bg-green-500 text-white py-2 rounded-lg mt-2 hover:bg-green-600 transition-colors">
-            Entrar
-          </button>
+              <button className="w-full bg-green-500 text-white py-2 rounded-lg mt-2 hover:bg-green-600 transition-colors">
+                Entrar
+              </button>
+            </div>
+          ))}
         </div>
       </div>
-    </div>
+    </IonPage>
   );
 };
 
