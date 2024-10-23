@@ -3,7 +3,7 @@ import { useHistory } from "react-router-dom";
 import AuthService from "../../services/AuthService";
 import { IRegistro } from "../../interfaces/IRegister";
 import { IResponse } from "../../interfaces/IResponse";
-import Modal from "../../components/Modal";
+import Modal from "../../components/Modals/Modal";
 import { IonPage } from "@ionic/react";
 
 const RegisterPage: React.FC = () => {

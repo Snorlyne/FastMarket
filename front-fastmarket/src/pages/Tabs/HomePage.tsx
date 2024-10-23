@@ -1,16 +1,39 @@
 import { IonIcon, IonPage } from "@ionic/react";
 import { searchOutline } from "ionicons/icons";
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { IonCard, IonCardHeader, IonCardContent, IonButton } from '@ionic/react';
+import LoadingWave from "../../components/Loader";
+import { useHistory } from "react-router";
+
 
 const HomePage: React.FC = () => {
+  const [isLoading, setIsLoading] = useState(true);
+  const history = useHistory();
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 1000);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (isLoading) {
+    return (
+      <div className="fixed inset-0 flex items-center justify-center bg-white">
+        <LoadingWave />
+      </div>
+    );
+  }
+
   return (
     <div className="p-4 h-screen bg-white">
       {/* Título de la página */}
       <div className="block justify-center text-center">
-        <h2 className="text-2xl  text-black font-bold mb-1">
+        <h2 className="text-2xl text-black font-bold mb-1">
           Subasta de productos
         </h2>
-        <p className="text-md  text-black mb-4">Encuentra tus productos</p>
+        <p className="text-md text-black mb-4">Encuentra tus productos</p>
       </div>
 
       {/* Barra de búsqueda */}
@@ -39,24 +62,35 @@ const HomePage: React.FC = () => {
       </div>
 
       {/* Productos */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {/* Primer Producto */}
-        <div className="bg-white rounded-lg shadow-lg p-4">
-          <h3 className="text-lg font-semibold">Silla de escritorio</h3>
-          <p className="text-gray-600">MX$500</p>
-          <button className="w-full bg-green-500 text-white py-2 rounded-lg mt-2 hover:bg-green-600 transition-colors">
-            Entrar
-          </button>
-        </div>
+      <div className="flex justify-between">
+        <IonCard className="w-44 rounded-xl">
+          <IonCardHeader className="h-44 p-0">
+            <img
+              src="https://images.unsplash.com/photo-1629367494173-c78a56567877?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=927&q=80"
+              alt="card-image"
+              className="h-full w-full object-cover"
+            />
+          </IonCardHeader>
+          <IonCardContent>
+            <div className="mb-2 flex items-center justify-between">
+              <span className="text-blue-gray-700 font-medium">
+                Apple AirPods
+              </span>
+              <span className="text-blue-gray-700 font-medium">
+                $95.00
+              </span>
+            </div>
+          </IonCardContent>
+          <IonCardContent className="pt-0">
+            <button  className="bg-blue-gray-900 text-blue-gray-900 hover:scale-105" onClick={() => history.push("/ViewProduct")} >
+              Add to Cart
+            </button>
+          </IonCardContent>
+        </IonCard>
 
-        {/* Segundo Producto */}
-        <div className="bg-white rounded-lg shadow-lg p-4">
-          <h3 className="text-lg font-semibold">Silla de escritorio</h3>
-          <p className="text-gray-600">MX$500</p>
-          <button className="w-full bg-green-500 text-white py-2 rounded-lg mt-2 hover:bg-green-600 transition-colors">
-            Entrar
-          </button>
-        </div>
+        <IonCard className="w-44 rounded-xl">
+          {/* Segunda card con el mismo contenido */}
+        </IonCard>
       </div>
     </div>
   );

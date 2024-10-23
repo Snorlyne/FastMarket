@@ -41,6 +41,9 @@ import "./theme/variables.css";
 import LoginPage from "./pages/auth/LoginPage";
 import RegisterPage from "./pages/auth/RegisterPage";
 import IndexTabs from "./pages/Tabs/IndexTabs";
+import HomePage from "./pages/Tabs/HomePage";
+import ViewProfile from "./pages/ViewProfile";
+import ViewProduct from "./pages/ViewProduct";
 
 
 setupIonicReact();
@@ -48,10 +51,15 @@ setupIonicReact();
 const App: React.FC = () => (
   <IonApp>
     <IonReactRouter>
-      <IonRouterOutlet>
+      <IonRouterOutlet >
         <Route exact path="/login" component={LoginPage} />
         <Route exact path="/register" component={RegisterPage} />
         <Route exact path="/dashboard" component={IndexTabs} />
+        <Route exact path="/HomePage" component={HomePage} />
+        <Route exact path="/ViewProfile" component={ViewProfile} />
+        <Route exact path="/ViewProduct" component={ViewProduct} />
+
+
         <Redirect exact from="/" to="/login" />
       </IonRouterOutlet>
     </IonReactRouter>

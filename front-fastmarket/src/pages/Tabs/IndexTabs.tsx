@@ -8,7 +8,7 @@ import {
 } from "@ionic/react";
 import { IonReactRouter } from "@ionic/react-router";
 import { homeOutline, personOutline, settingsOutline } from "ionicons/icons";
-import { Route, Redirect } from "react-router";
+import { Route, Redirect } from 'react-router-dom';
 import HomePage from "./HomePage";
 import ProfilePage from "./ProfilePage";
 
