@@ -28,46 +28,60 @@ namespace Services.Services
             try
             {
                 List<AnunciosDto> response = await _dBContext.anuncios
-                  .Include(x => x.Localizacion)
-                  .Include(x => x.Personas)
-                  .Include(x => x.Productos)
-                  .Select(a => new AnunciosDto
-                  {
-                      Id = a.Id,
-                      Personas = new PersonasDto
-                      {
-                          Id = a.Personas.Id,
-                          Nombre = a.Personas.Nombre,
-                          Apellido = a.Personas.Apellido,
-                          IdUsuario = a.Personas.IdUsuario
-                      },
-                      Productos = new ProductosDto
-                      {
-                          Id = a.Productos.Id,
-                          Nombre = a.Productos.Nombre,
-                          Descripcion = a.Productos.Descripcion,
-                          Precio = a.Productos.Precio,
-                          Cantidad = a.Productos.Cantidad,
-                          Tipo = a.Productos.Tipo
-                      },
-                      Localizacion = new LocalizacionesDto
-                      {
-                          Id = a.Localizacion.Id,
-                          Ciudad = a.Localizacion.Ciudad,
-                          Estado = a.Localizacion.Estado,
-                          Pais = a.Localizacion.Pais,
-                          CodigoPostal = a.Localizacion.codigo_postal,
-                          Latitud = a.Localizacion.Latitud,
-                          Longitud = a.Localizacion.Longitud
-                      },
-                      fecha_publicacion = a.fecha_publicacion,
-                      fecha_expiracion = a.fecha_expiracion,
-                      Estado = a.Estado,
-                      precio_anuncio = a.precio_anuncio,
-                      Descripcion = a.Descripcion,
-                      Tipo = a.Tipo,
-                  })
-                  .ToListAsync();
+                    .Include(a => a.Localizacion)
+                    .Include(a => a.Personas)
+                    .Include(a => a.Productos)
+                        .ThenInclude(p => p.Fotos)
+                    .Include(a => a.Productos)
+                        .ThenInclude(p => p.ProductosEtiquetas)
+                            .ThenInclude(pe => pe.Etiquetas)
+                    .Select(a => new AnunciosDto
+                    {
+                        Id = a.Id,
+                        Personas = new PersonasDto
+                        {
+                            Id = a.Personas.Id,
+                            Nombre = a.Personas.Nombre,
+                            Apellido = a.Personas.Apellido,
+                            IdUsuario = a.Personas.IdUsuario
+                        },
+                        Productos = new ProductosDto
+                        {
+                            Id = a.Productos.Id,
+                            Nombre = a.Productos.Nombre,
+                            Descripcion = a.Productos.Descripcion,
+                            Precio = a.Productos.Precio,
+                            Cantidad = a.Productos.Cantidad,
+                            Tipo = a.Productos.Tipo,
+                            Fotos = a.Productos.Fotos.Select(f => new FotosDto
+                            {
+                                Id = f.Id,
+                                Url = f.Url
+                            }).ToList(),
+                            Etiquetas = a.Productos.ProductosEtiquetas
+                                .Select(pe => new EtiquetasDto
+                                {
+                                    Nombre = pe.Etiquetas.Nombre
+                                }).ToList()
+                        },
+                        Localizacion = new LocalizacionesDto
+                        {
+                            Id = a.Localizacion.Id,
+                            Ciudad = a.Localizacion.Ciudad,
+                            Estado = a.Localizacion.Estado,
+                            Pais = a.Localizacion.Pais,
+                            CodigoPostal = a.Localizacion.codigo_postal,
+                            Latitud = a.Localizacion.Latitud,
+                            Longitud = a.Localizacion.Longitud
+                        },
+                        fecha_publicacion = a.fecha_publicacion,
+                        fecha_expiracion = a.fecha_expiracion,
+                        Estado = a.Estado,
+                        precio_anuncio = a.precio_anuncio,
+                        Descripcion = a.Descripcion,
+                        Tipo = a.Tipo
+                    })
+                    .ToListAsync();
                 return new Response<List<AnunciosDto>>(response);
             }
             catch (Exception ex)

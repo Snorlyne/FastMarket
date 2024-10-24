@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Common.Utilities;
 
 namespace Services.Services
 {
@@ -45,21 +46,46 @@ namespace Services.Services
             };
         }
 
-        public async Task<PersonasDto> CrearPersona(PersonasDto personaDto)
+        public async Task<Response<PersonasDto>> CrearPersona(PersonasDto personaDto)
         {
-            var persona = new Personas
+            try
             {
-                Nombre = personaDto.Nombre,
-                Apellido = personaDto.Apellido,
-                IdUsuario = personaDto.IdUsuario
-            };
+                // Validaciones básicas
+                if (string.IsNullOrEmpty(personaDto.Nombre))
+                {
+                    throw new Exception("El nombre es requerido.");
+                }
 
-            _context.personas.Add(persona);
-            await _context.SaveChangesAsync();
+                if (string.IsNullOrEmpty(personaDto.Apellido))
+                {
+                    throw new Exception("El apellido es requerido.");
+                }
 
-            personaDto.Id = persona.Id;
-            return personaDto;
+                // Crear una nueva instancia de la entidad Persona
+                var persona = new Personas
+                {
+                    Nombre = personaDto.Nombre,
+                    Apellido = personaDto.Apellido,
+                    IdUsuario = personaDto.IdUsuario
+                };
+
+                // Agregar la persona al contexto y guardar cambios
+                _context.personas.Add(persona);
+                await _context.SaveChangesAsync();
+
+                // Actualizar el ID de persona en el DTO
+                personaDto.Id = persona.Id;
+
+                // Devolver el DTO de la persona creada en un Response exitoso
+                return new Response<PersonasDto>(personaDto, "Persona creada exitosamente.");
+            }
+            catch (Exception ex)
+            {
+                // Lanza la excepción con el mensaje de error
+                throw new Exception($"Error al crear la persona: {ex.Message}");
+            }
         }
+
 
         public async Task<bool> ActualizarPersona(int id, PersonasDto personaDto)
         {

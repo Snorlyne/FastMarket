@@ -22,12 +22,8 @@ namespace FastMarketBackEnd.Controllers
             // Llamar al servicio para registrar el usuario y la persona
             try
             {
-                var (usuario, persona) = await _registroServices.RegistrarUsuarioYPersona(registroDto);
-                return Ok(new
-                {
-                    Usuario = usuario,
-                    Persona = persona
-                });
+                var res = await _registroServices.RegistrarUsuarioYPersona(registroDto);
+                return Ok(res);
             }
             catch (System.Exception ex)
             {

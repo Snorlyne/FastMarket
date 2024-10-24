@@ -84,7 +84,6 @@ namespace Services.Services
         }
         public async Task<Response<ProductosDto>> CrearProducto(ProductosDto request)
         {
-            using var transaction = await _dBContext.Database.BeginTransactionAsync();
             try
             {
                 // Crear el producto
@@ -128,7 +127,6 @@ namespace Services.Services
 
                 // Guardar todas las etiquetas y finalizar la transacción
                 await _dBContext.SaveChangesAsync();
-                await transaction.CommitAsync();
 
 
                 // Construir el DTO de respuesta
@@ -149,7 +147,6 @@ namespace Services.Services
             }
             catch(Exception ex)
             {
-                await transaction.RollbackAsync();
                 return new Response<ProductosDto>("Ocurrió un error al crear el peoducto: " + ex.Message);
             }
         }

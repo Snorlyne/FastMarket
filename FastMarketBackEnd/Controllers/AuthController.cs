@@ -53,7 +53,7 @@ namespace FastMarketBackEnd.Controllers
             {
                 Subject = new ClaimsIdentity(new[]
                 {
-                    new Claim("IdPersona", persona.Id.ToString()),      // Incluir persona
+                   new Claim("IdPersona", persona.Id.ToString()),      // Incluir persona
                     new Claim(ClaimTypes.Email, usuario.Correo),       // Incluir el correo
                     new Claim(ClaimTypes.Role, rolNombre)              // Incluir el rol
                 }),
