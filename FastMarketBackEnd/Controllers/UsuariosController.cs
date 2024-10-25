@@ -42,7 +42,7 @@ namespace FastMarketBackEnd.Controllers
         public async Task<IActionResult> PostUsuario([FromBody] UsuarioCreateDto usuarioDto)
         {
             var usuarioCreado = await _services.CrearUsuario(usuarioDto);
-            return CreatedAtAction(nameof(GetUsuario), new { id = usuarioCreado.Id }, usuarioCreado);
+            return CreatedAtAction(nameof(GetUsuario), new { id = usuarioCreado.Result.Id }, usuarioCreado);
         }
 
         [HttpPut("{id}")]

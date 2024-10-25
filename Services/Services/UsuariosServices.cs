@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Common.Utilities;
 
 namespace Services.Services
 {
@@ -63,25 +64,59 @@ namespace Services.Services
             };
         }
 
-        public async Task<UsuariosDto> CrearUsuario(UsuarioCreateDto usuarioDto)
+        public async Task<Response<UsuariosDto>> CrearUsuario(UsuarioCreateDto usuarioDto)
         {
-            var nuevoUsuario = new Usuarios
+            try
             {
-                Correo = usuarioDto.Correo,
-                Contraseña = usuarioDto.Contraseña,
-                IdRol = usuarioDto.IdRol
-            };
+                // Validaciones básicas
+                if (string.IsNullOrEmpty(usuarioDto.Correo))
+                {
+                    throw new Exception("El correo es requerido.");
+                }
 
-            _context.usuarios.Add(nuevoUsuario);
-            await _context.SaveChangesAsync();
+                if (string.IsNullOrEmpty(usuarioDto.Contraseña))
+                {
+                    throw new Exception("La contraseña es requerida.");
+                }
 
-            return new UsuariosDto
+                // Verificar si el correo ya existe
+                var usuarioExistente = await _context.usuarios
+                    .FirstOrDefaultAsync(u => u.Correo == usuarioDto.Correo);
+
+                if (usuarioExistente != null)
+                {
+                    throw new Exception("Ya existe un usuario con este correo.");
+                }
+
+                // Crear el nuevo usuario
+                var nuevoUsuario = new Usuarios
+                {
+                    Correo = usuarioDto.Correo,
+                    Contraseña = usuarioDto.Contraseña,
+                    IdRol = usuarioDto.IdRol
+                };
+
+                // Agregar usuario al contexto y guardar cambios
+                _context.usuarios.Add(nuevoUsuario);
+                await _context.SaveChangesAsync();
+
+                // Devolver el usuario creado como DTO
+                var usuarioDtoCreado = new UsuariosDto
+                {
+                    Id = nuevoUsuario.Id,
+                    Correo = nuevoUsuario.Correo,
+                    IdRol = nuevoUsuario.IdRol
+                };
+
+                return new Response<UsuariosDto>(usuarioDtoCreado, "Usuario creado exitosamente.");
+            }
+            catch (Exception ex)
             {
-                Id = nuevoUsuario.Id,
-                Correo = nuevoUsuario.Correo,
-                IdRol = nuevoUsuario.IdRol
-            };
+                // Lanza la excepción con el mensaje de error
+                throw new Exception($"Error al crear el usuario: {ex.Message}");
+            }
         }
+
 
         public async Task<bool> ActualizarUsuario(int id, UsuariosDto usuarioDto)
         {

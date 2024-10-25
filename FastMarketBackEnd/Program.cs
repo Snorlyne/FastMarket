@@ -15,7 +15,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
-    // Configuración para permitir autenticación JWT en Swagger
+    // Configuraciï¿½n para permitir autenticaciï¿½n JWT en Swagger
     options.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
     {
         Name = "Authorization",
@@ -53,14 +53,14 @@ builder.Services.AddTransient<IAnunciosServices, AnunciosServices>();
 builder.Services.AddTransient<ILocalizacionesServices, LocalizacionesServices>();
 builder.Services.AddTransient<IOfertasServices, OfertasServices>();
 
-// Configuración del DbContext para usar MySQL
+// Configuraciï¿½n del DbContext para usar MySQL
 builder.Services.AddDbContext<ApplicationDBContext>(options =>
     options.UseMySql(
         builder.Configuration.GetConnectionString("DefaultConnection"),
         new MySqlServerVersion(new Version(8, 0, 27))
     ));
 
-// Configuración de JWT
+// Configuraciï¿½n de JWT
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -80,7 +80,7 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-// Configuración de CORS (opcional si tu API será consumida por clientes en otros dominios)
+// Configuraciï¿½n de CORS (opcional si tu API serï¿½ consumida por clientes en otros dominios)
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll",
@@ -105,7 +105,7 @@ app.UseHttpsRedirection();
 // Middleware de CORS (opcional)
 app.UseCors("AllowAll");
 
-// Middleware de autenticación
+// Middleware de autenticaciï¿½n
 app.UseAuthentication();
 app.UseAuthorization();
 
