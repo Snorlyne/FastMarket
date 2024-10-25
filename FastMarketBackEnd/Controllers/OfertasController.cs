@@ -1,6 +1,5 @@
 ﻿using Domain.Dto;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Services.IServices;
 
@@ -11,10 +10,12 @@ namespace FastMarketBackEnd.Controllers
     public class OfertasController : ControllerBase
     {
         private readonly IOfertasServices _ofertasServices;
+
         public OfertasController(IOfertasServices ofertasServices)
         {
             _ofertasServices = ofertasServices;
         }
+
         // GET: api/<OfertasController>
         [HttpGet]
         [Authorize(Roles = "Admin")]
@@ -34,17 +35,29 @@ namespace FastMarketBackEnd.Controllers
 
         // POST api/<OfertasController>
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] OfertasDto request)
+        public async Task<IActionResult> Post([FromBody] CrearOfertaRequest request)
         {
-            var response = await _ofertasServices.CrearOferta(request);
+            // Validar la solicitud y asegurar que contenga la lista de IDs de productos
+            if (request == null || request.ProductoIds == null || !request.ProductoIds.Any())
+            {
+                return BadRequest("La solicitud es inválida. Asegúrate de incluir los IDs de los productos.");
+            }
+
+            var response = await _ofertasServices.CrearOferta(request.Oferta, request.ProductoIds);
             return Ok(response);
         }
 
         // PUT api/<OfertasController>/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(int id, [FromBody] OfertasDto request)
+        public async Task<IActionResult> Put(int id, [FromBody] ActualizarOfertaRequest request)
         {
-            var response = await _ofertasServices.ActualizarOferta(id, request);
+            // Validar la solicitud y asegurar que contenga la lista de IDs de productos
+            if (request == null || request.ProductoIds == null || !request.ProductoIds.Any())
+            {
+                return BadRequest("La solicitud es inválida. Asegúrate de incluir los IDs de los productos.");
+            }
+
+            var response = await _ofertasServices.ActualizarOferta(id, request.Oferta, request.ProductoIds);
             return Ok(response);
         }
 
@@ -55,5 +68,18 @@ namespace FastMarketBackEnd.Controllers
             var response = await _ofertasServices.EliminarOferta(id);
             return Ok(response);
         }
+    }
+
+    // Clases para la creación y actualización de ofertas
+    public class CrearOfertaRequest
+    {
+        public OfertasDto Oferta { get; set; }
+        public List<int> ProductoIds { get; set; }
+    }
+
+    public class ActualizarOfertaRequest
+    {
+        public OfertasDto Oferta { get; set; }
+        public List<int> ProductoIds { get; set; }
     }
 }

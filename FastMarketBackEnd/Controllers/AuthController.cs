@@ -42,7 +42,7 @@ namespace FastMarketBackEnd.Controllers
                 return Unauthorized("El rol no existe");
             }
 
-            // Aquí aseguramos que el IdPersona está disponible
+            // Aseguramos que el IdPersona está disponible
             var persona = await _dbContext.personas.FirstOrDefaultAsync(x => x.IdUsuario == usuario.Id)
                  ?? throw new Exception("Error al obtener usuario.");
 
