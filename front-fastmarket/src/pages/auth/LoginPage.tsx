@@ -4,12 +4,14 @@ import { useHistory } from "react-router-dom";
 
 import authService from "../../services/AuthService";
 import Modal from "../../components/Modals/Modal";
+import { useAuth } from "../../services/auth/AuthContext";
 
 const LoginPage: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const auth = useAuth();
   const [modalData, setModalData] = useState({
     type: "info",
     title: "",
@@ -58,8 +60,10 @@ const LoginPage: React.FC = () => {
     try {
       const response = await authService.login(req.correo, req.contraseña);
       if (response.isSuccess) {
-        history.replace("/dashboard");
+        auth.login(); // Iniciar sesión en el contexto de autenticación
+        history.replace('/dashboard');
       } else {
+        setIsModalOpen(true);
         setModalData({
           type: "error",
           title: "Error de inicio de sesión",
@@ -68,9 +72,9 @@ const LoginPage: React.FC = () => {
             setIsModalOpen(false);
           },
         });
-        setIsModalOpen(true);
       }
     } catch (error) {
+      setIsModalOpen(true);
       setModalData({
         type: "error",
         title: "Error de inicio de sesión",
@@ -78,9 +82,6 @@ const LoginPage: React.FC = () => {
           "Ocurrió un error inesperado. Por favor, intenta de nuevo más tarde.",
         onConfirm: () => {setIsModalOpen(false);},
       });
-    } finally {
-      setIsLoading(false); // Desactivar loading
-      setIsModalOpen(true);
     }
   };
 
