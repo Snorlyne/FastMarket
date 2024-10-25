@@ -4,8 +4,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Repository.Context
 {
-    public class ApplicationDBContext(DbContextOptions<ApplicationDBContext> options) : DbContext(options)
+    public class ApplicationDBContext : DbContext
     {
+        public ApplicationDBContext(DbContextOptions<ApplicationDBContext> options) : base(options) { }
+
         public virtual DbSet<Usuarios> usuarios { get; set; }
         public virtual DbSet<Productos> productos { get; set; }
         public virtual DbSet<Productos_Etiquetas> productos_etiquetas { get; set; }
@@ -16,10 +18,10 @@ namespace Repository.Context
         public virtual DbSet<Anuncios> anuncios { get; set; }
         public virtual DbSet<Localizaciones> localizaciones { get; set; }
         public virtual DbSet<Ofertas> ofertas { get; set; }
+        public virtual DbSet<Ofertas_Productos> ofertas_productos { get; set; } // Agregar DbSet para Ofertas_Productos
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-
             // Configuración de clave compuesta para Productos_etiquetas
             modelBuilder.Entity<Productos_Etiquetas>()
                 .HasKey(pf => new { pf.productos_Id, pf.etiquetas_id });
@@ -41,12 +43,14 @@ namespace Repository.Context
                 .WithOne(f => f.Producto)
                 .HasForeignKey(f => f.IdProducto)
                 .OnDelete(DeleteBehavior.Cascade);  // Cascada para eliminar las fotos cuando se elimina un producto
+
             // Relación entre Anuncios y Localizaciones
             modelBuilder.Entity<Anuncios>()
                 .HasOne(a => a.Localizacion)
                 .WithOne()
                 .HasForeignKey<Anuncios>(a => a.IdLocalizacion)
                 .OnDelete(DeleteBehavior.Cascade);
+
             // Relación entre Anuncios y Personas
             modelBuilder.Entity<Anuncios>()
                 .HasOne(a => a.Personas)
@@ -58,6 +62,20 @@ namespace Repository.Context
                 .HasOne(a => a.Productos)
                 .WithMany()
                 .HasForeignKey(a => a.IdProducto);
+
+            // Configuración de la relación entre Ofertas y Ofertas_Productos
+            modelBuilder.Entity<Ofertas_Productos>()
+                .HasKey(op => new { op.ofertas_id, op.productos_id });
+
+            modelBuilder.Entity<Ofertas_Productos>()
+                .HasOne(op => op.Ofertas)
+                .WithMany(o => o.OfertasProductos)
+                .HasForeignKey(op => op.ofertas_id);
+
+            modelBuilder.Entity<Ofertas_Productos>()
+                .HasOne(op => op.Producto)
+                .WithMany() // Si no necesitas la relación inversa, puedes dejarlo así
+                .HasForeignKey(op => op.productos_id);
         }
     }
 }
