@@ -58,6 +58,11 @@ namespace Repository.Context
                 .HasOne(a => a.Productos)
                 .WithMany()
                 .HasForeignKey(a => a.IdProducto);
+
+            modelBuilder.Entity<Personas>()
+                .HasOne(p => p.Usuario)
+                .WithMany()
+                .HasForeignKey(p => p.IdUsuario);
         }
     }
 }

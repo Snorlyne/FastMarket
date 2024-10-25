@@ -21,15 +21,31 @@ namespace Services.Services
 
         public async Task<IEnumerable<PersonasDto>> ObtenerPersonas()
         {
-            return await _context.personas
-                .Select(p => new PersonasDto
-                {
-                    Id = p.Id,
-                    Nombre = p.Nombre,
-                    Apellido = p.Apellido,
-                    IdUsuario = p.IdUsuario
-                })
-                .ToListAsync();
+            try
+            {
+                var response = await _context.personas
+                    .Include(p => p.Usuario) // Incluir la relación con Usuarios
+                    .Select(p => new PersonasDto
+                    {
+                        Id = p.Id,
+                        Nombre = p.Nombre,
+                        Apellido = p.Apellido,
+                        IdUsuario = p.IdUsuario,
+                        Usuarios = new UsuariosDto
+                        {
+                            Id = p.Usuario.Id,
+                            Correo = p.Usuario.Correo,
+                            IdRol = p.Usuario.IdRol,
+                        },
+                    })
+                    .ToListAsync();
+
+                return response;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Ocurrió un error al obtener las personas: " + ex.Message);
+            }
         }
 
         public async Task<PersonasDto> ObtenerPersonaPorId(int id)
