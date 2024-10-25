@@ -44,6 +44,7 @@ import IndexTabs from "./pages/Tabs/IndexTabs";
 import HomePage from "./pages/Tabs/HomePage";
 import ViewProfile from "./pages/ViewProfile";
 import ViewProduct from "./pages/ViewProduct";
+import ViewMySale from "./pages/ViewMysales";
 
 
 setupIonicReact();
@@ -58,7 +59,7 @@ const App: React.FC = () => (
         <Route exact path="/HomePage" component={HomePage} />
         <Route exact path="/ViewProfile" component={ViewProfile} />
         <Route exact path="/ViewProduct" component={ViewProduct} />
-
+        <Route exact path="/ViewMySale" component={ViewMySale} />
 
         <Redirect exact from="/" to="/login" />
       </IonRouterOutlet>

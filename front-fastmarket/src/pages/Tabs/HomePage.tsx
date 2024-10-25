@@ -62,35 +62,34 @@ const HomePage: React.FC = () => {
       </div>
 
       {/* Productos */}
-      <div className="flex justify-between">
-        <IonCard className="w-44 rounded-xl">
-          <IonCardHeader className="h-44 p-0">
-            <img
-              src="https://images.unsplash.com/photo-1629367494173-c78a56567877?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=927&q=80"
-              alt="card-image"
-              className="h-full w-full object-cover"
-            />
-          </IonCardHeader>
-          <IonCardContent>
-            <div className="mb-2 flex items-center justify-between">
-              <span className="text-blue-gray-700 font-medium">
-                Apple AirPods
-              </span>
-              <span className="text-blue-gray-700 font-medium">
-                $95.00
-              </span>
-            </div>
-          </IonCardContent>
-          <IonCardContent className="pt-0">
-            <button  className="bg-blue-gray-900 text-blue-gray-900 hover:scale-105" onClick={() => history.push("/ViewProduct")} >
-              Add to Cart
-            </button>
-          </IonCardContent>
-        </IonCard>
+      <div className="max-w-4xl mx-auto px-4 py-4">
+        <h2 className="text-2xl text-black font-medium mb-3">Subasta del momento:</h2>
+        <div className="grid grid-cols-2 gap-4">
 
-        <IonCard className="w-44 rounded-xl">
-          {/* Segunda card con el mismo contenido */}
-        </IonCard>
+          {/* Cards del producto */}
+        <div className="flex flex-col bg-white rounded-2xl overflow-hidden shadow-lg">
+      <div className="relative w-full aspect-square">
+        <img 
+          src={ "https://http2.mlstatic.com/D_NQ_NP_630525-MLU72612729871_112023-O.webp"} 
+          className="w-full h-full object-cover bg-gray-200"
+        />
+      </div>
+      <div className="p-3 space-y-1">
+        <h3 className="text-xl font-bold text-gray-600">Silla de oficina</h3>
+        <p className="text-lg font-medium text-gray-500">MX$<span className="text-green-400 text-lg font-bold">500</span></p>
+        <button 
+          className="w-full bg-green-500 text-white text-sm font-bold py-2 rounded-lg hover:bg-green-800 transition-colors" onClick={() => history.push("/ViewProduct")}
+        >
+          ENTRAR
+        </button>
+      </div>
+    </div>
+
+  
+
+
+   
+        </div>
       </div>
     </div>
   );
