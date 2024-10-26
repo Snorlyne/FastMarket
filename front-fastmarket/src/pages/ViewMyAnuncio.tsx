@@ -2,7 +2,7 @@ import Header from '../components/Header';
 import { useHistory } from "react-router";
 
 
-const ViewMySale: React.FC = () => {
+const ViewMyAnuncio: React.FC = () => {
 
   const history = useHistory();
 
@@ -17,6 +17,7 @@ const ViewMySale: React.FC = () => {
 
             <button
               className="w-80 mt-3 py-2.5 p-8 bg-green-500 text-white rounded-md hover:bg-green-700 transition-colors"
+              onClick={() => history.push("/ProductCreate")}
             >
               Crear publicación
             </button>
@@ -80,4 +81,4 @@ const ViewMySale: React.FC = () => {
   );
 };
 
-export default ViewMySale;
+export default ViewMyAnuncio;

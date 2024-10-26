@@ -5,7 +5,7 @@ import './css/product.css';
 
 const ViewProduct = () => {
   return (
-    <div className=" view-product-container"> {/* Habilita scroll vertical */}
+    <div className=" view-product-container"> 
       <Header title="producto" />
 
       <div className="carousel relative">

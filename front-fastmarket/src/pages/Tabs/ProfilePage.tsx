@@ -4,10 +4,27 @@ import { useHistory } from "react-router";
 import { IonCard, IonCardHeader, IonCardTitle } from "@ionic/react";
 import LoadingWave from "../../components/Loader";
 
+import {
+  IonTabs,
+  IonRouterOutlet,
+  IonTabBar,
+  IonTabButton,
+  IonIcon,
+  IonLabel,
+} from "@ionic/react";
+import { IonReactRouter } from "@ionic/react-router";
+
+import ViewMySale from "../ViewMyAnuncio";
+
+
+
+
 const ProfilePage: React.FC = () => {
   const email = "lian.erick@example.com";
   const history = useHistory();
   const [isLoading, setIsLoading] = useState(true);
+
+  
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -25,7 +42,13 @@ const ProfilePage: React.FC = () => {
   }
 
   return (
+
+
+
     <IonPage>
+
+
+
       <div className="p-4 bg-white h-screen">
         {/* Sección de avatar y nombre */}
         <IonCard
@@ -65,7 +88,7 @@ const ProfilePage: React.FC = () => {
           <h3 className="text-lg font-semibold mb-2 text-black">Opciones:</h3>
 
           <div className="grid grid-cols-2 gap-2 place-items-center mx-auto">
-            <IonCard className="w-44 rounded-xl">
+            <IonCard className="w-44 rounded-xl"  onClick={() => history.push("/ViewMyVentas")}>
               <IonCardHeader>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -85,7 +108,7 @@ const ProfilePage: React.FC = () => {
               </IonCardHeader>
             </IonCard>
 
-            <IonCard className="w-44 rounded-xl">
+            <IonCard className="w-44 rounded-xl"  onClick={() => history.push("/ViewMyAnuncio")}>
               <IonCardHeader>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
