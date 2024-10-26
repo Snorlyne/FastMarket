@@ -30,6 +30,6 @@ namespace Domain.Entities
 
         [Required]
         public string Tipo { get; set; }
-
+        public Ofertas Ofertas { get; set; } = null!;
     }
 }

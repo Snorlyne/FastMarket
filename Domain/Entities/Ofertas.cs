@@ -15,5 +15,7 @@ namespace Domain.Entities
         public DateTime fecha_oferta { get; set; }
         public string estado { get; set; }
         public string Tipo { get; set; } = null!;
+
+        public virtual ICollection<Ofertas_Productos> OfertasProductos { get; set; } = new List<Ofertas_Productos>();
     }
 }

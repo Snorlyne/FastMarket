@@ -3,6 +3,8 @@ import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router";
 import { IonCard, IonCardHeader, IonCardTitle } from "@ionic/react";
 import LoadingWave from "../../components/Loader";
+import authService from "../../services/AuthService";
+import { useAuth } from "../../services/auth/AuthContext";
 
 import {
   IonTabs,
@@ -22,6 +24,14 @@ import ViewMySale from "../ViewMyAnuncio";
 const ProfilePage: React.FC = () => {
   const email = "lian.erick@example.com";
   const history = useHistory();
+  const auth = useAuth();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalData, setModalData] = useState({
+    type: "info",
+    title: "",
+    message: "",
+    onConfirm: () => {},
+  });
   const [isLoading, setIsLoading] = useState(true);
 
   
@@ -40,6 +50,16 @@ const ProfilePage: React.FC = () => {
       </div>
     );
   }
+
+  const logOut = async () => {
+    setIsModalOpen(true);
+    setModalData({
+      type: "info",
+      title: "¿Cerrar Sesión?",
+      message: "Estás a punto de cerrar tu sesión. ¿Estás seguro?",
+      onConfirm: () => auth.logout(),
+    });
+  };
 
   return (
 
@@ -153,7 +173,7 @@ const ProfilePage: React.FC = () => {
         <div className="mt-6">
           <button
             className="w-full bg-red-500 text-white py-2 rounded-lg hover:bg-red-600 transition flex justify-center"
-            onClick={() => !isLoading && history.push("/login")}
+            onClick={() => authService.logout().then(() => logOut())}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"

@@ -14,7 +14,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
-  const history = useHistory();
+  const history = useHistory(); // useHistory debe estar dentro del componente
 
   useEffect(() => {
     const checkToken = async () => {
@@ -26,13 +26,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const login = () => {
     setIsAuthenticated(true);
-    history.push("/dashboard");
   };
 
   const logout = async () => {
     await authService.logout();
     setIsAuthenticated(false);
-    history.push("/login");
+    history.replace("/"); // Redirigir al home después de logout
   };
 
   return (

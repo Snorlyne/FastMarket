@@ -6,13 +6,11 @@ using System.Threading.Tasks;
 
 namespace Domain.Entities
 {
-   
-    public class Productos_Etiquetas
+    public class Ofertas_Productos
     {
-        public int productos_Id { get; set; }
+        public int ofertas_id { get; set; }
+        public virtual Ofertas Ofertas { get; set; } = null!;
+        public int productos_id { get; set; }
         public virtual Productos Producto { get; set; } = null!;
-
-        public int etiquetas_id { get; set; }
-        public virtual Etiquetas Etiquetas { get; set; } = null!;
     }
 }

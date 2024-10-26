@@ -54,25 +54,16 @@ setupIonicReact();
 
 const App: React.FC = () => {
   return (
-    <AuthProvider>
       <IonApp>
         <IonReactRouter>
           <IonRouterOutlet>
             <Route exact path="/login" component={LoginPage} />
             <Route exact path="/register" component={RegisterPage} />
             <PrivateRoute path="/dashboard" component={IndexTabs} />
-            <Route exact path="/ViewProduct" component={ViewProduct} />
-            <Route exact path="/ViewMyAnuncio" component={ViewMyAnuncio} />
-            <Route exact path="/ProductCreate" component={ProductCreate} />
-            <Route exact path="/ViewMyVentas" component={ViewMyVentas} />
-
-
-
             <Redirect exact from="/" to="/login" />
           </IonRouterOutlet>
         </IonReactRouter>
       </IonApp>
-    </AuthProvider>
   );
 };
 

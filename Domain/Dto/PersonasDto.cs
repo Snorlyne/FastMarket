@@ -12,7 +12,8 @@ namespace Domain.Dto
         public int Id { get; set; }  
         public string Nombre { get; set; }
         public string Apellido { get; set; }
-        public int IdUsuario { get; set; } 
+        public int IdUsuario { get; set; }
+        public UsuariosDto Usuarios { get; set; }
     }
 
 }

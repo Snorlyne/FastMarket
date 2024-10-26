@@ -43,10 +43,10 @@ const IndexTabs: React.FC = () => {
             <IonIcon icon={homeOutline} />
             <IonLabel>Inicio</IonLabel>
           </IonTabButton>
-          <IonTabButton tab="busqueda" href="/dashboard/search">
+          {/* <IonTabButton tab="busqueda" href="/dashboard/search">
             <IonIcon icon={searchOutline} />
             <IonLabel>Buscar</IonLabel>
-          </IonTabButton>
+          </IonTabButton> */}
           <IonTabButton tab="profile" href="/dashboard/profile">
             <IonIcon icon={personOutline} />
             <IonLabel>Perfil</IonLabel>

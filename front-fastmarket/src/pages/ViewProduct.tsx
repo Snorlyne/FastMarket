@@ -3,7 +3,7 @@ import 'tailwindcss/tailwind.css';
 import Header from '../components/Header';
 import './css/product.css';
 
-const ViewProduct = () => {
+const ViewProduct: React.FC = () => {
   return (
     <div className=" view-product-container"> 
       <Header title="producto" />
