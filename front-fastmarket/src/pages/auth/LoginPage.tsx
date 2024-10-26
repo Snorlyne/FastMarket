@@ -58,7 +58,7 @@ const LoginPage: React.FC = () => {
     try {
       const response = await authService.login(req.correo, req.contraseña);
       if (response.isSuccess) {
-        history.push("/dashboard");
+        history.replace("/dashboard");
       } else {
         setModalData({
           type: "error",
@@ -68,6 +68,7 @@ const LoginPage: React.FC = () => {
             setIsModalOpen(false);
           },
         });
+        setIsModalOpen(true);
       }
     } catch (error) {
       setModalData({
@@ -75,7 +76,7 @@ const LoginPage: React.FC = () => {
         title: "Error de inicio de sesión",
         message:
           "Ocurrió un error inesperado. Por favor, intenta de nuevo más tarde.",
-        onConfirm: () => {},
+        onConfirm: () => {setIsModalOpen(false);},
       });
     } finally {
       setIsLoading(false); // Desactivar loading
