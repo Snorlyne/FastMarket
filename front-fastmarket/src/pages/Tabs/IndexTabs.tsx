@@ -11,6 +11,11 @@ import { homeOutline, personOutline, searchOutline, settingsOutline } from "ioni
 import { Route, Redirect } from "react-router";
 import HomePage from "./HomePage";
 import ProfilePage from "./ProfilePage";
+import ViewMySale from "../ViewMyAnuncio";
+import ViewProduct from "../ViewProduct";
+
+/*         <Route exact path="/ViewMySale" component={ViewMySale} />
+ */
 
 const IndexTabs: React.FC = () => {
   return (
@@ -20,6 +25,10 @@ const IndexTabs: React.FC = () => {
           {/* Define las rutas de las páginas */}
           <Route path="/dashboard/home" component={HomePage} exact />
           <Route path="/dashboard/profile" component={ProfilePage} exact />
+          <Route path="/dashboard/ViewMySale" component={ViewMySale} exact />
+          <Route path="/dashboard/ViewProduct" component={ViewProduct} exact />
+
+
           {/* Redirige a /home si no coincide ninguna ruta */}
           <Redirect exact path="/dashboard" to="/dashboard/home" />
         </IonRouterOutlet>

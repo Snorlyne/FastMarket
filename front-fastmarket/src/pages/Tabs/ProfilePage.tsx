@@ -9,6 +9,21 @@ import perfilService from "../../services/PerfilServices";
 import { IPersona } from "../../interfaces/IPersona";
 import Modal from "../../components/Modals/Modal";
 
+import {
+  IonTabs,
+  IonRouterOutlet,
+  IonTabBar,
+  IonTabButton,
+  IonIcon,
+  IonLabel,
+} from "@ionic/react";
+import { IonReactRouter } from "@ionic/react-router";
+
+import ViewMySale from "../ViewMyAnuncio";
+
+
+
+
 const ProfilePage: React.FC = () => {
   const history = useHistory();
   const auth = useAuth();
@@ -21,6 +36,8 @@ const ProfilePage: React.FC = () => {
     onConfirm: () => {},
   });
   const [isLoading, setIsLoading] = useState(true);
+
+  
 
   const fetchPerfil = async () => {
     try {
@@ -52,6 +69,9 @@ const ProfilePage: React.FC = () => {
   };
 
   return (
+
+
+
     <IonPage>
       {isLoading && (
         <div className="fixed inset-0 z-10 flex items-center justify-center bg-white">
@@ -92,7 +112,7 @@ const ProfilePage: React.FC = () => {
           <h3 className="text-lg font-semibold mb-2 text-black">Opciones:</h3>
 
           <div className="grid grid-cols-2 gap-2 place-items-center mx-auto">
-            <IonCard className="w-44 rounded-xl">
+            <IonCard className="w-44 rounded-xl"  onClick={() => history.push("/ViewMyVentas")}>
               <IonCardHeader>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -111,7 +131,8 @@ const ProfilePage: React.FC = () => {
                 <IonCardTitle>Mis ventas</IonCardTitle>
               </IonCardHeader>
             </IonCard>
-            <IonCard className="w-44 rounded-xl">
+
+            <IonCard className="w-44 rounded-xl"  onClick={() => history.push("/ViewMyAnuncio")}>
               <IonCardHeader>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"

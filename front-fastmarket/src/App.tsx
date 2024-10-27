@@ -44,6 +44,9 @@ import IndexTabs from "./pages/Tabs/IndexTabs";
 import {AuthProvider } from "./services/auth/AuthContext";
 import PrivateRoute from "./services/auth/PrivateRoute";
 import ViewProduct from "./pages/ViewProduct";
+import ViewMyAnuncio from "./pages/ViewMyAnuncio";
+import ProductCreate from "./pages/ViewProductCreate";
+import ViewMyVentas from "./pages/ViewMyVentas";
 
 
 setupIonicReact();
@@ -57,7 +60,6 @@ const App: React.FC = () => {
             <Route exact path="/login" component={LoginPage} />
             <Route exact path="/register" component={RegisterPage} />
             <PrivateRoute path="/dashboard" component={IndexTabs} />
-            <PrivateRoute path="*/anuncio/:id" component={ViewProduct} />
             <Redirect exact from="/" to="/login" />
           </IonRouterOutlet>
         </IonReactRouter>
