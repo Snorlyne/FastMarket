@@ -1,4 +1,5 @@
 ﻿using Domain.Dto;
+using FastMarketBackEnd.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
@@ -31,7 +32,22 @@ namespace FastMarketBackEnd.Controllers
             var response = await _ofertasServices.ObtenerOferta(id);
             return Ok(response);
         }
-
+        // GET api/ofertas/usuario
+        [HttpGet("byToken")]
+        [Authorize]
+        public async Task<IActionResult> GetOfertasDelUsuario()
+        {
+            try
+            {
+                int idPersona = TokenHelper.ObtenerIdPersona(User);
+                var response = await _ofertasServices.ObtenerOfertasUsuario(idPersona);
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("Ocurrió un error: " + ex.Message);
+            }
+        }
         // POST api/<OfertasController>
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] OfertasDto request)

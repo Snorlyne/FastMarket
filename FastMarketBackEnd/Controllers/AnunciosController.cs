@@ -27,8 +27,25 @@ namespace FastMarketBackEnd.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)
         {
-            var response = await _anunciosServices.ObtenerAnuncio(id);
+            int idPersona = TokenHelper.ObtenerIdPersona(User);
+            var response = await _anunciosServices.ObtenerAnuncio(id, idPersona);
             return Ok(response);
+        }
+        // GET: api/<AnunciosUsuarioController>
+        [HttpGet("byToken")]
+        [Authorize]
+        public async Task<IActionResult> GetAnunciosPorUsuario()
+        {
+            try
+            {
+                int idPersona = TokenHelper.ObtenerIdPersona(User);
+                var response = await _anunciosServices.ObtenerAnunciosUsuario(idPersona);
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("Ocurrió un error al obtener los anuncios: " + ex.Message);
+            }
         }
         // POST api/<AnunciosController>
         [HttpPost]

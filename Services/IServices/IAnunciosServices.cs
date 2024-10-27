@@ -12,7 +12,8 @@ namespace Services.IServices
     public interface IAnunciosServices
     {
         Task<Response<List<AnunciosDto>>> ObtenerAnuncios();
-        Task<Response<AnunciosDto>> ObtenerAnuncio(int id);
+        Task<Response<AnunciosDto>> ObtenerAnuncio(int id, int idPersona);
+        Task<Response<List<AnunciosDto>>> ObtenerAnunciosUsuario(int idPersona);
         Task<Response<AnunciosDto>> CrearAnuncio(AnunciosDto request, int idPersona);
         Task<Response<AnunciosDto>> ActualizarAnuncio(int id, AnunciosDto request);
         Task<Response<AnunciosDto>> EliminarAnuncio(int id);
