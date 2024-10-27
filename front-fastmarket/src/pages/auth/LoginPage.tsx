@@ -82,6 +82,8 @@ const LoginPage: React.FC = () => {
           "Ocurrió un error inesperado. Por favor, intenta de nuevo más tarde.",
         onConfirm: () => {setIsModalOpen(false);},
       });
+    }finally {
+      setIsLoading(false); // Desactivar loading
     }
   };
 
@@ -89,17 +91,12 @@ const LoginPage: React.FC = () => {
     <IonPage className="bg-gray-800 h-screen w-screen flex items-center justify-center">
       <div className="flex justify-center items-center w-11/12">
         <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-sm">
-          {/* Título */}
           <h2 className="text-2xl font-bold text-green-500 text-center mb-4">
             FastMarket
           </h2>
-
-          {/* Subtítulo */}
           <p className="text-center text-gray-500 mb-6">
             Bienvenido a una aplicación de subastas!
           </p>
-
-          {/* Input de correo electrónico */}
           <div className="mb-4">
             <input
               type="email"

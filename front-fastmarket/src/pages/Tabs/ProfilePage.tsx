@@ -1,15 +1,18 @@
-import { IonPage } from "@ionic/react";
+import { IonPage, useIonViewDidEnter } from "@ionic/react";
 import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router";
 import { IonCard, IonCardHeader, IonCardTitle } from "@ionic/react";
 import LoadingWave from "../../components/Loader";
 import authService from "../../services/AuthService";
 import { useAuth } from "../../services/auth/AuthContext";
+import perfilService from "../../services/PerfilServices";
+import { IPersona } from "../../interfaces/IPersona";
+import Modal from "../../components/Modals/Modal";
 
 const ProfilePage: React.FC = () => {
-  const email = "lian.erick@example.com";
   const history = useHistory();
   const auth = useAuth();
+  const [perfil, setPerfil] = useState<IPersona | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalData, setModalData] = useState({
     type: "info",
@@ -19,25 +22,29 @@ const ProfilePage: React.FC = () => {
   });
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
+  const fetchPerfil = async () => {
+    try {
+      setIsLoading(true);
+      const response = await perfilService.getPerfil();
+      if (response.isSuccess && response.result) {
+        setPerfil(response.result);
+        console.log("Perfil obtenidos:", response.result);
+      } else {
+        console.log("Error fetching perfil: " + response.result);
+      }
+    } catch (error) {
+      console.error("Error fetching perfil:", error);
+    } finally {
       setIsLoading(false);
-    }, 1000);
-
-    return () => clearTimeout(timer);
-  }, []);
-  if (isLoading) {
-    return (
-      <div className="fixed inset-0 flex items-center justify-center bg-white">
-        <LoadingWave />
-      </div>
-    );
-  }
-
+    }
+  };
+  useIonViewDidEnter(() => {
+    fetchPerfil();
+  });
   const logOut = async () => {
     setIsModalOpen(true);
     setModalData({
-      type: "info",
+      type: "warning",
       title: "¿Cerrar Sesión?",
       message: "Estás a punto de cerrar tu sesión. ¿Estás seguro?",
       onConfirm: () => auth.logout(),
@@ -46,8 +53,12 @@ const ProfilePage: React.FC = () => {
 
   return (
     <IonPage>
+      {isLoading && (
+        <div className="fixed inset-0 z-10 flex items-center justify-center bg-white">
+          <LoadingWave />
+        </div>
+      )}
       <div className="p-4 bg-white h-screen">
-        {/* Sección de avatar y nombre */}
         <IonCard
           className="bg-white shadow-lg rounded-lg max-w-sm"
           onClick={() => history.push("/ViewProfile")}
@@ -60,11 +71,9 @@ const ProfilePage: React.FC = () => {
                 className="w-16 h-16 rounded-full mr-6"
               />
               <IonCardTitle className="text-xl font-bold text-gray-800">
-                Lian Erick Aguirre Sierra
+                {perfil?.nombre} {" "} {perfil?.apellido}
               </IonCardTitle>
             </div>
-            {/* Input para Correo Electrónico */}
-
             <div className="mb-4">
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Correo Electrónico
@@ -73,14 +82,12 @@ const ProfilePage: React.FC = () => {
                 type="email"
                 readOnly
                 className="w-full px-4 py-2 rounded-lg text-gray-700 bg-gray-200 border-b-2"
-                value={email}
+                value={perfil?.usuarios.correo}
                 placeholder="Correo Electrónico..."
               />
             </div>
           </IonCardHeader>
         </IonCard>
-
-        {/* Opciones de navegación */}
         <div className="mb-6">
           <h3 className="text-lg font-semibold mb-2 text-black">Opciones:</h3>
 
@@ -104,7 +111,6 @@ const ProfilePage: React.FC = () => {
                 <IonCardTitle>Mis ventas</IonCardTitle>
               </IonCardHeader>
             </IonCard>
-
             <IonCard className="w-44 rounded-xl">
               <IonCardHeader>
                 <svg
@@ -124,7 +130,6 @@ const ProfilePage: React.FC = () => {
                 <IonCardTitle>Mis Anuncios</IonCardTitle>
               </IonCardHeader>
             </IonCard>
-
             <IonCard className="w-44 rounded-xl">
               <IonCardHeader>
                 <svg
@@ -146,7 +151,6 @@ const ProfilePage: React.FC = () => {
             </IonCard>
           </div>
         </div>
-
         <div className="mt-6">
           <button
             className="w-full bg-red-500 text-white py-2 rounded-lg hover:bg-red-600 transition flex justify-center"
@@ -169,6 +173,14 @@ const ProfilePage: React.FC = () => {
             Cerrar sesión
           </button>
         </div>
+        <Modal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          type={modalData.type as any}
+          title={modalData.title}
+          message={modalData.message}
+          onConfirm={modalData.onConfirm}
+        />
       </div>
     </IonPage>
   );

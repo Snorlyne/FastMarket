@@ -13,12 +13,13 @@ const HomePage: React.FC = () => {
 
   const fetchAnuncios = async () => {
     try {
+      setIsLoading(true); // Start loading animation
       const response = await anunciosService.getAll();
       if (response.isSuccess && response.result) {
         setAnuncios(response.result); // Set the anuncios state
         console.log("Anuncios obtenidos:", response.result); // Log the fetched anuncios for debugging purposes
       } else {
-        alert("Error fetching anuncios: " + response.message);
+        console.log("Error fetching anuncios: " + response.message);
       }
     } catch (error) {
       console.error("Error fetching anuncios:", error);
@@ -31,13 +32,11 @@ const HomePage: React.FC = () => {
     fetchAnuncios();
   });
 
-  if (isLoading) {
-  }
 
   return (
     <IonPage>
       {isLoading && (
-        <div className="fixed inset-0 flex items-center justify-center bg-white">
+        <div className="fixed inset-0 z-10 flex items-center justify-center bg-white">
           <LoadingWave />
         </div>
       )}
@@ -72,7 +71,6 @@ const HomePage: React.FC = () => {
                     </span>
                   </p>
                   <div>
-                    {/* Display product images */}
                     {anuncio.productos.fotos.length > 0 && (
                       <img
                         src={anuncio.productos.fotos[0].url}
@@ -108,7 +106,6 @@ const HomePage: React.FC = () => {
                     {anuncio.productos.nombre ?? "Sin nombre"}
                   </h3>
                   <div>
-                    {/* Display product images */}
                     {anuncio.productos.fotos.length > 0 && (
                       <img
                         src={anuncio.productos.fotos[0].url}

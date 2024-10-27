@@ -24,7 +24,7 @@ namespace Services.Services
             try
             {
                 var response = await _context.personas
-                    .Include(p => p.Usuario) // Incluir la relación con Usuarios
+                    .Include(p => p.Usuario) 
                     .Select(p => new PersonasDto
                     {
                         Id = p.Id,
@@ -50,7 +50,9 @@ namespace Services.Services
 
         public async Task<PersonasDto> ObtenerPersonaPorId(int id)
         {
-            var persona = await _context.personas.FindAsync(id);
+            var persona = await _context.personas
+                .Include(p => p.Usuario)
+                .FirstOrDefaultAsync(x => x.Id == id);
             if (persona == null) return null;
 
             return new PersonasDto
@@ -58,7 +60,13 @@ namespace Services.Services
                 Id = persona.Id,
                 Nombre = persona.Nombre,
                 Apellido = persona.Apellido,
-                IdUsuario = persona.IdUsuario
+                IdUsuario = persona.IdUsuario,
+                Usuarios = new UsuariosDto
+                {
+                    Id = persona.Usuario.Id,
+                    Correo = persona.Usuario.Correo,
+                    IdRol = persona.Usuario.IdRol,
+                },
             };
         }
 

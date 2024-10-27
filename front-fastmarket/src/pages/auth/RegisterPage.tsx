@@ -13,6 +13,7 @@ const RegisterPage: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false); // Control del modal
+  const [isLoading, setIsLoading] = useState(false);
   const [modalData, setModalData] = useState({
     type: "info", // Por defecto
     title: "",
@@ -185,10 +186,22 @@ const RegisterPage: React.FC = () => {
 
           {/* Botón Crear Cuenta */}
           <button
-            className="w-full bg-green-500 text-white py-2 rounded-lg hover:bg-green-600 transition-colors"
+            className={`w-full bg-green-500 text-white py-2 rounded-lg hover:bg-green-600 transition-colors mt-4 relative ${
+              isLoading ? 'cursor-not-allowed opacity-70' : ''
+            }`}
             onClick={handleRegister}
+            disabled={isLoading}
           >
-            Crear cuenta
+            <span className={isLoading ? 'invisible' : ''}>
+              Crear cuenta
+            </span>
+            
+            {/* Loading Spinner */}
+            {isLoading && (
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white"></div>
+              </div>
+            )}
           </button>
 
           <p className="text-center mt-4 text-gray-600">

@@ -1,4 +1,5 @@
 ﻿using Domain.Dto;
+using FastMarketBackEnd.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Services.IServices;
@@ -26,10 +27,12 @@ namespace FastMarketBackEnd.Controllers
             return Ok(personas);
         }
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult<PersonasDto>> GetPersona(int id)
+        [HttpGet("byToken")]
+        public async Task<ActionResult<PersonasDto>> GetPersona()
         {
-            var persona = await _personasServices.ObtenerPersonaPorId(id);
+            int idPersona = TokenHelper.ObtenerIdPersona(User);
+
+            var persona = await _personasServices.ObtenerPersonaPorId(idPersona);
             if (persona == null)
             {
                 return NotFound();
