@@ -63,7 +63,7 @@ const LoginPage: React.FC = () => {
         auth.login(); // Iniciar sesión en el contexto de autenticación
         history.replace('/dashboard');
       } else {
-        setIsModalOpen(true);
+        setIsLoading(false); // Detener loading en caso de error
         setModalData({
           type: "error",
           title: "Error de inicio de sesión",
@@ -72,17 +72,27 @@ const LoginPage: React.FC = () => {
             setIsModalOpen(false);
           },
         });
+        setIsModalOpen(true);
       }
     } catch (error) {
-      setIsModalOpen(true);
+      setIsLoading(false); // Detener loading en caso de error
       setModalData({
         type: "error",
         title: "Error de inicio de sesión",
         message:
           "Ocurrió un error inesperado. Por favor, intenta de nuevo más tarde.",
-        onConfirm: () => {setIsModalOpen(false);},
+        onConfirm: () => {
+          setIsModalOpen(false);
+        },
       });
+      setIsModalOpen(true);
     }
+  };
+
+  // Función para manejar el cierre del modal y resetear el estado si es necesario
+  const handleModalClose = () => {
+    setIsModalOpen(false);
+    setIsLoading(false); // Aseguramos que el loading se detenga al cerrar el modal
   };
 
   return (
@@ -123,7 +133,7 @@ const LoginPage: React.FC = () => {
             />
           </div>
 
-          {/* Botón de inicio de sesión con loading spinner */}
+          {/* Botón de inicio de sesión con loading spinner mejorado */}
           <button
             className={`w-full bg-green-500 text-white py-2 rounded-lg hover:bg-green-600 transition-colors mt-4 relative ${
               isLoading ? 'cursor-not-allowed opacity-70' : ''
@@ -158,14 +168,17 @@ const LoginPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Modal de confirmación */}
+      {/* Modal de confirmación con manejo mejorado */}
       <Modal
         isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
+        onClose={handleModalClose}
         type={modalData.type as any}
         title={modalData.title}
         message={modalData.message}
-        onConfirm={modalData.onConfirm}
+        onConfirm={() => {
+          modalData.onConfirm();
+          setIsLoading(false); // Aseguramos que el loading se detenga al confirmar
+        }}
       />
     </IonPage>
   );
