@@ -9,22 +9,12 @@ import perfilService from "../../services/PerfilServices";
 import { IPersona } from "../../interfaces/IPersona";
 import Modal from "../../components/Modals/Modal";
 
-import {
-  IonTabs,
-  IonRouterOutlet,
-  IonTabBar,
-  IonTabButton,
-  IonIcon,
-  IonLabel,
-} from "@ionic/react";
-import { IonReactRouter } from "@ionic/react-router";
-
-import ViewMySale from "../ViewMyAnuncio";
 
 
 
 
 const ProfilePage: React.FC = () => {
+  const [email, setEmail ] = useState("")
   const history = useHistory();
   const auth = useAuth();
   const [perfil, setPerfil] = useState<IPersona | null>(null);
@@ -45,6 +35,7 @@ const ProfilePage: React.FC = () => {
       const response = await perfilService.getPerfil();
       if (response.isSuccess && response.result) {
         setPerfil(response.result);
+        setEmail(response.result.usuarios.correo);
         console.log("Perfil obtenidos:", response.result);
       } else {
         console.log("Error fetching perfil: " + response.result);
@@ -69,8 +60,6 @@ const ProfilePage: React.FC = () => {
   };
 
   return (
-
-
 
     <IonPage>
       {isLoading && (
@@ -102,7 +91,7 @@ const ProfilePage: React.FC = () => {
                 type="email"
                 readOnly
                 className="w-full px-4 py-2 rounded-lg text-gray-700 bg-gray-200 border-b-2"
-                value={perfil?.usuarios.correo}
+                value={email}
                 placeholder="Correo Electrónico..."
               />
             </div>
@@ -112,7 +101,7 @@ const ProfilePage: React.FC = () => {
           <h3 className="text-lg font-semibold mb-2 text-black">Opciones:</h3>
 
           <div className="grid grid-cols-2 gap-2 place-items-center mx-auto">
-            <IonCard className="w-44 rounded-xl"  onClick={() => history.push("/ViewMyVentas")}>
+            <IonCard className="w-44 rounded-xl"  onClick={() => history.push("/misAnuncios")}>
               <IonCardHeader>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -132,7 +121,7 @@ const ProfilePage: React.FC = () => {
               </IonCardHeader>
             </IonCard>
 
-            <IonCard className="w-44 rounded-xl"  onClick={() => history.push("/ViewMyAnuncio")}>
+            <IonCard className="w-44 rounded-xl"  onClick={() => history.push("/dashboard/profile/misAnuncios")}>
               <IonCardHeader>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -194,6 +183,7 @@ const ProfilePage: React.FC = () => {
             Cerrar sesión
           </button>
         </div>
+      </div>
         <Modal
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
@@ -202,8 +192,8 @@ const ProfilePage: React.FC = () => {
           message={modalData.message}
           onConfirm={modalData.onConfirm}
         />
-      </div>
     </IonPage>
+    
   );
 };
 
