@@ -14,6 +14,7 @@ import ProfilePage from "./ProfilePage";
 import ViewMySale from "../ViewMyAnuncio";
 import ViewProduct from "../ViewProduct";
 import ViewMyAnuncio from "../ViewMyAnuncio";
+import ViewProductCreate from "../ViewProductCreate";
 
 /*         <Route exact path="/ViewMySale" component={ViewMySale} />
  */
@@ -27,6 +28,7 @@ const IndexTabs: React.FC = () => {
           <Route path="/dashboard/home" component={HomePage} exact />
           <Route path="/dashboard/profile" component={ProfilePage} exact />
           <Route path="/dashboard/profile/misAnuncios" component={ViewMyAnuncio} exact />
+          <Route path="/dashboard/profile/misAnuncios/publicarAnuncio" component={ViewProductCreate} exact />
           {/* Redirige a /home si no coincide ninguna ruta */}
           <Redirect exact path="/dashboard" to="/dashboard/home" />
         </IonRouterOutlet>

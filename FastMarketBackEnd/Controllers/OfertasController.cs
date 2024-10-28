@@ -51,31 +51,31 @@ namespace FastMarketBackEnd.Controllers
         }
         // POST api/<OfertasController>
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] CrearOfertaRequest request)
-        {
-            // Validar la solicitud y asegurar que contenga la lista de IDs de productos
-            if (request == null || request.ProductoIds == null || !request.ProductoIds.Any())
-            {
-                return BadRequest("La solicitud es inválida. Asegúrate de incluir los IDs de los productos.");
-            }
+        //public async Task<IActionResult> Post([FromBody] CrearOfertaRequest request)
+        //{
+        //    // Validar la solicitud y asegurar que contenga la lista de IDs de productos
+        //    if (request == null || request.ProductoIds == null || !request.ProductoIds.Any())
+        //    {
+        //        return BadRequest("La solicitud es inválida. Asegúrate de incluir los IDs de los productos.");
+        //    }
 
-            var response = await _ofertasServices.CrearOferta(request.Oferta, request.ProductoIds);
-            return Ok(response);
-        }
+        //    var response = await _ofertasServices.CrearOferta(request.Oferta, request.ProductoIds);
+        //    return Ok(response);
+        //}
 
-        // PUT api/<OfertasController>/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> Put(int id, [FromBody] ActualizarOfertaRequest request)
-        {
-            // Validar la solicitud y asegurar que contenga la lista de IDs de productos
-            if (request == null || request.ProductoIds == null || !request.ProductoIds.Any())
-            {
-                return BadRequest("La solicitud es inválida. Asegúrate de incluir los IDs de los productos.");
-            }
+        //// PUT api/<OfertasController>/5
+        //[HttpPut("{id}")]
+        //public async Task<IActionResult> Put(int id, [FromBody] ActualizarOfertaRequest request)
+        //{
+        //    // Validar la solicitud y asegurar que contenga la lista de IDs de productos
+        //    if (request == null || request.ProductoIds == null || !request.ProductoIds.Any())
+        //    {
+        //        return BadRequest("La solicitud es inválida. Asegúrate de incluir los IDs de los productos.");
+        //    }
 
-            var response = await _ofertasServices.ActualizarOferta(id, request.Oferta, request.ProductoIds);
-            return Ok(response);
-        }
+        //    var response = await _ofertasServices.ActualizarOferta(id, request.Oferta, request.ProductoIds);
+        //    return Ok(response);
+        //}
 
         // DELETE api/<OfertasController>/5
         [HttpDelete("{id}")]

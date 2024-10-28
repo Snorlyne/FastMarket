@@ -9,6 +9,6 @@ export interface IAnuncio {
     precio_anuncio: number;
     descripcion: string;
     tipo: string;
-    prodcutos: IProducto[];
+    productos: IProducto;
     localizacion: Ilocalizacion
 }
