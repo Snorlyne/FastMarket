@@ -81,6 +81,11 @@ namespace Repository.Context
                 .HasOne(p => p.Usuario)
                 .WithMany()
                 .HasForeignKey(p => p.IdUsuario);
+            modelBuilder.Entity<Ofertas>()
+                  .HasOne(o => o.Anuncio)
+                  .WithMany(a => a.Ofertas)
+                  .HasForeignKey(o => o.idAnuncio)
+                  .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

@@ -27,9 +27,8 @@ namespace Domain.Entities
         [Required]
         public decimal precio_anuncio { get; set; }
         public string Descripcion { get; set; }
-
         [Required]
         public string Tipo { get; set; }
-        public Ofertas Ofertas { get; set; } = null!;
+        public virtual ICollection<Ofertas> Ofertas { get; set; } = new List<Ofertas>();
     }
 }
