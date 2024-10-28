@@ -49,6 +49,20 @@ namespace FastMarketBackEnd.Controllers
                 return BadRequest("Ocurrió un error: " + ex.Message);
             }
         }
+        // GET api/ofertas/anuncio/{idAnuncio}
+        [HttpGet("anuncio/{idAnuncio}")]
+        public async Task<IActionResult> GetOfertasPorAnuncio(int idAnuncio)
+        {
+            try
+            {
+                var response = await _ofertasServices.ObtenerOfertasPorAnuncio(idAnuncio);
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("Ocurrió un error: " + ex.Message);
+            }
+        }
         // POST api/<OfertasController>
         [HttpPost]
         //public async Task<IActionResult> Post([FromBody] CrearOfertaRequest request)
