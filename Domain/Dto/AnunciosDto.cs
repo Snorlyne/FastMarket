@@ -12,13 +12,13 @@ namespace Domain.Dto
         public PersonasDto? Personas { get; set; }
         public ProductosDto Productos { get; set; } = null!;
         public LocalizacionesDto Localizacion { get; set; } = null!;
-        public OfertasDto Ofertas { get; set; } = null!;
+        public List<OfertasDto> Ofertas { get; set; } = new();
         public DateTime fecha_publicacion { get; set; }
         public DateTime fecha_expiracion { get; set; }
         public string Estado { get; set; }
         public decimal precio_anuncio { get; set; }
         public string Descripcion { get; set; } = null!;
         public string Tipo { get; set; }
-
+        public bool Propietario { get; set; }
     }
 }

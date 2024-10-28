@@ -76,10 +76,16 @@ namespace Repository.Context
                 .HasOne(op => op.Producto)
                 .WithMany() // Si no necesitas la relación inversa, puedes dejarlo así
                 .HasForeignKey(op => op.productos_id);
+
             modelBuilder.Entity<Personas>()
                 .HasOne(p => p.Usuario)
                 .WithMany()
                 .HasForeignKey(p => p.IdUsuario);
+            modelBuilder.Entity<Ofertas>()
+                  .HasOne(o => o.Anuncio)
+                  .WithMany(a => a.Ofertas)
+                  .HasForeignKey(o => o.idAnuncio)
+                  .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

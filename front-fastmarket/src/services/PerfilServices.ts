@@ -1,15 +1,13 @@
-import { IAnuncio } from "../interfaces/IAnuncio";
 import { IResponse } from "../interfaces/IResponse";
 import authService from "./AuthService";
 
 const API_URL = import.meta.env.VITE_APP_API_URL;
 
-const anunciosService = {
-    getAll: async (): Promise<IResponse> => {
+const perfilService = {
+    getPerfil: async (): Promise<IResponse> => {
         const token = await authService.getToken();
-        console.log(token);
         try {
-            const response = await fetch(`${API_URL}anuncios`, {
+            const response = await fetch(`${API_URL}personas/byToken`, {
                 method: 'GET',
                 headers: { 
                     'Authorization': `Bearer ${token}`,
@@ -17,12 +15,12 @@ const anunciosService = {
                 }
             });
             const data = await response.json();
-            return { isSuccess: true, message: "", result: data.result };
+            return { isSuccess: true, message: "", result: data };
         } catch (error) {
             console.error('Unexpected error:', (error as Error).message);
-            return { isSuccess: false, message: 'Error al obtener anuncios', result: null };
+            return { isSuccess: false, message: 'Error al obtener perfil', result: (error as Error)};
         }
     }
 }
 
-export default anunciosService;
+export default perfilService;

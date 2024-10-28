@@ -89,15 +89,33 @@ namespace Services.Services
                 return new Response<List<AnunciosDto>>("Ocurrió un error al obtener los anuncios: " + ex.Message);
             }
         }
-        public async Task<Response<AnunciosDto>> ObtenerAnuncio(int id)
+        public async Task<Response<AnunciosDto>> ObtenerAnuncio(int id, int idPersona)
         {
             try
             {
                 Anuncios anuncio = await _dBContext.anuncios
                      .Include(a => a.Localizacion)
+                     .Include(a => a.Ofertas)
                      .Include(a => a.Personas)
                      .Include(a => a.Productos)
                      .FirstOrDefaultAsync(a => a.Id == id) ?? throw new Exception("Anuncio no encontrado");
+
+                bool esPropietario = anuncio.Personas.Id == idPersona ? true : false;
+
+                var topOfertas = anuncio.Ofertas
+                    .OrderByDescending(o => o.monto)
+                    .Take(3)
+                    .Select(o => new OfertasDto
+                    {
+                        Id = o.Id,
+                        idPersona = o.idPersona,
+                        idAnuncio = o.idAnuncio,
+                        monto = o.monto,
+                        fecha_oferta = o.fecha_oferta,
+                        estado = o.estado,
+                        Tipo = o.Tipo
+                    })
+                    .ToList();
 
                 AnunciosDto anuncioDto = new ()
                 {
@@ -128,6 +146,8 @@ namespace Services.Services
                         Latitud = anuncio.Localizacion.Latitud,
                         Longitud = anuncio.Localizacion.Longitud
                     },
+                    Ofertas = topOfertas,
+                    Propietario = esPropietario,
                     fecha_publicacion = anuncio.fecha_publicacion,
                     fecha_expiracion = anuncio.fecha_expiracion,
                     Estado = anuncio.Estado,
@@ -141,6 +161,74 @@ namespace Services.Services
             catch (Exception e)
             {
                 return new Response<AnunciosDto>("Ocurrió un error al obtener el anuncio: " + e.Message);
+            }
+        }
+        public async Task<Response<List<AnunciosDto>>> ObtenerAnunciosUsuario(int idPersona)
+        {
+            try
+            {
+                List<AnunciosDto> response = await _dBContext.anuncios
+                    .Where(a => a.IdPersona == idPersona) // Filtramos por idPersona
+                    .Include(a => a.Localizacion)
+                    .Include(a => a.Personas)
+                    .Include(a => a.Productos)
+                        .ThenInclude(p => p.Fotos)
+                    .Include(a => a.Productos)
+                        .ThenInclude(p => p.ProductosEtiquetas)
+                            .ThenInclude(pe => pe.Etiquetas)
+                    .Select(a => new AnunciosDto
+                    {
+                        Id = a.Id,
+                        Personas = new PersonasDto
+                        {
+                            Id = a.Personas.Id,
+                            Nombre = a.Personas.Nombre,
+                            Apellido = a.Personas.Apellido,
+                            IdUsuario = a.Personas.IdUsuario
+                        },
+                        Productos = new ProductosDto
+                        {
+                            Id = a.Productos.Id,
+                            Nombre = a.Productos.Nombre,
+                            Descripcion = a.Productos.Descripcion,
+                            Precio = a.Productos.Precio,
+                            Cantidad = a.Productos.Cantidad,
+                            Tipo = a.Productos.Tipo,
+                            Fotos = a.Productos.Fotos.Select(f => new FotosDto
+                            {
+                                Id = f.Id,
+                                Url = f.Url
+                            }).ToList(),
+                            Etiquetas = a.Productos.ProductosEtiquetas
+                                .Select(pe => new EtiquetasDto
+                                {
+                                    Nombre = pe.Etiquetas.Nombre
+                                }).ToList()
+                        },
+                        Localizacion = new LocalizacionesDto
+                        {
+                            Id = a.Localizacion.Id,
+                            Ciudad = a.Localizacion.Ciudad,
+                            Estado = a.Localizacion.Estado,
+                            Pais = a.Localizacion.Pais,
+                            CodigoPostal = a.Localizacion.codigo_postal,
+                            Latitud = a.Localizacion.Latitud,
+                            Longitud = a.Localizacion.Longitud
+                        },
+                        fecha_publicacion = a.fecha_publicacion,
+                        fecha_expiracion = a.fecha_expiracion,
+                        Estado = a.Estado,
+                        precio_anuncio = a.precio_anuncio,
+                        Descripcion = a.Descripcion,
+                        Tipo = a.Tipo
+                    })
+                    .ToListAsync();
+
+                return new Response<List<AnunciosDto>>(response);
+            }
+            catch (Exception ex)
+            {
+                return new Response<List<AnunciosDto>>("Ocurrió un error al obtener los anuncios: " + ex.Message);
             }
         }
         public async Task<Response<AnunciosDto>> CrearAnuncio(AnunciosDto request, int idPersona)

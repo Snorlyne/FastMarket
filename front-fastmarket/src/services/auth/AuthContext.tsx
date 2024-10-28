@@ -14,15 +14,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
-  const history = useHistory(); // useHistory debe estar dentro del componente
+  const history = useHistory();
 
   useEffect(() => {
     const checkToken = async () => {
       const token = await authService.getToken();
-      setIsAuthenticated(!!token);
+      if (token) {
+        setIsAuthenticated(true);
+        history.replace("/dashboard"); // Redirige si hay token
+      }
     };
     checkToken();
-  }, []);
+  }, [history]); // Asegura que se incluya 'history' como dependencia para evitar advertencias de hooks
 
   const login = () => {
     setIsAuthenticated(true);

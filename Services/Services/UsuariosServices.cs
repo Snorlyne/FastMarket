@@ -100,9 +100,10 @@ namespace Services.Services
                 var nuevoUsuario = new Usuarios
                 {
                     Correo = usuarioDto.Correo,
-                    Contraseña = usuarioDto.Contraseña,
                     IdRol = usuarioDto.IdRol
                 };
+
+                nuevoUsuario.Contraseña = _passwordHasher.HashPassword(nuevoUsuario, usuarioDto.Contraseña);
 
                 // Agregar usuario al contexto y guardar cambios
                 _context.usuarios.Add(nuevoUsuario);

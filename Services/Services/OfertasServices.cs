@@ -79,7 +79,33 @@ namespace Services.Services
             }
         }
 
-        public async Task<Response<OfertasDto>> CrearOferta(OfertasDto request, List<int> productoIds)
+        public async Task<Response<List<OfertasDto>>> ObtenerOfertasUsuario(int idPersona)
+        {
+            try
+            {
+                // Obtener ofertas filtrando por idPersona
+                var ofertas = await _context.ofertas
+                    .Where(o => o.idPersona == idPersona) // Filtrar por el ID de la persona
+                    .Select(o => new OfertasDto
+                    {
+                        Id = o.Id,
+                        idPersona = o.idPersona,
+                        idAnuncio = o.idAnuncio,
+                        monto = o.monto,
+                        fecha_oferta = o.fecha_oferta,
+                        estado = o.estado,
+                        Tipo = o.Tipo
+                    })
+                    .ToListAsync();
+
+                return new Response<List<OfertasDto>>(ofertas);
+            }
+            catch (Exception ex)
+            {
+                return new Response<List<OfertasDto>>("Error al obtener las ofertas del usuario: " + ex.Message);
+            }
+        }
+        public async Task<Response<OfertasDto>> CrearOferta(OfertasDto request)
         {
             try
             {
