@@ -231,6 +231,123 @@ namespace Services.Services
                 return new Response<List<AnunciosDto>>("Ocurrió un error al obtener los anuncios: " + ex.Message);
             }
         }
+        public async Task<Response<List<AnunciosDto>>> ObtenerAnunciosFiltrados(
+         string? nombreProducto = null,
+         string? etiquetas = null,
+         string? ciudad = null,
+         string? estado = null,
+         string? pais = null,
+         string? codigoPostal = null)
+        {
+            try
+            {
+                var query = _dBContext.anuncios
+                    .Include(a => a.Localizacion)
+                    .Include(a => a.Personas)
+                    .Include(a => a.Productos)
+                        .ThenInclude(p => p.Fotos)
+                    .Include(a => a.Productos)
+                        .ThenInclude(p => p.ProductosEtiquetas)
+                            .ThenInclude(pe => pe.Etiquetas)
+                    .AsQueryable();
+
+                // Normalizar el nombre del producto
+                if (!string.IsNullOrEmpty(nombreProducto))
+                {
+                    // Normalizar y filtrar
+                    var normalizedNombre = nombreProducto.Trim().ToLower();
+                    query = query.Where(a => a.Productos.Nombre.ToLower().Contains(normalizedNombre));
+                }
+
+                // Normalizar y aplicar filtro por etiquetas si se proporciona
+                if (!string.IsNullOrEmpty(etiquetas))
+                {
+                    var etiquetasList = etiquetas.Split(',').Select(e => e.Trim().ToLower()).ToList();
+                    query = query.Where(a => a.Productos.ProductosEtiquetas
+                        .Any(pe => etiquetasList.Contains(pe.Etiquetas.Nombre.ToLower())));
+                }
+
+                // Normalizar y aplicar filtro por ciudad, estado, país y código postal de localización
+                if (!string.IsNullOrEmpty(ciudad))
+                {
+                    var normalizedCiudad = ciudad.Trim().ToLower();
+                    query = query.Where(a => a.Localizacion.Ciudad.ToLower().Contains(normalizedCiudad));
+                }
+
+                if (!string.IsNullOrEmpty(estado))
+                {
+                    var normalizedEstado = estado.Trim().ToLower();
+                    query = query.Where(a => a.Localizacion.Estado.ToLower().Contains(normalizedEstado));
+                }
+
+                if (!string.IsNullOrEmpty(pais))
+                {
+                    var normalizedPais = pais.Trim().ToLower();
+                    query = query.Where(a => a.Localizacion.Pais.ToLower().Contains(normalizedPais));
+                }
+
+                if (!string.IsNullOrEmpty(codigoPostal))
+                {
+                    var normalizedCodigoPostal = codigoPostal.Trim();
+                    query = query.Where(a => a.Localizacion.codigo_postal.Contains(normalizedCodigoPostal));
+                }
+
+                List<AnunciosDto> response = await query
+                    .Select(a => new AnunciosDto
+                    {
+                        Id = a.Id,
+                        Personas = new PersonasDto
+                        {
+                            Id = a.Personas.Id,
+                            Nombre = a.Personas.Nombre,
+                            Apellido = a.Personas.Apellido,
+                            IdUsuario = a.Personas.IdUsuario
+                        },
+                        Productos = new ProductosDto
+                        {
+                            Id = a.Productos.Id,
+                            Nombre = a.Productos.Nombre,
+                            Descripcion = a.Productos.Descripcion,
+                            Precio = a.Productos.Precio,
+                            Cantidad = a.Productos.Cantidad,
+                            Tipo = a.Productos.Tipo,
+                            Fotos = a.Productos.Fotos.Select(f => new FotosDto
+                            {
+                                Id = f.Id,
+                                Url = f.Url
+                            }).ToList(),
+                            Etiquetas = a.Productos.ProductosEtiquetas
+                                .Select(pe => new EtiquetasDto
+                                {
+                                    Nombre = pe.Etiquetas.Nombre
+                                }).ToList()
+                        },
+                        Localizacion = new LocalizacionesDto
+                        {
+                            Id = a.Localizacion.Id,
+                            Ciudad = a.Localizacion.Ciudad,
+                            Estado = a.Localizacion.Estado,
+                            Pais = a.Localizacion.Pais,
+                            CodigoPostal = a.Localizacion.codigo_postal,
+                            Latitud = a.Localizacion.Latitud,
+                            Longitud = a.Localizacion.Longitud
+                        },
+                        fecha_publicacion = a.fecha_publicacion,
+                        fecha_expiracion = a.fecha_expiracion,
+                        Estado = a.Estado,
+                        precio_anuncio = a.precio_anuncio,
+                        Descripcion = a.Descripcion,
+                        Tipo = a.Tipo
+                    })
+                    .ToListAsync();
+
+                return new Response<List<AnunciosDto>>(response);
+            }
+            catch (Exception ex)
+            {
+                return new Response<List<AnunciosDto>>("Ocurrió un error al obtener los anuncios filtrados: " + ex.Message);
+            }
+        }
         public async Task<Response<AnunciosDto>> CrearAnuncio(AnunciosDto request, int idPersona)
         {
             using var transaction = await _dBContext.Database.BeginTransactionAsync();

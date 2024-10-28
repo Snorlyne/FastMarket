@@ -101,6 +101,32 @@ namespace Services.Services
                 return new Response<List<OfertasDto>>("Error al obtener las ofertas del usuario: " + ex.Message);
             }
         }
+        public async Task<Response<List<OfertasDto>>> ObtenerOfertasPorAnuncio(int idAnuncio)
+        {
+            try
+            {
+                // Obtener ofertas filtrando por idAnuncio
+                var ofertas = await _context.ofertas
+                    .Where(o => o.idAnuncio == idAnuncio) // Filtrar por el ID del anuncio
+                    .Select(o => new OfertasDto
+                    {
+                        Id = o.Id,
+                        idPersona = o.idPersona,
+                        idAnuncio = o.idAnuncio,
+                        monto = o.monto,
+                        fecha_oferta = o.fecha_oferta,
+                        estado = o.estado,
+                        Tipo = o.Tipo
+                    })
+                    .ToListAsync();
+
+                return new Response<List<OfertasDto>>(ofertas);
+            }
+            catch (Exception ex)
+            {
+                return new Response<List<OfertasDto>>("Error al obtener las ofertas del anuncio: " + ex.Message);
+            }
+        }
         public async Task<Response<OfertasDto>> CrearOferta(OfertasDto request)
         {
             try

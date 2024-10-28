@@ -13,6 +13,7 @@ namespace Services.IServices
         Task<Response<List<OfertasDto>>> ObtenerOfertas();
         Task<Response<OfertasDto>> ObtenerOferta(int id);
         Task<Response<List<OfertasDto>>> ObtenerOfertasUsuario(int idPersona);
+        Task<Response<List<OfertasDto>>> ObtenerOfertasPorAnuncio(int idAnuncio);
         Task<Response<OfertasDto>> CrearOferta(OfertasDto request);
         Task<Response<OfertasDto>> ActualizarOferta(int id, OfertasDto request);
         Task<Response<OfertasDto>> EliminarOferta(int id);
