@@ -6,7 +6,7 @@ import LoadingWave from "../components/Loader";
 import { IAnuncio } from "../interfaces/IAnuncio";
 import anunciosService from "../services/AnunciosServices";
 
-const ViewMyAnuncio: React.FC = () => {
+const MyAdvert: React.FC = () => {
   const history = useHistory();
   const [anuncios, setAnuncios] = useState<IAnuncio[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -44,7 +44,7 @@ const ViewMyAnuncio: React.FC = () => {
           <div className="flex items-center justify-center sticky top-0 z-10">
             <button
               className="w-80 mt-3 py-2.5 p-8 bg-green-500 text-white rounded-md hover:bg-green-700 transition-colors"
-              onClick={() => history.push("/dashboard/profile/misAnuncios/publicarAnuncio")}
+              onClick={() => history.push("/dashboard/profile/MyAdvert/ProductCreate")}
             >
               Crear publicación
             </button>
@@ -84,7 +84,7 @@ const ViewMyAnuncio: React.FC = () => {
                       </p>
                       <button
                         className="w-full bg-blue-500 text-white text-sm font-bold py-2 rounded-lg hover:bg-blue-800 transition-colors"
-                        onClick={() => history.push("/ViewProduct")}
+                       /*  onClick={() => history.push("/ViewProduct")} */
                       >
                         Entrar
                       </button>
@@ -104,4 +104,4 @@ const ViewMyAnuncio: React.FC = () => {
   );
 };
 
-export default ViewMyAnuncio;
+export default MyAdvert;

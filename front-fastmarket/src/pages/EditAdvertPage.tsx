@@ -15,7 +15,7 @@ interface ImageData {
   file?: File; // Optional since we may not have a File object for simulated images
 }
 
-const EditAnuncio: React.FC = () => {
+const EditAdvert: React.FC = () => {
   const [formData, setFormData] = useState<ProductFormData>({
     name: '',
     description: '',
@@ -184,4 +184,4 @@ const EditAnuncio: React.FC = () => {
   );
 };
 
-export default EditAnuncio;
+export default EditAdvert;

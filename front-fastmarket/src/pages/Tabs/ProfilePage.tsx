@@ -10,9 +10,6 @@ import { IPersona } from "../../interfaces/IPersona";
 import Modal from "../../components/Modals/Modal";
 
 
-
-
-
 const ProfilePage: React.FC = () => {
   const [email, setEmail ] = useState("")
   const history = useHistory();
@@ -79,7 +76,7 @@ const ProfilePage: React.FC = () => {
                 alt="Avatar"
                 className="w-16 h-16 rounded-full mr-6"
               />
-              <IonCardTitle className="text-xl font-bold text-gray-800">
+              <IonCardTitle className="text-xl font-bold text-black">
                 {perfil?.nombre} {" "} {perfil?.apellido}
               </IonCardTitle>
             </div>
@@ -101,7 +98,7 @@ const ProfilePage: React.FC = () => {
           <h3 className="text-lg font-semibold mb-2 text-black">Opciones:</h3>
 
           <div className="grid grid-cols-2 gap-2 place-items-center mx-auto">
-            <IonCard className="w-44 rounded-xl"  onClick={() => history.push("/dashboard/profile/ViewMyVentas")}>
+            <IonCard className="w-44 rounded-xl"  onClick={() => history.push("/dashboard/profile/Mysale")}>
               <IonCardHeader>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -121,7 +118,7 @@ const ProfilePage: React.FC = () => {
               </IonCardHeader>
             </IonCard>
 
-            <IonCard className="w-44 rounded-xl"  onClick={() => history.push("/dashboard/profile/misAnuncios")}>
+            <IonCard className="w-44 rounded-xl"  onClick={() => history.push("/dashboard/profile/MyAdvert")}>
               <IonCardHeader>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -140,7 +137,7 @@ const ProfilePage: React.FC = () => {
                 <IonCardTitle>Mis Anuncios</IonCardTitle>
               </IonCardHeader>
             </IonCard>
-            <IonCard className="w-44 rounded-xl" onClick={() => history.push("/dashboard/profile/ViewMyOferta")}>
+            <IonCard className="w-44 rounded-xl" onClick={() => history.push("/dashboard/profile/MyOffert")}>
               <IonCardHeader>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"

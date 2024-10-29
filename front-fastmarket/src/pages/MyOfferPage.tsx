@@ -7,7 +7,7 @@ import { IOferta } from "../interfaces/IOferta";
 import ofertasService from "../services/OfertasServices";
 import { ofertasMockData } from "../data/OfertasMockData";
 
-const ViewMyOferta: React.FC = () => {
+const MyOffert: React.FC = () => {
   const history = useHistory();
   const [ofertas, setOfertas] = useState<IOferta[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -151,4 +151,4 @@ const ViewMyOferta: React.FC = () => {
   );
 };
 
-export default ViewMyOferta;
+export default MyOffert;

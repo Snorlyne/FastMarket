@@ -3,7 +3,7 @@ import Header from '../components/Header';
 import { useHistory } from "react-router";
 
 
-const ViewMyVentas: React.FC = () => {
+const Mysale: React.FC = () => {
 
   const history = useHistory();
 
@@ -60,4 +60,4 @@ const ViewMyVentas: React.FC = () => {
   );
 };
 
-export default ViewMyVentas;
+export default Mysale;

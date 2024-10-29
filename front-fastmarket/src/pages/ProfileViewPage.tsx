@@ -3,7 +3,7 @@ import { trashOutline } from 'ionicons/icons';
 import { IonIcon, IonPage } from '@ionic/react';
 import Header from '../components/Header';
 
-const ViewProfile: React.FC = () => {
+const ProfileView: React.FC = () => {
   return (
     <IonPage> 
        <div className="min-h-screen w-full bg-white">
@@ -88,4 +88,4 @@ const ViewProfile: React.FC = () => {
   );
 };
 
-export default ViewProfile;
+export default ProfileView;

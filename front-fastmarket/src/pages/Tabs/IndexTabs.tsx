@@ -9,15 +9,18 @@ import {
 import { IonReactRouter } from "@ionic/react-router";
 import { homeOutline, personOutline, searchOutline, settingsOutline } from "ionicons/icons";
 import { Route, Redirect } from "react-router";
+
 import HomePage from "./HomePage";
 import ProfilePage from "./ProfilePage";
-import ViewMySale from "../ViewMyAnuncio";
-import ViewProduct from "../ViewProduct";
-import ProductForm from "../ViewProductCreate"; 
-import EditAnuncio from "../ViewEditAnuncio";
-import ViewMyOferta from "../ViewMyOferta";
-import ViewMyVentas from "../ViewMyVentas";
-import ViewProfile from "../ViewProfile";
+
+
+import MyAdvert from "../MyAdvertPage";
+import ViewProduct from "../ProductViewPage";
+import ProductCreate from "../ProductCreatePage"; 
+import EditAdvert from "../EditAdvertPage";
+import MyOffert from "../MyOfferPage";
+import Mysale from "../MysalePage";
+import ProfileView from "../ProfileViewPage";
 
 
 const IndexTabs: React.FC = () => {
@@ -25,21 +28,18 @@ const IndexTabs: React.FC = () => {
     <IonReactRouter>
       <IonTabs>
         <IonRouterOutlet>
-          {/* Define las rutas de las páginas */}
+          {/* vista del Tabs */}
           <Route path="/dashboard/home" component={HomePage} exact />
-          <Route path="/dashboard/home/ViewProduct" component={ViewProduct} exact />
-
-
           <Route path="/dashboard/profile" component={ProfilePage} exact />
-          <Route path="/dashboard/profile/ViewProfile" component={ViewProfile} exact />
-          <Route path="/dashboard/profile/misAnuncios" component={ViewMySale} exact />
-          <Route path="/dashboard/profile/ViewMyVentas" component={ViewMyVentas} exact />
-          <Route path="/dashboard/profile/ViewMyOferta" component={ViewMyOferta} exact />
 
-
-
-          <Route path="/dashboard/profile/misAnuncios/publicarAnuncio" component={ProductForm} exact />
-          <Route path="/misAnuncios/publicarAnuncio/EditAnuncio" component={EditAnuncio} exact />
+          {/* Vista fuera del Tabs */}
+          <Route path="/dashboard/home/ViewProduct" component={ViewProduct} exact />
+          <Route path="/dashboard/profile/Profile" component={ProfileView} exact />
+          <Route path="/dashboard/profile/MyAdvert" component={MyAdvert} exact />
+          <Route path="/dashboard/profile/MyOffert" component={MyOffert} exact />
+          <Route path="/dashboard/profile/Mysale" component={Mysale} exact />
+          <Route path="/dashboard/profile/MyAdvert/ProductCreate" component={ProductCreate} exact />
+          <Route path="/dashboard/profile/MyAdvert/ProductCreate/EditAdvert" component={EditAdvert} exact />
 
 
 
