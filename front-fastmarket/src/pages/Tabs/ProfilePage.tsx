@@ -70,7 +70,7 @@ const ProfilePage: React.FC = () => {
       <div className="p-4 bg-white h-screen">
         <IonCard
           className="bg-white shadow-lg rounded-lg max-w-sm"
-          onClick={() => history.push("/ViewProfile")}
+          onClick={() => history.push("/dashboard/profile/ViewProfile")}
         >
           <IonCardHeader>
             <div className="flex items-center p-6">
@@ -101,7 +101,7 @@ const ProfilePage: React.FC = () => {
           <h3 className="text-lg font-semibold mb-2 text-black">Opciones:</h3>
 
           <div className="grid grid-cols-2 gap-2 place-items-center mx-auto">
-            <IonCard className="w-44 rounded-xl"  onClick={() => history.push("/misAnuncios")}>
+            <IonCard className="w-44 rounded-xl"  onClick={() => history.push("/dashboard/profile/ViewMyVentas")}>
               <IonCardHeader>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -140,7 +140,7 @@ const ProfilePage: React.FC = () => {
                 <IonCardTitle>Mis Anuncios</IonCardTitle>
               </IonCardHeader>
             </IonCard>
-            <IonCard className="w-44 rounded-xl">
+            <IonCard className="w-44 rounded-xl" onClick={() => history.push("/dashboard/profile/ViewMyOferta")}>
               <IonCardHeader>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"

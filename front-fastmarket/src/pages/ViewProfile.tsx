@@ -1,22 +1,19 @@
 import React from 'react';
 import { trashOutline } from 'ionicons/icons';
-import { IonIcon } from '@ionic/react';
+import { IonIcon, IonPage } from '@ionic/react';
 import Header from '../components/Header';
 
 const ViewProfile: React.FC = () => {
   return (
-    
-    <div className="min-h-screen w-full bg-white">
+    <IonPage> 
+       <div className="min-h-screen w-full bg-white">
             <Header title="perfil" />
 
-      
       <div className="w-full h-full overflow-auto p-4">
         {/* Container principal con fondo gris claro */}
           {/* Título */}
           <h1 className="text-xl font-bold text-center mb-6">Perfil</h1>
-
-          {/* Contenedor de la imagen de perfil */}
-          <div className="bg-gray-300 rounded-lg p-4 mb-6">
+          <div className="bg-gray-300 rounded-lg  mb-6">
             <div className="w-24 h-24 mx-auto rounded-full overflow-hidden">
               <img
                 src={"https://raw.githubusercontent.com/RogelioGR/Proyect-RoomClean/refs/heads/Developer/public/usuario.png"}
@@ -85,6 +82,9 @@ const ViewProfile: React.FC = () => {
           </button>
         </div>
       </div>
+    </IonPage>
+    
+ 
   );
 };
 

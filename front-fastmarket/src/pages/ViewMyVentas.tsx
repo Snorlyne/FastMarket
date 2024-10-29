@@ -1,3 +1,4 @@
+import { IonPage } from '@ionic/react';
 import Header from '../components/Header';
 import { useHistory } from "react-router";
 
@@ -8,7 +9,7 @@ const ViewMyVentas: React.FC = () => {
 
   
   return (
-    <>
+    <IonPage>
       <div className="min-h-screen bg-gray-100">
         <Header title="Mis ventas" />
 
@@ -30,7 +31,6 @@ const ViewMyVentas: React.FC = () => {
       <div className="p-2 space-y-1">
         <h3 className="text-xl font-bold text-gray-600">Silla de oficina</h3>
         <div className='flex justify-between'>
-        <p className="text-lg font-medium text-gray-500">MX$<span className="text-green-400 text-lg font-bold">500</span></p>
         <p className='text-red-400 text-lg font-bold'>  Vendido</p>
         </div>
         <button 
@@ -55,7 +55,7 @@ const ViewMyVentas: React.FC = () => {
 
 
       </div>
-    </>
+    </IonPage>
 
   );
 };

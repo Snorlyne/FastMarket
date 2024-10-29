@@ -2,9 +2,11 @@ import React from 'react';
 import 'tailwindcss/tailwind.css'; 
 import Header from '../components/Header';
 import './css/product.css';
+import { IonPage } from '@ionic/react';
 
 const ViewProduct: React.FC = () => {
   return (
+    <IonPage>
     <div className=" view-product-container"> 
       <Header title="producto" />
 
@@ -39,11 +41,7 @@ const ViewProduct: React.FC = () => {
           </div>
         </div>
         {/* Carousel Indicators (Optional) */}
-        <div className="absolute bottom-0 left-0 right-0 flex justify-center space-x-2 mb-4">
-          <button className="w-3 h-3 bg-gray-400 rounded-full"></button>
-          <button className="w-3 h-3 bg-gray-400 rounded-full"></button>
-          <button className="w-3 h-3 bg-gray-600 rounded-full"></button>
-        </div>
+     
       </div>
 
       {/* Product Details */}
@@ -74,6 +72,7 @@ const ViewProduct: React.FC = () => {
         </div>
       </div>
     </div>
+    </IonPage>
   );
 };
 

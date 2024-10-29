@@ -43,10 +43,7 @@ import RegisterPage from "./pages/auth/RegisterPage";
 import IndexTabs from "./pages/Tabs/IndexTabs";
 import {AuthProvider } from "./services/auth/AuthContext";
 import PrivateRoute from "./services/auth/PrivateRoute";
-import ViewProduct from "./pages/ViewProduct";
-import ViewMyAnuncio from "./pages/ViewMyAnuncio";
-import ProductCreate from "./pages/ViewProductCreate";
-import ViewMyVentas from "./pages/ViewMyVentas";
+
 
 
 setupIonicReact();

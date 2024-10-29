@@ -1,3 +1,4 @@
+import { IonPage } from '@ionic/react';
 import Header from '../components/Header';
 import { useHistory } from "react-router";
 
@@ -8,7 +9,8 @@ const ViewMyOferta: React.FC = () => {
 
   
   return (
-    <>
+    
+    <IonPage>
       <div className="min-h-screen bg-gray-100">
         <Header title="Mis ventas" />
 
@@ -46,7 +48,7 @@ const ViewMyOferta: React.FC = () => {
       </div>
 
       </div>
-    </>
+      </IonPage>
 
   );
 };

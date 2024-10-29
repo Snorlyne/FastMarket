@@ -1,5 +1,8 @@
 import React, { useState, useRef, ChangeEvent, FormEvent } from 'react';
 import Header from '../components/Header';
+import { useHistory } from "react-router";
+import { IonPage } from '@ionic/react';
+
 
 
 interface ProductFormData {
@@ -58,8 +61,11 @@ const ProductForm: React.FC = () => {
     e.preventDefault();
     console.log('Form submitted:', { ...formData, images });
   };
+  const history = useHistory();
+
 
   return (
+    <IonPage>
     <div className=" bg-gray-100">
         <Header title="Crear Anuncio" />
 
@@ -75,7 +81,6 @@ const ProductForm: React.FC = () => {
         />
         
         {images.length === 0 ? (
-          // Large Upload Button when no images
           <button
             type="button"
             onClick={() => fileInputRef.current?.click()}
@@ -156,6 +161,7 @@ const ProductForm: React.FC = () => {
             name="description"
             placeholder="Descripción del producto"
             className="w-full p-2 border  bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 min-h-[100px] text-black"
+
             value={formData.description}
             onChange={handleChange}
           />
@@ -192,6 +198,7 @@ const ProductForm: React.FC = () => {
         <button
           type="submit"
           className="w-full bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 transition-colors"
+
         >
           Crear publicación
         </button>
@@ -199,6 +206,7 @@ const ProductForm: React.FC = () => {
       </div>
      
     </div>
+    </IonPage>
   );
 };
 

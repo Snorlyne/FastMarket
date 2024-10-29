@@ -83,7 +83,10 @@ const HomePage: React.FC = () => {
                     </p>
                   </div>
 
-                  <button className="w-full bg-green-500 text-white py-2 rounded-lg mt-2 hover:bg-green-600 transition-colors">
+                  <button 
+                  className="w-full bg-green-500 text-white py-2 rounded-lg mt-2 hover:bg-green-600 transition-colors" 
+                  onClick={() => history.push("/dashboard/home/ViewProduct")}
+                  >
                     Entrar
                   </button>
                 </div>
@@ -122,7 +125,10 @@ const HomePage: React.FC = () => {
                     </span>
                   </p>
                   </div>
-                  <button className="w-full bg-green-500 text-white py-2 rounded-lg mt-2 hover:bg-green-600 transition-colors">
+                  <button className="w-full bg-green-500 text-white py-2 rounded-lg mt-2 hover:bg-green-600 transition-colors"
+                  onClick={() => history.push("/dashboard/home/ViewProduct")}
+
+                  >
                     Entrar
                   </button>
                 </div>
