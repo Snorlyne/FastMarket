@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Domain.Dto
 {
@@ -14,6 +10,6 @@ namespace Domain.Dto
         public decimal monto { get; set; }
         public DateTime fecha_oferta { get; set; }
         public string estado { get; set; }
-        public string Tipo { get; set; } = null!;
+        public string Tipo { get; set; } = null!; // Asegúrate de que esto esté en minúsculas
     }
 }

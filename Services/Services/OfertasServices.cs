@@ -79,49 +79,7 @@ namespace Services.Services
             }
         }
 
-        public async Task<Response<OfertasDto>> CrearOferta(OfertasDto request, List<int> productoIds)
-        {
-            try
-            {
-                var nuevaOferta = new Ofertas
-                {
-                    idPersona = request.idPersona,
-                    idAnuncio = request.idAnuncio,
-                    monto = request.monto,
-                    fecha_oferta = request.fecha_oferta,
-                    estado = request.estado,
-                    Tipo = request.Tipo
-                };
-
-                // Añadir la oferta a la base de datos
-                _context.ofertas.Add(nuevaOferta);
-                await _context.SaveChangesAsync();
-
-                // Asociar productos a la oferta
-                foreach (var productoId in productoIds)
-                {
-                    var ofertaProducto = new Ofertas_Productos
-                    {
-                        ofertas_id = nuevaOferta.Id,
-                        productos_id = productoId
-                    };
-                    _context.ofertas_productos.Add(ofertaProducto);
-                }
-                await _context.SaveChangesAsync();
-
-                request.Id = nuevaOferta.Id;
-
-                return new Response<OfertasDto>(request);
-            }
-            catch (Exception ex)
-            {
-                // Log the inner exception details
-                var innerExceptionMessage = ex.InnerException != null ? ex.InnerException.Message : ex.Message;
-                return new Response<OfertasDto>("Error al crear la oferta: " + innerExceptionMessage);
-            }
-        }
-
-        public async Task<Response<OfertasDto>> ActualizarOferta(int id, OfertasDto request, List<int> productoIds)
+        public async Task<Response<OfertasDto>> ActualizarOferta(int id, OfertasDto request, List<ProductosDto> productos)
         {
             try
             {
@@ -132,6 +90,7 @@ namespace Services.Services
                     return new Response<OfertasDto>("Oferta no encontrada.");
                 }
 
+                // Actualizar la oferta con los nuevos datos
                 oferta.idPersona = request.idPersona;
                 oferta.idAnuncio = request.idAnuncio;
                 oferta.monto = request.monto;
@@ -150,14 +109,28 @@ namespace Services.Services
                 // Eliminar asociaciones antiguas
                 _context.ofertas_productos.RemoveRange(ofertasProductos);
 
-                // Asociar nuevos productos
-                foreach (var productoId in productoIds)
+                // Crear nuevos productos y asociarlos a la oferta
+                foreach (var producto in productos)
                 {
+                    var nuevoProducto = new Productos
+                    {
+                        Nombre = producto.Nombre, // Asegúrate de que los nombres de las propiedades sean correctos
+                        Descripcion = producto.Descripcion,
+                        Precio = producto.Precio,
+                        Cantidad = producto.Cantidad,
+                        Tipo = producto.Tipo
+                    };
+
+                    _context.productos.Add(nuevoProducto);
+                    await _context.SaveChangesAsync(); // Guarda el nuevo producto en la base de datos
+
+                    // Ahora asociamos el nuevo producto a la oferta
                     var ofertaProducto = new Ofertas_Productos
                     {
                         ofertas_id = oferta.Id,
-                        productos_id = productoId // Cambiado a productos_Id
+                        productos_id = nuevoProducto.Id // Usamos el nuevo ID del producto creado
                     };
+
                     _context.ofertas_productos.Add(ofertaProducto);
                 }
 
@@ -168,6 +141,63 @@ namespace Services.Services
             catch (Exception ex)
             {
                 return new Response<OfertasDto>("Error al actualizar la oferta: " + ex.Message);
+            }
+        }
+
+
+        public async Task<Response<OfertasDto>> CrearOferta(OfertasDto request, List<ProductosDto> productos)
+        {
+            try
+            {
+                var nuevaOferta = new Ofertas
+                {
+                    idPersona = request.idPersona,
+                    idAnuncio = request.idAnuncio,
+                    monto = request.monto,
+                    fecha_oferta = request.fecha_oferta,
+                    estado = request.estado,
+                    Tipo = request.Tipo
+                };
+
+                // Añadir la oferta a la base de datos y guardar para obtener su Id
+                _context.ofertas.Add(nuevaOferta);
+                await _context.SaveChangesAsync();
+
+                // Crear productos asociados y relaciones
+                foreach (var producto in productos)
+                {
+                    // Crear y guardar el producto en la base de datos
+                    var nuevoProducto = new Productos
+                    {
+                        Nombre = producto.Nombre,
+                        Descripcion = producto.Descripcion,
+                        Precio = producto.Precio,
+                        Cantidad = producto.Cantidad,
+                        Tipo = producto.Tipo
+                    };
+                    _context.productos.Add(nuevoProducto);
+                    await _context.SaveChangesAsync();
+
+                    // Crear la relación de producto con la oferta en la tabla ofertas_productos
+                    var ofertaProducto = new Ofertas_Productos
+                    {
+                        ofertas_id = nuevaOferta.Id,
+                        productos_id = nuevoProducto.Id
+                    };
+                    _context.ofertas_productos.Add(ofertaProducto);
+                }
+
+                // Guardar las relaciones creadas en ofertas_productos
+                await _context.SaveChangesAsync();
+
+                request.Id = nuevaOferta.Id;
+
+                return new Response<OfertasDto>(request);
+            }
+            catch (Exception ex)
+            {
+                var innerExceptionMessage = ex.InnerException != null ? ex.InnerException.Message : ex.Message;
+                return new Response<OfertasDto>("Error al crear la oferta: " + innerExceptionMessage);
             }
         }
 

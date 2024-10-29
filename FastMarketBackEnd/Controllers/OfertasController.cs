@@ -1,7 +1,9 @@
 ﻿using Domain.Dto;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Services.IServices;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace FastMarketBackEnd.Controllers
 {
@@ -18,7 +20,6 @@ namespace FastMarketBackEnd.Controllers
 
         // GET: api/<OfertasController>
         [HttpGet]
-        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Get()
         {
             var response = await _ofertasServices.ObtenerOfertas();
@@ -37,13 +38,53 @@ namespace FastMarketBackEnd.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] CrearOfertaRequest request)
         {
-            // Validar la solicitud y asegurar que contenga la lista de IDs de productos
-            if (request == null || request.ProductoIds == null || !request.ProductoIds.Any())
+            // Validar la solicitud
+            if (request == null)
             {
-                return BadRequest("La solicitud es inválida. Asegúrate de incluir los IDs de los productos.");
+                return BadRequest("La solicitud es inválida.");
             }
 
-            var response = await _ofertasServices.CrearOferta(request.Oferta, request.ProductoIds);
+            // Verificar el tipo de oferta y aplicar la lógica según el tipo
+            switch (request.Oferta.Tipo)
+            {
+                case "dinero":
+                    if (request.Productos != null && request.Productos.Any())
+                    {
+                        return BadRequest("No se deben incluir productos cuando la oferta es de tipo dinero.");
+                    }
+                    if (request.Oferta.monto <= 0)
+                    {
+                        return BadRequest("El monto debe ser mayor a cero para el tipo dinero.");
+                    }
+                    break;
+
+                case "producto":
+                    if (request.Productos == null || !request.Productos.Any())
+                    {
+                        return BadRequest("Debe incluir productos cuando la oferta es de tipo producto.");
+                    }
+                    if (request.Oferta.monto != 0)
+                    {
+                        return BadRequest("El monto debe ser cero cuando la oferta es de tipo producto.");
+                    }
+                    break;
+
+                case "dinero_producto":
+                    if (request.Productos == null || !request.Productos.Any())
+                    {
+                        return BadRequest("Debe incluir productos cuando la oferta es de tipo dinero_producto.");
+                    }
+                    if (request.Oferta.monto <= 0)
+                    {
+                        return BadRequest("El monto debe ser mayor a cero para el tipo dinero_producto.");
+                    }
+                    break;
+
+                default:
+                    return BadRequest("El tipo de oferta es inválido.");
+            }
+
+            var response = await _ofertasServices.CrearOferta(request.Oferta, request.Productos);
             return Ok(response);
         }
 
@@ -51,13 +92,53 @@ namespace FastMarketBackEnd.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(int id, [FromBody] ActualizarOfertaRequest request)
         {
-            // Validar la solicitud y asegurar que contenga la lista de IDs de productos
-            if (request == null || request.ProductoIds == null || !request.ProductoIds.Any())
+            // Validar la solicitud
+            if (request == null)
             {
-                return BadRequest("La solicitud es inválida. Asegúrate de incluir los IDs de los productos.");
+                return BadRequest("La solicitud es inválida.");
             }
 
-            var response = await _ofertasServices.ActualizarOferta(id, request.Oferta, request.ProductoIds);
+            // Verificar el tipo de oferta y aplicar la lógica según el tipo
+            switch (request.Oferta.Tipo)
+            {
+                case "dinero":
+                    if (request.Productos != null && request.Productos.Any())
+                    {
+                        return BadRequest("No se deben incluir productos cuando la oferta es de tipo dinero.");
+                    }
+                    if (request.Oferta.monto <= 0)
+                    {
+                        return BadRequest("El monto debe ser mayor a cero para el tipo dinero.");
+                    }
+                    break;
+
+                case "producto":
+                    if (request.Productos == null || !request.Productos.Any())
+                    {
+                        return BadRequest("Debe incluir productos cuando la oferta es de tipo producto.");
+                    }
+                    if (request.Oferta.monto != 0)
+                    {
+                        return BadRequest("El monto debe ser cero cuando la oferta es de tipo producto.");
+                    }
+                    break;
+
+                case "dinero_producto":
+                    if (request.Productos == null || !request.Productos.Any())
+                    {
+                        return BadRequest("Debe incluir productos cuando la oferta es de tipo dinero_producto.");
+                    }
+                    if (request.Oferta.monto <= 0)
+                    {
+                        return BadRequest("El monto debe ser mayor a cero para el tipo dinero_producto.");
+                    }
+                    break;
+
+                default:
+                    return BadRequest("El tipo de oferta es inválido.");
+            }
+
+            var response = await _ofertasServices.ActualizarOferta(id, request.Oferta, request.Productos);
             return Ok(response);
         }
 
@@ -74,12 +155,12 @@ namespace FastMarketBackEnd.Controllers
     public class CrearOfertaRequest
     {
         public OfertasDto Oferta { get; set; }
-        public List<int> ProductoIds { get; set; }
+        public List<ProductosDto> Productos { get; set; }
     }
 
     public class ActualizarOfertaRequest
     {
         public OfertasDto Oferta { get; set; }
-        public List<int> ProductoIds { get; set; }
+        public List<ProductosDto> Productos { get; set; }
     }
 }

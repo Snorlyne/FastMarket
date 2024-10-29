@@ -9,7 +9,6 @@ namespace FastMarketBackEnd.Controllers
 {
     [Route("[controller]")]
     [ApiController]
-    [Authorize(Roles = "Admin")]
     public class PersonasController : ControllerBase
     {
         private readonly IPersonasServices _personasServices;

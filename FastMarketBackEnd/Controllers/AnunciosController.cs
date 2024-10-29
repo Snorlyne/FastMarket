@@ -17,7 +17,6 @@ namespace FastMarketBackEnd.Controllers
         }
         // GET: api/<AnunciosController>
         [HttpGet] 
-        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Get()
         {
             var response = await _anunciosServices.ObtenerAnuncios();
