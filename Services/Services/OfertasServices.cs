@@ -83,9 +83,14 @@ namespace Services.Services
         {
             try
             {
-                // Obtener ofertas filtrando por idPersona
                 var ofertas = await _context.ofertas
-                    .Where(o => o.idPersona == idPersona) // Filtrar por el ID de la persona
+                    .Where(o => o.idPersona == idPersona)
+                    .Include(o => o.Anuncio)
+                        .ThenInclude(a => a.Productos)
+                            .ThenInclude(p => p.Fotos)
+                    .Include(o => o.OfertasProductos)
+                        .ThenInclude(op => op.Producto)
+                            .ThenInclude(pf => pf.Fotos)
                     .Select(o => new OfertasDto
                     {
                         Id = o.Id,
@@ -94,7 +99,32 @@ namespace Services.Services
                         monto = o.monto,
                         fecha_oferta = o.fecha_oferta,
                         estado = o.estado,
-                        Tipo = o.Tipo
+                        Tipo = o.Tipo,
+                        Anuncio = new AnunciosDto
+                        {
+                            Id = o.Anuncio.Id,
+                            fecha_expiracion = o.Anuncio.fecha_expiracion,
+                            Estado = o.Anuncio.Estado,
+                            precio_anuncio = o.Anuncio.precio_anuncio,
+                            Productos = new ProductosDto
+                            {
+                                Nombre = o.Anuncio.Productos.Nombre,
+                                Fotos = o.Anuncio.Productos.Fotos.Select(f => new FotosDto
+                                {
+                                    Id = f.Id,
+                                    Url = f.Url
+                                }).ToList()
+                            }
+                        },
+                        Productos = o.OfertasProductos.Select(op => new ProductosDto
+                        {
+                            Nombre = op.Producto.Nombre,
+                            Fotos = op.Producto.Fotos.Select(f => new FotosDto
+                            {
+                                Id = f.Id,
+                                Url = f.Url
+                            }).ToList()
+                        }).ToList()
                     })
                     .ToListAsync();
 
@@ -105,6 +135,8 @@ namespace Services.Services
                 return new Response<List<OfertasDto>>("Error al obtener las ofertas del usuario: " + ex.Message);
             }
         }
+
+
         //public async Task<Response<OfertasDto>> CrearOferta(OfertasDto request)
         //{
         //    try
@@ -196,7 +228,32 @@ namespace Services.Services
         //        return new Response<OfertasDto>("Error al actualizar la oferta: " + ex.Message);
         //    }
         //}
+        public async Task<Response<List<OfertasDto>>> ObtenerOfertasPorAnuncio(int idAnuncio)
+        {
+            try
+            {
+                // Obtener ofertas filtrando por idAnuncio
+                var ofertas = await _context.ofertas
+                    .Where(o => o.idAnuncio == idAnuncio) // Filtrar por el ID del anuncio
+                    .Select(o => new OfertasDto
+                    {
+                        Id = o.Id,
+                        idPersona = o.idPersona,
+                        idAnuncio = o.idAnuncio,
+                        monto = o.monto,
+                        fecha_oferta = o.fecha_oferta,
+                        estado = o.estado,
+                        Tipo = o.Tipo
+                    })
+                    .ToListAsync();
 
+                return new Response<List<OfertasDto>>(ofertas);
+            }
+            catch (Exception ex)
+            {
+                return new Response<List<OfertasDto>>("Error al obtener las ofertas del anuncio: " + ex.Message);
+            }
+        }
         public async Task<Response<OfertasDto>> EliminarOferta(int id)
         {
             try

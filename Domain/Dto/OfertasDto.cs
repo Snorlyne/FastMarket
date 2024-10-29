@@ -15,5 +15,7 @@ namespace Domain.Dto
         public DateTime fecha_oferta { get; set; }
         public string estado { get; set; }
         public string Tipo { get; set; } = null!;
+        public AnunciosDto Anuncio { get; set; }
+        public List<ProductosDto> Productos { get; set; }
     }
 }

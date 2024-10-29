@@ -55,9 +55,9 @@ const ViewMyAnuncio: React.FC = () => {
         {/* Scrollable product list */}
         <div className="max-w-4xl mx-auto px-4 py-4 overflow-y-auto h-[80vh]">
             {/* Map sobre los anuncios obtenidos */}
+            <div className="grid grid-cols-2 gap-4">
             {anuncios.length > 0 ? (
               anuncios.map((anuncio, index) => (
-                <div className="grid grid-cols-2 gap-4">
                   <div
                     key={index}
                     className="flex flex-col bg-white rounded-2xl overflow-hidden shadow-lg"
@@ -91,13 +91,14 @@ const ViewMyAnuncio: React.FC = () => {
                       </button>
                     </div>
                   </div>
-                </div>
               ))
-            ) : (
+            ): null}
+            </div>
+            {anuncios.length == 0 ? (
               <p className="w-full text-center text-gray-500">
-                Publica tu primera subasta.
+                No hay ofertas en este momento.
               </p>
-            )}
+            ) : null }
           </div>
         </div>
     </IonPage>

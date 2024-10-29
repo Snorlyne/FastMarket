@@ -2,7 +2,7 @@ import React, { useState, useRef, ChangeEvent, FormEvent } from "react";
 import Header from "../components/Header";
 import { IonPage } from "@ionic/react";
 import { XCircleIcon } from "@heroicons/react/24/solid";
-import { storage } from "../services/firebaseConfig";
+import { storage } from "../firebaseConfig";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 interface ImageData {
   url: string;

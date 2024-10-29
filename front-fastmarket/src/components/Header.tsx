@@ -9,7 +9,7 @@ const Header = ({ title }: { title: string }) => {
     };
 
     return (
-        <IonHeader className="bg-blue-500">
+        <IonHeader className="bg-white" >
             <IonToolbar>
                 <IonButtons slot="start">
                     <button onClick={goBack} className="inline-flex">

@@ -140,7 +140,7 @@ const ProfilePage: React.FC = () => {
                 <IonCardTitle>Mis Anuncios</IonCardTitle>
               </IonCardHeader>
             </IonCard>
-            <IonCard className="w-44 rounded-xl">
+            <IonCard className="w-44 rounded-xl" onClick={() => history.push("/dashboard/profile/misOfertas")}>
               <IonCardHeader>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
