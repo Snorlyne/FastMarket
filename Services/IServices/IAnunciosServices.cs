@@ -13,6 +13,15 @@ namespace Services.IServices
     {
         Task<Response<List<AnunciosDto>>> ObtenerAnuncios();
         Task<Response<AnunciosDto>> ObtenerAnuncio(int id, int idPersona);
+        Task<Response<List<AnunciosDto>>> ObtenerAnunciosFiltrados
+            (
+                string? nombreProducto = null,
+                string? etiquetas = null,
+                string? ciudad = null,
+                string? estado = null,
+                string? pais = null,
+                string? codigoPostal = null
+            );
         Task<Response<List<AnunciosDto>>> ObtenerAnunciosUsuario(int idPersona);
         Task<Response<AnunciosDto>> CrearAnuncio(AnunciosDto request, int idPersona);
         Task<Response<AnunciosDto>> ActualizarAnuncio(int id, AnunciosDto request);

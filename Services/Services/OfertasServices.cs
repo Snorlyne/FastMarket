@@ -83,9 +83,158 @@ namespace Services.Services
         {
             try
             {
-                // Obtener ofertas filtrando por idPersona
                 var ofertas = await _context.ofertas
-                    .Where(o => o.idPersona == idPersona) // Filtrar por el ID de la persona
+                    .Where(o => o.idPersona == idPersona)
+                    .Include(o => o.Anuncio)
+                        .ThenInclude(a => a.Productos)
+                            .ThenInclude(p => p.Fotos)
+                    .Include(o => o.OfertasProductos)
+                        .ThenInclude(op => op.Producto)
+                            .ThenInclude(pf => pf.Fotos)
+                    .Select(o => new OfertasDto
+                    {
+                        Id = o.Id,
+                        idPersona = o.idPersona,
+                        idAnuncio = o.idAnuncio,
+                        monto = o.monto,
+                        fecha_oferta = o.fecha_oferta,
+                        estado = o.estado,
+                        Tipo = o.Tipo,
+                        Anuncio = new AnunciosDto
+                        {
+                            Id = o.Anuncio.Id,
+                            fecha_expiracion = o.Anuncio.fecha_expiracion,
+                            Estado = o.Anuncio.Estado,
+                            precio_anuncio = o.Anuncio.precio_anuncio,
+                            Productos = new ProductosDto
+                            {
+                                Nombre = o.Anuncio.Productos.Nombre,
+                                Fotos = o.Anuncio.Productos.Fotos.Select(f => new FotosDto
+                                {
+                                    Id = f.Id,
+                                    Url = f.Url
+                                }).ToList()
+                            }
+                        },
+                        Productos = o.OfertasProductos.Select(op => new ProductosDto
+                        {
+                            Nombre = op.Producto.Nombre,
+                            Fotos = op.Producto.Fotos.Select(f => new FotosDto
+                            {
+                                Id = f.Id,
+                                Url = f.Url
+                            }).ToList()
+                        }).ToList()
+                    })
+                    .ToListAsync();
+
+                return new Response<List<OfertasDto>>(ofertas);
+            }
+            catch (Exception ex)
+            {
+                return new Response<List<OfertasDto>>("Error al obtener las ofertas del usuario: " + ex.Message);
+            }
+        }
+
+
+        //public async Task<Response<OfertasDto>> CrearOferta(OfertasDto request)
+        //{
+        //    try
+        //    {
+        //        var nuevaOferta = new Ofertas
+        //        {
+        //            idPersona = request.idPersona,
+        //            idAnuncio = request.idAnuncio,
+        //            monto = request.monto,
+        //            fecha_oferta = request.fecha_oferta,
+        //            estado = request.estado,
+        //            Tipo = request.Tipo
+        //        };
+
+        //        // Añadir la oferta a la base de datos
+        //        _context.ofertas.Add(nuevaOferta);
+        //        await _context.SaveChangesAsync();
+
+        //        // Asociar productos a la oferta
+        //        foreach (var productoId in productoIds)
+        //        {
+        //            var ofertaProducto = new Ofertas_Productos
+        //            {
+        //                ofertas_id = nuevaOferta.Id,
+        //                productos_id = productoId
+        //            };
+        //            _context.ofertas_productos.Add(ofertaProducto);
+        //        }
+        //        await _context.SaveChangesAsync();
+
+        //        request.Id = nuevaOferta.Id;
+
+        //        return new Response<OfertasDto>(request);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        // Log the inner exception details
+        //        var innerExceptionMessage = ex.InnerException != null ? ex.InnerException.Message : ex.Message;
+        //        return new Response<OfertasDto>("Error al crear la oferta: " + innerExceptionMessage);
+        //    }
+        //}
+
+        //public async Task<Response<OfertasDto>> ActualizarOferta(int id, OfertasDto request, List<int> productoIds)
+        //{
+        //    try
+        //    {
+        //        var oferta = await _context.ofertas.FirstOrDefaultAsync(o => o.Id == id);
+
+        //        if (oferta == null)
+        //        {
+        //            return new Response<OfertasDto>("Oferta no encontrada.");
+        //        }
+
+        //        oferta.idPersona = request.idPersona;
+        //        oferta.idAnuncio = request.idAnuncio;
+        //        oferta.monto = request.monto;
+        //        oferta.fecha_oferta = request.fecha_oferta;
+        //        oferta.estado = request.estado;
+        //        oferta.Tipo = request.Tipo;
+
+        //        _context.ofertas.Update(oferta);
+        //        await _context.SaveChangesAsync();
+
+        //        // Actualizar los productos asociados
+        //        var ofertasProductos = await _context.ofertas_productos
+        //            .Where(op => op.ofertas_id == oferta.Id)
+        //            .ToListAsync();
+
+        //        // Eliminar asociaciones antiguas
+        //        _context.ofertas_productos.RemoveRange(ofertasProductos);
+
+        //        // Asociar nuevos productos
+        //        foreach (var productoId in productoIds)
+        //        {
+        //            var ofertaProducto = new Ofertas_Productos
+        //            {
+        //                ofertas_id = oferta.Id,
+        //                productos_id = productoId // Cambiado a productos_Id
+        //            };
+        //            _context.ofertas_productos.Add(ofertaProducto);
+        //        }
+
+        //        await _context.SaveChangesAsync();
+
+        //        return new Response<OfertasDto>(request);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return new Response<OfertasDto>("Error al actualizar la oferta: " + ex.Message);
+        //    }
+        //}
+        public async Task<Response<List<OfertasDto>>> ObtenerOfertasPorAnuncio(int idAnuncio)
+        {
+            try
+            {
+                // Obtener ofertas filtrando por idAnuncio
+                var ofertas = await _context.ofertas
+                    .Where(o => o.idAnuncio == idAnuncio) // Filtrar por el ID del anuncio
                     .Select(o => new OfertasDto
                     {
                         Id = o.Id,
@@ -102,101 +251,9 @@ namespace Services.Services
             }
             catch (Exception ex)
             {
-                return new Response<List<OfertasDto>>("Error al obtener las ofertas del usuario: " + ex.Message);
+                return new Response<List<OfertasDto>>("Error al obtener las ofertas del anuncio: " + ex.Message);
             }
         }
-        public async Task<Response<OfertasDto>> CrearOferta(OfertasDto request)
-        {
-            try
-            {
-                var nuevaOferta = new Ofertas
-                {
-                    idPersona = request.idPersona,
-                    idAnuncio = request.idAnuncio,
-                    monto = request.monto,
-                    fecha_oferta = request.fecha_oferta,
-                    estado = request.estado,
-                    Tipo = request.Tipo
-                };
-
-                // Añadir la oferta a la base de datos
-                _context.ofertas.Add(nuevaOferta);
-                await _context.SaveChangesAsync();
-
-                // Asociar productos a la oferta
-                foreach (var productoId in productoIds)
-                {
-                    var ofertaProducto = new Ofertas_Productos
-                    {
-                        ofertas_id = nuevaOferta.Id,
-                        productos_id = productoId
-                    };
-                    _context.ofertas_productos.Add(ofertaProducto);
-                }
-                await _context.SaveChangesAsync();
-
-                request.Id = nuevaOferta.Id;
-
-                return new Response<OfertasDto>(request);
-            }
-            catch (Exception ex)
-            {
-                // Log the inner exception details
-                var innerExceptionMessage = ex.InnerException != null ? ex.InnerException.Message : ex.Message;
-                return new Response<OfertasDto>("Error al crear la oferta: " + innerExceptionMessage);
-            }
-        }
-
-        public async Task<Response<OfertasDto>> ActualizarOferta(int id, OfertasDto request, List<int> productoIds)
-        {
-            try
-            {
-                var oferta = await _context.ofertas.FirstOrDefaultAsync(o => o.Id == id);
-
-                if (oferta == null)
-                {
-                    return new Response<OfertasDto>("Oferta no encontrada.");
-                }
-
-                oferta.idPersona = request.idPersona;
-                oferta.idAnuncio = request.idAnuncio;
-                oferta.monto = request.monto;
-                oferta.fecha_oferta = request.fecha_oferta;
-                oferta.estado = request.estado;
-                oferta.Tipo = request.Tipo;
-
-                _context.ofertas.Update(oferta);
-                await _context.SaveChangesAsync();
-
-                // Actualizar los productos asociados
-                var ofertasProductos = await _context.ofertas_productos
-                    .Where(op => op.ofertas_id == oferta.Id)
-                    .ToListAsync();
-
-                // Eliminar asociaciones antiguas
-                _context.ofertas_productos.RemoveRange(ofertasProductos);
-
-                // Asociar nuevos productos
-                foreach (var productoId in productoIds)
-                {
-                    var ofertaProducto = new Ofertas_Productos
-                    {
-                        ofertas_id = oferta.Id,
-                        productos_id = productoId // Cambiado a productos_Id
-                    };
-                    _context.ofertas_productos.Add(ofertaProducto);
-                }
-
-                await _context.SaveChangesAsync();
-
-                return new Response<OfertasDto>(request);
-            }
-            catch (Exception ex)
-            {
-                return new Response<OfertasDto>("Error al actualizar la oferta: " + ex.Message);
-            }
-        }
-
         public async Task<Response<OfertasDto>> EliminarOferta(int id)
         {
             try

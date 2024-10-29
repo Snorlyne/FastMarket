@@ -5,9 +5,10 @@ import { IonPage } from "@ionic/react";
 import LoadingWave from "../../components/Loader";
 import { useHistory } from "react-router";
 import Modal from "../../components/Modals/Modal";
+import { IAnuncio } from "../../interfaces/IAnuncio";
 
 const HomePage: React.FC = () => {
-  const [anuncios, setAnuncios] = useState<any[]>([]);
+  const [anuncios, setAnuncios] = useState<IAnuncio[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const history = useHistory();
 

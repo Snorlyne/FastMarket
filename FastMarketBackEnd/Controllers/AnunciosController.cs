@@ -3,6 +3,7 @@ using FastMarketBackEnd.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Services.IServices;
+using Services.Services;
 
 namespace FastMarketBackEnd.Controllers
 {
@@ -46,6 +47,25 @@ namespace FastMarketBackEnd.Controllers
             {
                 return BadRequest("Ocurrió un error al obtener los anuncios: " + ex.Message);
             }
+        }
+        [HttpGet("filtrar")]
+        public async Task<IActionResult> ObtenerAnunciosFiltrados(
+        [FromQuery] string? nombreProducto = null,
+        [FromQuery] string? etiquetas = null,
+        [FromQuery] string? ciudad = null,
+        [FromQuery] string? estado = null,
+        [FromQuery] string? pais = null,
+        [FromQuery] string? codigoPostal = null)
+        {
+            var response = await _anunciosServices.ObtenerAnunciosFiltrados(
+                nombreProducto, etiquetas, ciudad, estado, pais, codigoPostal);
+
+            if (response.Result == null || response.Result.Count == 0)
+            {
+                return NotFound(new { message = "No se encontraron anuncios con los filtros especificados." });
+            }
+
+            return Ok(response);
         }
         // POST api/<AnunciosController>
         [HttpPost]
