@@ -20,7 +20,7 @@ namespace FastMarketBackEnd.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public async Task<ActionResult<IEnumerable<UsuariosDto>>> GetUsuarios()
         {
             var usuarios = await _services.ObtenerUsuarios();
