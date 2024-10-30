@@ -33,11 +33,11 @@ const Mysale: React.FC = () => {
         <div className='flex justify-between'>
         <p className='text-red-400 text-lg font-bold'>  Vendido</p>
         </div>
-        <button 
+        {/* <button 
           className="w-full bg-blue-500 text-white text-sm font-bold py-2 rounded-lg hover:bg-blue-800 transition-colors" onClick={() => history.push("/ViewProduct")}
         >
           ENTRAR
-        </button>
+        </button> */}
       </div>
     </div>
 

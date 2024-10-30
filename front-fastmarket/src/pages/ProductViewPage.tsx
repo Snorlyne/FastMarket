@@ -13,6 +13,7 @@ const ViewProduct: React.FC = () => {
   const [anuncio, setAnuncio] = useState<IAnuncio | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const history = useHistory();
+  const route = history.location
 
   const fetchAnuncios = async (id: string) => {
     try {
@@ -64,43 +65,41 @@ const ViewProduct: React.FC = () => {
         </div>
 
         {/* Product Details */}
-        <div className="p-4">
-          <h1 className="text-xl font-bold text-black">
-            {anuncio?.productos?.nombre || "Product Name"}
-          </h1>
-          <p className="text-green-600">
-            MX${anuncio?.productos?.precio || "N/A"}
-          </p>
+        <div className="flex p-4 flex-col justify-between w-full h-[50%]">
+          <div className=" h-full">
+            <h1 className="text-xl font-bold text-black">
+              {anuncio?.productos?.nombre || "Product Name"}
+            </h1>
+            <p className="text-green-600">
+              MX${anuncio?.productos?.precio || "N/A"}
+            </p>
 
-          <div className="my-4">
-            <h2 className="text-md font-semibold text-black">
-              Mejores Ofertas:
-            </h2>
-            <div className="flex space-x-2 mt-2">
-              {anuncio?.ofertas?.map((oferta: any, index: any) => (
-                <button
-                  key={index}
-                  className="bg-green-600 py-2 px-4 rounded-lg"
-                >
-                  {index + 1}. Oferta: ${oferta.monto}
-                </button>
-              ))}
+            <div className="my-4">
+              <h2 className="text-md font-semibold text-black">
+                Mejores Ofertas:
+              </h2>
+              <div className="flex space-x-2 mt-2">
+                {anuncio?.ofertas?.map((oferta: any, index: any) => (
+                  <button
+                    key={index}
+                    className="bg-green-600 py-2 px-4 rounded-lg"
+                  >
+                    {index + 1}. Oferta: ${oferta.monto}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="mt-6">
+              <h3 className="text-md font-semibold">Descripción:</h3>
+              <p className="text-gray-600 text-justify">
+                {anuncio?.descripcion || "No description available."}
+              </p>
             </div>
           </div>
-
-          <button className="w-full bg-blue-500 text-white py-2 rounded-lg mt-4">
-            Enviar propuesta al vendedor
-          </button>
-
-          <div className="mt-6">
-            <h3 className="text-md font-semibold">Descripción:</h3>
-            <p className="text-gray-600 text-justify">
-              {anuncio?.descripcion || "No description available."}
-            </p>
-            <p className="text-black mt-2">
-              Estado: {anuncio?.estado || "Unknown"}
-            </p>
-          </div>
+            <button onClick={() => history.push(route.pathname+"/offerhub/"+id)} className="w-full bg-blue-500 text-white py-2 rounded-lg mt-4">
+              Enviar propuesta al vendedor
+            </button>
         </div>
       </div>
     </IonPage>

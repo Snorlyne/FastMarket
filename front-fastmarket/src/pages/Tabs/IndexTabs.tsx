@@ -21,6 +21,8 @@ import EditAdvert from "../EditAdvertPage";
 import MyOffert from "../MyOfferPage";
 import Mysale from "../MysalePage";
 import ProfileView from "../ProfileViewPage";
+import OffersHubPage from "../OfferHubPage";
+import ChatList from "../ChatListPage";
 
 
 const IndexTabs: React.FC = () => {
@@ -33,7 +35,9 @@ const IndexTabs: React.FC = () => {
           <Route path="/dashboard/profile" component={ProfilePage} exact />
 
           {/* Vista fuera del Tabs */}
-          <Route path="/dashboard/home/ViewProduct/:id" component={ViewProduct} exact />
+          <Route path="*/offerhub/:id" component={OffersHubPage} exact />
+          <Route path="*/ViewProduct/:id" component={ViewProduct} exact />
+          <Route path="*/chatlist" component={ChatList} exact />
           <Route path="/dashboard/profile/Profile" component={ProfileView} exact />
           <Route path="/dashboard/profile/MyAdvert" component={MyAdvert} exact />
           <Route path="/dashboard/profile/MyOffert" component={MyOffert} exact />

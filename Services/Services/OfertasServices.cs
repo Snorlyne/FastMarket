@@ -125,12 +125,13 @@ namespace Services.Services
                                 Url = f.Url
                             }).ToList()
                         }).ToList()
-                    })
-                    .ToListAsync();
+                    }).ToListAsync();
+                return new Response<List<OfertasDto>>(ofertas);
+            }
+            catch (Exception ex) {
+                return new Response<List<OfertasDto>>(ex.Message);
             }
         }
-
-                return new Response<List<OfertasDto>>(ofertas);
         public async Task<Response<OfertasDto>> ActualizarOferta(int id, OfertasDto request, List<ProductosDto> productos)
         {
             try
@@ -192,7 +193,7 @@ namespace Services.Services
             }
             catch (Exception ex)
             {
-                return new Response<List<OfertasDto>>("Error al obtener las ofertas del usuario: " + ex.Message);
+                return new Response<OfertasDto>("Error al actuaizar la oferta: " + ex.Message);
             }
         }
 

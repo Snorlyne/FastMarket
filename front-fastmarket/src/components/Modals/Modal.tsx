@@ -1,5 +1,5 @@
 import React from "react";
-import { InformationCircleIcon, CheckCircleIcon, ExclamationCircleIcon, XCircleIcon, XMarkIcon } from "@heroicons/react/24/solid";
+import { InformationCircleIcon, CheckCircleIcon, ExclamationCircleIcon, XCircleIcon, XMarkIcon } from "@heroicons/react/24/outline";
 
 interface DynamicModalProps {
   isOpen: boolean;
@@ -21,13 +21,13 @@ const Modal: React.FC<DynamicModalProps> = ({
   const getIconAndColor = () => {
     switch (type) {
       case "success":
-        return { icon: <CheckCircleIcon className="h-16 w-16" />, color: "text-green-" };
+        return { icon: <CheckCircleIcon className="h-12 w-12" />, color: "text-green-" };
       case "warning":
-        return { icon: <ExclamationCircleIcon className="h-16 w-16" />, color: "text-yellow-" };
+        return { icon: <ExclamationCircleIcon className="h-12 w-12" />, color: "text-yellow-" };
       case "error":
-        return { icon: <XCircleIcon className="h-16 w-16" />, color: "text-red-" };
+        return { icon: <XCircleIcon className="h-12 w-12" />, color: "text-red-" };
       default:
-        return { icon: <InformationCircleIcon className="h-16 w-16"/>, color: "text-blue-" };
+        return { icon: <InformationCircleIcon className="h-12 w-12"/>, color: "text-blue-" };
     }
   };
 
