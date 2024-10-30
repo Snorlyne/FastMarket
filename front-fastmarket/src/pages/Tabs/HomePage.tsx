@@ -58,7 +58,7 @@ const HomePage: React.FC = () => {
           <div className="overflow-x-auto whitespace-nowrap py-4 mx-4">
             <div className="flex space-x-4">
               {anuncios.map((anuncio, index) => (
-                <div
+                <div onClick={() => history.push("/dashboard/home/ViewProduct/"+anuncio.id)}
                   key={index}
                   className="inline-block bg-white rounded-lg shadow-lg p-4 w-11/12 flex-shrink-0"
                 >
@@ -85,8 +85,8 @@ const HomePage: React.FC = () => {
                   </div>
 
                   <button 
-                  className="w-full bg-green-500 text-white py-2 rounded-lg mt-2 hover:bg-green-600 transition-colors" 
-                  onClick={() => history.push("/dashboard/home/ViewProduct")}
+                  className="w-full bg-transparent text-green-600 py-1 rounded-lg mt-2 hover:text-green-700 transition-colors" 
+                  onClick={() => history.push("/dashboard/home/ViewProduct/"+anuncio.id)}
                   >
                     Entrar
                   </button>
@@ -102,7 +102,7 @@ const HomePage: React.FC = () => {
           <div className="py-4 mx-4">
             <div className="grid grid-cols-2 md:grid-cols-2 gap-4">
               {anuncios.map((anuncio, index) => (
-                <div
+                <div onClick={() =>  history.push("/dashboard/home/ViewProduct/"+anuncio.id)}
                   key={index}
                   className="bg-white rounded-lg shadow-lg p-4 w-full"
                 >
@@ -126,12 +126,12 @@ const HomePage: React.FC = () => {
                     </span>
                   </p>
                   </div>
-                  <button className="w-full bg-green-500 text-white py-2 rounded-lg mt-2 hover:bg-green-600 transition-colors"
+                  {/* <button 
+                  className="w-full bg-transparent text-green-600 py-1 rounded-lg mt-2 hover:text-green-700 transition-colors" 
                   onClick={() => history.push("/dashboard/home/ViewProduct")}
-
                   >
                     Entrar
-                  </button>
+                  </button> */}
                 </div>
               ))}
             </div>

@@ -1,4 +1,5 @@
 import { Ilocalizacion } from "./ILocalizacion";
+import { IOferta } from "./IOferta";
 import { IProducto } from "./IProducto";
 
 export interface IAnuncio {
@@ -10,5 +11,6 @@ export interface IAnuncio {
     descripcion: string;
     tipo: string;
     productos: IProducto;
-    localizacion: Ilocalizacion
+    localizacion: Ilocalizacion;
+    ofertas: IOferta[];
 }

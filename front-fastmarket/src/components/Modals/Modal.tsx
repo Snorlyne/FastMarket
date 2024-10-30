@@ -34,7 +34,7 @@ const Modal: React.FC<DynamicModalProps> = ({
   const { icon, color } = getIconAndColor();
 
   return (
-    <div className={`fixed inset-0 z-50 ${isOpen ? "flex" : "hidden"} items-center justify-center`}>
+    <div className={`top-0 bottom-0 left-0 right-0 absolute z-50 ${isOpen ? "flex" : "hidden"} items-center justify-center`}>
       <div className="fixed inset-0 bg-black/30" onClick={onClose}></div>
       <div className={`relative bg-white rounded-lg w-full max-w-md p-6 mx-4 text-center shadow-lg`}>
         
@@ -43,7 +43,7 @@ const Modal: React.FC<DynamicModalProps> = ({
           <XMarkIcon className="h-6 w-6" />
         </button>
         
-        <div className={`flex justify-center mb-4 ${color}500`}>
+        <div className={`flex justify-center mb-4 text-black`}>
           {icon}
         </div>
         
@@ -53,7 +53,7 @@ const Modal: React.FC<DynamicModalProps> = ({
         {onConfirm && (
           <button
             onClick={onConfirm}
-            className={` ${color}500 py-2 px-4 rounded-md hover:${color}800`}
+            className={` text-black py-2 px-4 rounded-md hover:${color}800`}
           >
             Confirmar
           </button>

@@ -2,7 +2,7 @@ import { IAnuncio } from "../interfaces/IAnuncio";
 import { IResponse } from "../interfaces/IResponse";
 import authService from "./AuthService";
 
-const API_URL =/*  import.meta.env.VITE_APP_API_URL */ 'https://localhost:7087/';
+const API_URL = import.meta.env.VITE_APP_API_URL  //'https://localhost:7087/';
 
 const anunciosService = {
     getAll: async (): Promise<IResponse> => {
@@ -10,7 +10,7 @@ const anunciosService = {
         try {
             const response = await fetch(`${API_URL}anuncios`, {
                 method: 'GET',
-                headers: { 
+                headers: {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json',
                 }
@@ -27,7 +27,7 @@ const anunciosService = {
         try {
             const response = await fetch(`${API_URL}anuncios/byToken`, {
                 method: 'GET',
-                headers: { 
+                headers: {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json',
                 }
@@ -38,7 +38,24 @@ const anunciosService = {
             console.error('Unexpected error:', (error as Error).message);
             return { isSuccess: false, message: 'Error al obtener anuncios', result: null };
         }
-    }
+    },
+    getById: async (id:string): Promise<IResponse> => {
+        const token = await authService.getToken();
+        try {
+            const response = await fetch(`${API_URL}anuncios/${parseInt(id)}`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                }
+            });
+            const data = await response.json();
+            return { isSuccess: true, message: "", result: data.result };
+        } catch (error) {
+            console.error('Unexpected error:', (error as Error).message);
+            return { isSuccess: false, message: 'Error al obtener anuncios', result: null };
+        }
+    },
 }
 
 export default anunciosService;

@@ -184,7 +184,7 @@ const ProfilePage: React.FC = () => {
         <Modal
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
-          type={modalData.type as any}
+          type={"warning"}
           title={modalData.title}
           message={modalData.message}
           onConfirm={modalData.onConfirm}

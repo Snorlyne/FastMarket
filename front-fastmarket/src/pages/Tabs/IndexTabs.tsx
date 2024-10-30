@@ -33,7 +33,7 @@ const IndexTabs: React.FC = () => {
           <Route path="/dashboard/profile" component={ProfilePage} exact />
 
           {/* Vista fuera del Tabs */}
-          <Route path="/dashboard/home/ViewProduct" component={ViewProduct} exact />
+          <Route path="/dashboard/home/ViewProduct/:id" component={ViewProduct} exact />
           <Route path="/dashboard/profile/Profile" component={ProfileView} exact />
           <Route path="/dashboard/profile/MyAdvert" component={MyAdvert} exact />
           <Route path="/dashboard/profile/MyOffert" component={MyOffert} exact />

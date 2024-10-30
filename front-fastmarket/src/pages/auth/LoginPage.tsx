@@ -61,7 +61,7 @@ const LoginPage: React.FC = () => {
       const response = await authService.login(req.correo, req.contraseña);
       if (response.isSuccess) {
         auth.login(); // Iniciar sesión en el contexto de autenticación
-        history.replace('/dashboard');
+        history.replace('/dashboard/home');
       } else {
         setIsLoading(false); // Detener loading en caso de error
         setModalData({
