@@ -22,8 +22,8 @@ export const ofertasMockData: any[] = [
         cantidad: 1,
         tipo: "Deporte",
         fotos: [
-          { id: 1001, url: "https://example.com/bike1.jpg" },
-          { id: 1002, url: "https://example.com/bike2.jpg" }
+          { id: 1001, url: "https://firebasestorage.googleapis.com/v0/b/fastmarket-b082d.appspot.com/o/productosFM%2Flaptop_183544.jpg?alt=media&token=0170a0bd-4443-42b9-8c98-fb3d23d32643" },
+          { id: 1002, url: "https://firebasestorage.googleapis.com/v0/b/fastmarket-b082d.appspot.com/o/productosFM%2Flaptop_183544.jpg?alt=media&token=0170a0bd-4443-42b9-8c98-fb3d23d32643" }
         ],
       }
     },
@@ -35,8 +35,8 @@ export const ofertasMockData: any[] = [
         cantidad: 1,
         tipo: "Deporte",
         fotos: [
-          { id: 1001, url: "https://example.com/bike1.jpg" },
-          { id: 1002, url: "https://example.com/bike2.jpg" }
+          { id: 1001, url: "https://firebasestorage.googleapis.com/v0/b/fastmarket-b082d.appspot.com/o/productosFM%2Flaptop_183544.jpg?alt=media&token=0170a0bd-4443-42b9-8c98-fb3d23d32643" },
+          { id: 1002, url: "https://firebasestorage.googleapis.com/v0/b/fastmarket-b082d.appspot.com/o/productosFM%2Flaptop_183544.jpg?alt=media&token=0170a0bd-4443-42b9-8c98-fb3d23d32643" }
         ],
       },
       {
@@ -46,8 +46,8 @@ export const ofertasMockData: any[] = [
         cantidad: 1,
         tipo: "Deporte",
         fotos: [
-          { id: 1001, url: "https://example.com/bike1.jpg" },
-          { id: 1002, url: "https://example.com/bike2.jpg" }
+          { id: 1001, url: "https://firebasestorage.googleapis.com/v0/b/fastmarket-b082d.appspot.com/o/productosFM%2Flaptop_183544.jpg?alt=media&token=0170a0bd-4443-42b9-8c98-fb3d23d32643" },
+          { id: 1002, url: "https://firebasestorage.googleapis.com/v0/b/fastmarket-b082d.appspot.com/o/productosFM%2Flaptop_183544.jpg?alt=media&token=0170a0bd-4443-42b9-8c98-fb3d23d32643" }
         ],
       },
     ]

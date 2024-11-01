@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import {IonPage,IonHeader,IonToolbar,IonTitle,IonContent,IonText,IonButton,IonInput,IonItem,IonLabel,IonFooter} from '@ionic/react';
 import 'tailwindcss/tailwind.css';
+import Header from '../components/Header';
 
 const PrivateChat: React.FC = () => {
 const [messages, setMessages] = useState([
@@ -23,14 +24,10 @@ const sendMessage = () => {
 
 return (
     <IonPage>
-    <IonHeader>
-        <IonToolbar>
-        <IonTitle className="text-center font-semibold text-lg">Chat Privado</IonTitle>
-        </IonToolbar>
-    </IonHeader>
+        <Header title={'Chat Privado'} />
 
     <IonContent className="p-4 pb-20 bg-gray-50">
-        <div className="space-y-4">
+        <div className="space-y-4 py-4 px-2">
         {messages.map((message, index) => (
             <div
             key={index}
@@ -59,7 +56,7 @@ return (
             className="px-4 text-sm"
             />
         </IonItem>
-        <IonButton onClick={sendMessage} expand="block" className="w-1/6 rounded-full bg-indigo-600 text-white font-medium">
+        <IonButton onClick={sendMessage} expand="block" className="w-2/6 rounded-full bg-indigo-600 text-white font-medium">
             Enviar
         </IonButton>
         </div>

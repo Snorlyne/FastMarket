@@ -8,10 +8,10 @@ import { useAuth } from "../../services/auth/AuthContext";
 import perfilService from "../../services/PerfilServices";
 import { IPersona } from "../../interfaces/IPersona";
 import Modal from "../../components/Modals/Modal";
-
+import HeaderHome from "../../components/Header copy";
 
 const ProfilePage: React.FC = () => {
-  const [email, setEmail ] = useState("")
+  const [email, setEmail] = useState("");
   const history = useHistory();
   const auth = useAuth();
   const [perfil, setPerfil] = useState<IPersona | null>(null);
@@ -23,8 +23,6 @@ const ProfilePage: React.FC = () => {
     onConfirm: () => {},
   });
   const [isLoading, setIsLoading] = useState(true);
-
-  
 
   const fetchPerfil = async () => {
     try {
@@ -57,13 +55,13 @@ const ProfilePage: React.FC = () => {
   };
 
   return (
-
     <IonPage>
       {isLoading && (
         <div className="fixed inset-0 z-10 flex items-center justify-center bg-white">
           <LoadingWave />
         </div>
       )}
+      <HeaderHome title="FastMarket" />
       <div className="p-4 bg-white h-screen">
         <IonCard
           className="bg-white shadow-lg rounded-lg max-w-sm"
@@ -77,7 +75,7 @@ const ProfilePage: React.FC = () => {
                 className="w-16 h-16 rounded-full mr-6"
               />
               <IonCardTitle className="text-xl font-bold text-black">
-                {perfil?.nombre} {" "} {perfil?.apellido}
+                {perfil?.nombre} {perfil?.apellido}
               </IonCardTitle>
             </div>
             <div className="mb-4">
@@ -98,7 +96,10 @@ const ProfilePage: React.FC = () => {
           <h3 className="text-lg font-semibold mb-2 text-black">Opciones:</h3>
 
           <div className="grid grid-cols-2 gap-2 place-items-center mx-auto">
-            <IonCard className="w-44 rounded-xl"  onClick={() => history.push("/dashboard/profile/Mysale")}>
+            <IonCard
+              className="w-44 rounded-xl"
+              onClick={() => history.push("/dashboard/profile/Mysale")}
+            >
               <IonCardHeader>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -118,7 +119,10 @@ const ProfilePage: React.FC = () => {
               </IonCardHeader>
             </IonCard>
 
-            <IonCard className="w-44 rounded-xl"  onClick={() => history.push("/dashboard/profile/MyAdvert")}>
+            <IonCard
+              className="w-44 rounded-xl"
+              onClick={() => history.push("/dashboard/profile/MyAdvert")}
+            >
               <IonCardHeader>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -137,7 +141,10 @@ const ProfilePage: React.FC = () => {
                 <IonCardTitle>Mis Anuncios</IonCardTitle>
               </IonCardHeader>
             </IonCard>
-            <IonCard className="w-44 rounded-xl" onClick={() => history.push("/dashboard/profile/MyOffert")}>
+            <IonCard
+              className="w-44 rounded-xl"
+              onClick={() => history.push("/dashboard/profile/MyOffert")}
+            >
               <IonCardHeader>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -181,16 +188,15 @@ const ProfilePage: React.FC = () => {
           </button>
         </div>
       </div>
-        <Modal
-          isOpen={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
-          type={"warning"}
-          title={modalData.title}
-          message={modalData.message}
-          onConfirm={modalData.onConfirm}
-        />
+      <Modal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        type={"warning"}
+        title={modalData.title}
+        message={modalData.message}
+        onConfirm={modalData.onConfirm}
+      />
     </IonPage>
-    
   );
 };
 

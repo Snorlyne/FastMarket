@@ -3,6 +3,7 @@ import { IonPage, IonIcon } from "@ionic/react";
 import { searchOutline } from "ionicons/icons";
 import Header from "../../components/Header";
 import { Search } from "../../interfaces/ISearch";
+import HeaderHome from '../../components/Header copy';
 
 const SearchPage: React.FC = () => {
     const [searchTerm, setSearchTerm] = useState<string>("");
@@ -25,7 +26,7 @@ const SearchPage: React.FC = () => {
     return (
     <IonPage>
         <div className="min-h-screen bg-gray-100">
-        <Header title="Buscador" />
+        <HeaderHome title="FastMarket" />
 
           {/* Barra de búsqueda */}
         <div className="max-w-xl mx-auto px-4 py-4">

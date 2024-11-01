@@ -44,7 +44,7 @@ const ViewProduct: React.FC = () => {
         </div>
       )}
       <div className="view-product-container">
-        <Header title={anuncio?.productos?.nombre || "Product Details"} />
+        <Header title={anuncio?.productos?.nombre!} />
         <div className="carousel relative">
           <div className="relative overflow-x-scroll">
             <div className="flex">
