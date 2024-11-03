@@ -18,7 +18,6 @@ namespace FastMarketBackEnd.Controllers
         }
         // GET: api/<ProductosController>
         [HttpGet]
-        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Get()
         {
             var response = await _services.ObtenerProductos();

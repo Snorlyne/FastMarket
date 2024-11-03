@@ -21,6 +21,10 @@ import EditAdvert from "../EditAdvertPage";
 import MyOffert from "../MyOfferPage";
 import Mysale from "../MysalePage";
 import ProfileView from "../ProfileViewPage";
+import OffersHubPage from "../OfferHubPage";
+import ChatList from "../ChatListPage";
+import PrivateChat from "../ChatPrivateVendPage";
+import SearchPage from "./SearchPage";
 
 
 const IndexTabs: React.FC = () => {
@@ -31,9 +35,13 @@ const IndexTabs: React.FC = () => {
           {/* vista del Tabs */}
           <Route path="/dashboard/home" component={HomePage} exact />
           <Route path="/dashboard/profile" component={ProfilePage} exact />
+          <Route path="/dashboard/search" component={SearchPage} exact />
 
           {/* Vista fuera del Tabs */}
-          <Route path="/dashboard/home/ViewProduct" component={ViewProduct} exact />
+          <Route path="*/offerhub/:id" component={OffersHubPage} exact />
+          <Route path="*/ViewProduct/:id" component={ViewProduct} exact />
+          <Route path="*/chatlist" component={ChatList} exact />
+          <Route path="*/chat/:id" component={PrivateChat} exact />
           <Route path="/dashboard/profile/Profile" component={ProfileView} exact />
           <Route path="/dashboard/profile/MyAdvert" component={MyAdvert} exact />
           <Route path="/dashboard/profile/MyOffert" component={MyOffert} exact />
@@ -54,10 +62,10 @@ const IndexTabs: React.FC = () => {
             <IonIcon icon={homeOutline} />
             <IonLabel>Inicio</IonLabel>
           </IonTabButton>
-          {/* <IonTabButton tab="busqueda" href="/dashboard/search">
+          <IonTabButton tab="busqueda" href="/dashboard/search">
             <IonIcon icon={searchOutline} />
             <IonLabel>Buscar</IonLabel>
-          </IonTabButton> */}
+          </IonTabButton>
           <IonTabButton tab="profile" href="/dashboard/profile">
             <IonIcon icon={personOutline} />
             <IonLabel>Perfil</IonLabel>

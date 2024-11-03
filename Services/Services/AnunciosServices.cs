@@ -98,6 +98,10 @@ namespace Services.Services
                      .Include(a => a.Ofertas)
                      .Include(a => a.Personas)
                      .Include(a => a.Productos)
+                        .ThenInclude(ap => ap.Fotos)
+                    .Include(a => a.Productos)
+                        .ThenInclude(p => p.ProductosEtiquetas)
+                            .ThenInclude(pe => pe.Etiquetas)
                      .FirstOrDefaultAsync(a => a.Id == id) ?? throw new Exception("Anuncio no encontrado");
 
                 bool esPropietario = anuncio.Personas.Id == idPersona ? true : false;
@@ -134,7 +138,17 @@ namespace Services.Services
                         Descripcion = anuncio.Productos.Descripcion,
                         Precio = anuncio.Productos.Precio,
                         Cantidad = anuncio.Productos.Cantidad,
-                        Tipo = anuncio.Productos.Tipo
+                        Tipo = anuncio.Productos.Tipo,
+                        Fotos = anuncio.Productos.Fotos.Select(f => new FotosDto
+                        {
+                            Id = f.Id,
+                            Url = f.Url
+                        }).ToList(),
+                        Etiquetas = anuncio.Productos.ProductosEtiquetas
+                                .Select(pe => new EtiquetasDto
+                                {
+                                    Nombre = pe.Etiquetas.Nombre
+                                }).ToList()
                     },
                     Localizacion = new LocalizacionesDto
                     {

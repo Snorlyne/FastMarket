@@ -13,7 +13,7 @@ const MyOffert: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedOferta, setSelectedOferta] = useState<IOferta | null>(null);
-
+  const route = history.location
   const fetchOfertas = async () => {
     try {
       setIsLoading(true);
@@ -63,6 +63,7 @@ const MyOffert: React.FC = () => {
               {ofertas.length > 0 ? (
                 ofertas.map((oferta) => (
                   <div
+                  onClick={() => history.push(route+"/ViewProduct/"+ oferta.Id)}
                     key={oferta.Id}
                     className="flex flex-col bg-white rounded-2xl overflow-hidden shadow-lg"
                   >
@@ -88,9 +89,8 @@ const MyOffert: React.FC = () => {
                       </p>
                       <button
                         className="w-full bg-blue-500 text-white text-sm font-bold py-2 rounded-lg hover:bg-blue-800 transition-colors"
-                        onClick={() => openModal(oferta)}
                       >
-                        Ver Detalles del Producto
+                        Ver Detalles del anuncio
                       </button>
                     </div>
                   </div>
