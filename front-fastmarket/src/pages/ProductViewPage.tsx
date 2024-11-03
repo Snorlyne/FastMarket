@@ -1,10 +1,18 @@
-import React from 'react';
+import React, { useState } from 'react';
 import 'tailwindcss/tailwind.css'; 
 import Header from '../components/Header';
 import './css/product.css';
 import { IonPage } from '@ionic/react';
+import ProductModal from '../components/Modals/ModalsProduct';
+import OpcionModal from '../components/Modals/ModalOpcion';
 
 const ViewProduct: React.FC = () => {
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpcionOpen, setIsModalOpcionOpen] = useState(false);
+
+
+
   return (
     <IonPage>
     <div className=" view-product-container"> 
@@ -53,12 +61,13 @@ const ViewProduct: React.FC = () => {
           <h2 className="text-md font-semibold text-black">Ofertas del momento:</h2>
           <div className="flex space-x-2 mt-2">
             <button className="bg-green-600 py-2 px-4 rounded-lg">1. Oferta: $1000</button>
-            <button className="bg-green-600 py-2 px-4 rounded-lg">2. Oferta: Ver producto</button>
+            <button className="bg-green-600 py-2 px-4 rounded-lg" onClick={() => setIsModalOpen(true)}
+            >2. Oferta: Ver producto</button>
             <button className="bg-green-600 py-2 px-4 rounded-lg">1. Oferta: $1000</button>
           </div>
         </div>
 
-        <button className="w-full bg-blue-500 text-white py-2 rounded-lg mt-4">
+        <button className="w-full bg-blue-500 text-white py-2 rounded-lg mt-4" onClick={() => setIsModalOpcionOpen(true)}>
           Enviar propuesta al vendedor
         </button>
 
@@ -72,7 +81,20 @@ const ViewProduct: React.FC = () => {
         </div>
       </div>
     </div>
+    <ProductModal 
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+      />
+      <OpcionModal
+              isOpen={isModalOpcionOpen}
+              onClose={() => setIsModalOpcionOpen(false)}
+
+
+      
+      />
+
     </IonPage>
+   
   );
 };
 

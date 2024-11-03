@@ -40,15 +40,12 @@ const IndexTabs: React.FC = () => {
           <Route path="/dashboard/profile/Mysale" component={Mysale} exact />
           <Route path="/dashboard/profile/MyAdvert/ProductCreate" component={ProductCreate} exact />
           <Route path="/dashboard/profile/MyAdvert/ProductCreate/EditAdvert" component={EditAdvert} exact />
-
-
-
           {/* Redirige a /home si no coincide ninguna ruta */}
           <Redirect exact path="/dashboard" to="/dashboard/home" />
         </IonRouterOutlet>
 
         {/* Aquí están las pestañas (tab bar) */}
-        <IonTabBar style={{
+        <IonTabBar className=" " style={{
             backgroundColor: "#f8f9fa",
             borderTop: "1px solid #dee2e6",
   
