@@ -7,127 +7,110 @@ import Modal from "../../components/Modals/Modal";
 import { IonPage } from "@ionic/react";
 
 const RegisterPage: React.FC = () => {
-  const authService = AuthService;
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [isModalOpen, setIsModalOpen] = useState(false); // Control del modal
+  const history = useHistory();
+  
+  // Form state
+  const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: ""
+  });
+  
+  // UI state
   const [isLoading, setIsLoading] = useState(false);
-  const [modalData, setModalData] = useState({
-    type: "info", // Por defecto
+  const [modalState, setModalState] = useState({
+    isOpen: false,
+    type: "info" as "info" | "error" | "success",
     title: "",
     message: "",
-    onConfirm: () => {}, // Acción por defecto
-  }); // Datos dinámicos del modal
-  const history = useHistory();
+    onConfirm: () => {}
+  });
 
-  const handleRegister = async () => {
+  const showModal = (type: "info" | "error" | "success", title: string, message: string, onConfirm?: () => void) => {
+    setModalState({
+      isOpen: true,
+      type,
+      title,
+      message,
+      onConfirm: onConfirm || (() => setModalState(prev => ({ ...prev, isOpen: false })))
+    });
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const validateForm = (): boolean => {
     // Validación del nombre
-    if (!firstName.trim()) {
-      setModalData({
-        type: "error",
-        title: "Error de Validación",
-        message: "El nombre es obligatorio.",
-        onConfirm: () => {
-          setIsModalOpen(false);
-        },
-      });
-      setIsModalOpen(true);
-      return;
+    if (!formData.firstName.trim()) {
+      showModal("error", "Error de Validación", "El nombre es obligatorio.");
+      return false;
     }
 
     // Validación del apellido
-    if (!lastName.trim()) {
-      setModalData({
-        type: "error",
-        title: "Error de Validación",
-        message: "El apellido es obligatorio.",
-        onConfirm: () => {
-          setIsModalOpen(false);
-        },
-      });
-      setIsModalOpen(true);
-      return;
+    if (!formData.lastName.trim()) {
+      showModal("error", "Error de Validación", "El apellido es obligatorio.");
+      return false;
     }
 
     // Validación del correo electrónico
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!email.trim() || !emailRegex.test(email)) {
-      setModalData({
-        type: "error",
-        title: "Error de Validación",
-        message: "Por favor, introduce un correo electrónico válido.",
-        onConfirm: () => {
-          setIsModalOpen(false);
-        },
-      });
-      setIsModalOpen(true);
-      return;
+    if (!formData.email.trim() || !emailRegex.test(formData.email)) {
+      showModal("error", "Error de Validación", "Por favor, introduce un correo electrónico válido.");
+      return false;
     }
 
     // Validación de la contraseña
-    if (password.length < 6) {
-      setModalData({
-        type: "error",
-        title: "Error de Validación",
-        message: "La contraseña debe tener al menos 6 caracteres.",
-        onConfirm: () => {
-          setIsModalOpen(false);
-        },
-      });
-      setIsModalOpen(true);
-      return;
+    if (formData.password.length < 6) {
+      showModal("error", "Error de Validación", "La contraseña debe tener al menos 6 caracteres.");
+      return false;
     }
 
-    // Si todas las validaciones son correctas, se crea el objeto request
-    const request: IRegistro = {
-      correo: email,
-      contraseña: password,
-      nombre: firstName,
-      apellido: lastName,
-    };
+    return true;
+  };
+
+  const handleRegister = async () => {
+    if (!validateForm()) return;
+    
+    setIsLoading(true);
 
     try {
-      const response: IResponse = await authService.register(request);
+      const request: IRegistro = {
+        correo: formData.email,
+        contraseña: formData.password,
+        nombre: formData.firstName,
+        apellido: formData.lastName,
+      };
+
+      const response: IResponse = await AuthService.register(request);
 
       if (response.isSuccess) {
-        // Modal de éxito
-        setModalData({
-          type: "success",
-          title: "Registro Exitoso",
-          message:
-            "Tu cuenta ha sido creada exitosamente. Serás redirigido al inicio de sesión.",
-          onConfirm: () => {
-            history.push("/login"); // Redirige al login
-          },
-        });
+        showModal(
+          "success",
+          "Registro Exitoso",
+          "Tu cuenta ha sido creada exitosamente. Serás redirigido al inicio de sesión.",
+          () => history.push("/login")
+        );
       } else {
-        // Modal de error
-        setModalData({
-          type: "error",
-          title: "Error en el Registro",
-          message:
-            response.message ||
-            "Hubo un problema al crear la cuenta. Inténtalo de nuevo.",
-          onConfirm: () => {
-            setIsModalOpen(false); // Solo cierra el modal
-          },
-        });
+        showModal(
+          "error",
+          "Error en el Registro",
+          response.message || "Hubo un problema al crear la cuenta. Inténtalo de nuevo."
+        );
       }
-    } catch (err) {
-      // Modal para manejar errores de servidor o de conexión
-      setModalData({
-        type: "error",
-        title: "Error",
-        message:
-          "Ocurrió un error inesperado. Por favor, intenta de nuevo más tarde.",
-        onConfirm: () => {
-          setIsModalOpen(false); // Solo cierra el modal
-        },
-      });
+    } catch (error) {
+      showModal(
+        "error",
+        "Error",
+        "Ocurrió un error inesperado. Por favor, intenta de nuevo más tarde."
+      );
     } finally {
-      setIsModalOpen(true); // Abre el modal después de la respuesta o del error
+      setIsLoading(false);
     }
   };
 
@@ -140,53 +123,48 @@ const RegisterPage: React.FC = () => {
           </h2>
           <p className="text-center text-gray-600 mb-6">¡Crea tu cuenta!</p>
 
-          {/* Nombre */}
-          <div className="mb-4">
+          {/* Form inputs */}
+          <div className="space-y-4">
             <input
               type="text"
+              name="firstName"
               className="w-full px-4 py-2 rounded-lg text-black focus:outline-none focus:ring-2 focus:ring-green-500 bg-white border-b-2"
-              value={firstName}
+              value={formData.firstName}
               placeholder="Nombre..."
-              onChange={(e) => setFirstName(e.target.value)}
+              onChange={handleInputChange}
             />
-          </div>
 
-          {/* Apellidos */}
-          <div className="mb-4">
             <input
               type="text"
+              name="lastName"
               className="w-full px-4 py-2 rounded-lg text-black focus:outline-none focus:ring-2 focus:ring-green-500 bg-white border-b-2"
-              value={lastName}
+              value={formData.lastName}
               placeholder="Apellidos..."
-              onChange={(e) => setLastName(e.target.value)}
+              onChange={handleInputChange}
             />
-          </div>
 
-          {/* Correo Electrónico */}
-          <div className="mb-4">
             <input
               type="email"
+              name="email"
               className="w-full px-4 py-2 rounded-lg text-black focus:outline-none focus:ring-2 focus:ring-green-500 bg-white border-b-2"
-              value={email}
-              placeholder="Corre electrónico..."
-              onChange={(e) => setEmail(e.target.value)}
+              value={formData.email}
+              placeholder="Correo electrónico..."
+              onChange={handleInputChange}
             />
-          </div>
 
-          {/* Contraseña */}
-          <div className="mb-6">
             <input
               type="password"
+              name="password"
               className="w-full px-4 py-2 rounded-lg text-black focus:outline-none focus:ring-2 focus:ring-green-500 bg-white border-b-2"
-              value={password}
+              value={formData.password}
               placeholder="Contraseña..."
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={handleInputChange}
             />
           </div>
 
-          {/* Botón Crear Cuenta */}
+          {/* Submit button */}
           <button
-            className={`w-full bg-green-500 text-white py-2 rounded-lg hover:bg-green-600 transition-colors mt-4 relative ${
+            className={`w-full bg-green-500 text-white py-2 rounded-lg hover:bg-green-600 transition-colors mt-6 relative ${
               isLoading ? 'cursor-not-allowed opacity-70' : ''
             }`}
             onClick={handleRegister}
@@ -196,7 +174,6 @@ const RegisterPage: React.FC = () => {
               Crear cuenta
             </span>
             
-            {/* Loading Spinner */}
             {isLoading && (
               <div className="absolute inset-0 flex items-center justify-center">
                 <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white"></div>
@@ -218,12 +195,12 @@ const RegisterPage: React.FC = () => {
 
       {/* Modal */}
       <Modal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        type={modalData.type as any}
-        title={modalData.title}
-        message={modalData.message}
-        onConfirm={modalData.onConfirm}
+        isOpen={modalState.isOpen}
+        onClose={() => setModalState(prev => ({ ...prev, isOpen: false }))}
+        type={modalState.type}
+        title={modalState.title}
+        message={modalState.message}
+        onConfirm={modalState.onConfirm}
       />
     </IonPage>
   );

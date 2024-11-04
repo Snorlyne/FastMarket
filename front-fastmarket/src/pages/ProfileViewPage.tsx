@@ -1,19 +1,77 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { trashOutline } from 'ionicons/icons';
 import { IonIcon, IonPage } from '@ionic/react';
+import perfilService from '../services/PerfilServices';
+import { IPersona } from '../interfaces/IPersona';
+import { useAuth } from '../services/auth/AuthContext';
+
+/* Componentes */
 import Header from '../components/Header';
+import Modal from '../components/Modals/Modal';
 
 const ProfileView: React.FC = () => {
+  const [perfil, setPerfil] = useState<IPersona | null>(null);
+  const [email, setEmail] = useState("");
+  const auth = useAuth();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalData, setModalData] = useState({
+    type: "info",
+    title: "",
+    message: "",
+    onConfirm: () => {},
+  });
+
+  const fetchPerfil = async () => {
+    try {
+      const response = await perfilService.getPerfil();
+      if (response.isSuccess && response.result) {
+        setPerfil(response.result);
+        setEmail(response.result.usuarios.correo);
+        console.log("Perfil obtenido:", response.result);
+      } else {
+        console.log("Error fetching perfil: " + response.result);
+      }
+    } catch (error) {
+      console.error("Error fetching perfil:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchPerfil();
+  }, []);
+
+  const handleDeleteConfirmation = () => {
+    setIsModalOpen(true);
+    setModalData({
+      type: "warning",
+      title: "Eliminar cuenta",
+      message: "¿Estás seguro de eliminar tu cuenta?",
+      onConfirm: confirmDeleteUser,
+    });
+  };
+
+  const confirmDeleteUser = async () => {
+    if (perfil && perfil.id) {
+      const response = await perfilService.deletePerfil(perfil.id.toString());
+      setIsModalOpen(false);
+
+      if (response.isSuccess) {
+        console.log(response.message);
+        await auth.logout();
+      } else {
+        console.error(response.message);
+      }
+    }
+  };
+
   return (
     <IonPage> 
-       <div className="min-h-screen w-full bg-white">
-            <Header title="perfil" />
-
-      <div className="w-full h-full overflow-auto p-4">
-        {/* Container principal con fondo gris claro */}
+      <div className="min-h-screen w-full bg-white">
+        <Header title="perfil" />
+        <div className="w-full h-full overflow-auto p-4">
           {/* Título */}
           <h1 className="text-xl font-bold text-center mb-6">Perfil</h1>
-          <div className="bg-gray-300 rounded-lg  mb-6">
+          <div className="bg-gray-300 rounded-lg mb-6">
             <div className="w-24 h-24 mx-auto rounded-full overflow-hidden">
               <img
                 src={"https://raw.githubusercontent.com/RogelioGR/Proyect-RoomClean/refs/heads/Developer/public/usuario.png"}
@@ -22,50 +80,32 @@ const ProfileView: React.FC = () => {
               />
             </div>
           </div>
-
-          {/* Sección de información personal */}
+          {/* Información personal */}
           <div className="bg-gray-200 rounded-lg p-4 mb-6">
             <h2 className="text-sm text-gray-600 mb-4">Información personal</h2>
-            
-            {/* Campo Nombre */}
             <div className="mb-4">
               <label className="text-sm text-gray-600 mb-1 block">Nombre:</label>
               <input
                 type="text"
-                value='Lian'
+                value={perfil?.nombre}
                 readOnly
                 className="w-full p-2 rounded bg-gray-100 text-gray-800"
               />
             </div>
-
-            {/* Campo Apellidos */}
             <div className="mb-4">
               <label className="text-sm text-gray-600 mb-1 block">Apellidos:</label>
               <input
                 type="text"
-                value='{userData.apellidos}'
+                value={perfil?.apellido}
                 readOnly
                 className="w-full p-2 rounded bg-gray-100 text-gray-800"
               />
             </div>
-
-            {/* Campo Correo */}
             <div className="mb-4">
               <label className="text-sm text-gray-600 mb-1 block">Correo:</label>
               <input
                 type="email"
-                value='lina'
-                readOnly
-                className="w-full p-2 rounded bg-gray-100 text-gray-800"
-              />
-            </div>
-
-            {/* Campo Número */}
-            <div className="mb-4">
-              <label className="text-sm text-gray-600 mb-1 block">Numero:</label>
-              <input
-                type="tel"
-                value='s'
+                value={email}
                 readOnly
                 className="w-full p-2 rounded bg-gray-100 text-gray-800"
               />
@@ -74,7 +114,7 @@ const ProfileView: React.FC = () => {
 
           {/* Botón Eliminar cuenta */}
           <button
-            // onClick={onDeleteAccount}
+            onClick={handleDeleteConfirmation}
             className="w-full flex items-center justify-center gap-2 p-3 bg-red-500 rounded-lg text-white hover:bg-red-700 transition-colors"
           >
             <IonIcon icon={trashOutline} className="w-5 h-5" />
@@ -82,9 +122,17 @@ const ProfileView: React.FC = () => {
           </button>
         </div>
       </div>
+
+      {/* Modal de confirmación */}
+      <Modal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        type={"warning"}
+        title={modalData.title}
+        message={modalData.message}
+        onConfirm={modalData.onConfirm}
+      />
     </IonPage>
-    
- 
   );
 };
 

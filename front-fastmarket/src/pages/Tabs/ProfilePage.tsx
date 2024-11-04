@@ -67,7 +67,7 @@ const ProfilePage: React.FC = () => {
       <div className="p-4 bg-white h-screen">
         <IonCard
           className="bg-white shadow-lg rounded-lg max-w-sm"
-          onClick={() => history.push("/dashboard/profile/ViewProfile")}
+          onClick={() => history.push("/dashboard/profile/Profile")}
         >
           <IonCardHeader>
             <div className="flex items-center p-6">
@@ -167,7 +167,7 @@ const ProfilePage: React.FC = () => {
             </IonCard>
           </div>
         </div>
-        <div className="mt-6">
+        <div className="fixed bottom-2 left-0 right-0 p-4 bg-white ">
           <button
             className="w-full bg-red-500 text-white py-2 rounded-lg hover:bg-red-600 transition flex justify-center items-center"
             onClick={() => authService.logout().then(() => logOut())}

@@ -1,62 +1,96 @@
-import React, { useState } from "react";
-import "tailwindcss/tailwind.css";
-import Header from "../components/Header";
-import "./css/product.css";
-import { IonPage, useIonViewDidEnter } from "@ionic/react";
-import { useHistory, useParams } from "react-router";
+import React, { useState, useEffect } from "react";
+import { IonPage } from "@ionic/react";
+import { useHistory, useParams } from "react-router-dom";
 import { IAnuncio } from "../interfaces/IAnuncio";
 import anunciosService from "../services/AnunciosServices";
+import Header from '../components/Header';
 import LoadingWave from "../components/Loader";
 
+interface ViewProductParams {
+  id: string;
+}
+
 const ViewProduct: React.FC = () => {
-  const { id } = useParams<{ id: string }>();
+  const { id } = useParams<ViewProductParams>();
   const [anuncio, setAnuncio] = useState<IAnuncio | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const history = useHistory();
-  const route = history.location
 
-  const fetchAnuncios = async (id: string) => {
+  useEffect(() => {
+    fetchAnuncio();
+  }, [id]);
+
+  const fetchAnuncio = async () => {
+    if (!id) return;
+
     try {
       setIsLoading(true);
+      setError(null);
       const response = await anunciosService.getById(id);
+      
       if (response.isSuccess && response.result) {
         setAnuncio(response.result);
-        console.log("Anuncio fetched:", response.result);
       } else {
-        console.log("Error fetching anuncio: " + response.message);
+        setError(response.message || 'Error al cargar el anuncio');
       }
     } catch (error) {
+      setError('Error inesperado al cargar el anuncio');
       console.error("Error fetching anuncio:", error);
     } finally {
       setIsLoading(false);
     }
   };
 
-  useIonViewDidEnter(() => {
-    fetchAnuncios(id);
-  });
+  const handleMakeOffer = () => {
+    history.push(`${history.location.pathname}/offerhub/${id}`);
+  };
 
-  return (
-    <IonPage>
-      {isLoading && (
+  if (isLoading) {
+    return (
+      <IonPage>
         <div className="fixed inset-0 z-10 flex items-center justify-center bg-white">
           <LoadingWave />
         </div>
-      )}
-      <div className="view-product-container">
-        <Header title={anuncio?.productos?.nombre!} />
-        <div className="carousel relative">
-          <div className="relative overflow-x-scroll">
-            <div className="flex">
+      </IonPage>
+    );
+  }
+
+  if (error) {
+    return (
+      <IonPage>
+        <div className="flex flex-col items-center justify-center min-h-screen p-4">
+          <p className="text-red-600 text-center mb-4">{error}</p>
+          <button 
+            onClick={fetchAnuncio}
+            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+          >
+            Reintentar
+          </button>
+        </div>
+      </IonPage>
+    );
+  }
+
+  return (
+    <IonPage>
+      <div className="flex flex-col min-h-screen bg-white">
+        <Header title={anuncio?.productos?.nombre ?? 'Detalles del Producto'} />
+        
+        {/* Carrusel de Imágenes */}
+        <div className="relative">
+          <div className="overflow-x-auto">
+            <div className="flex snap-x snap-mandatory">
               {anuncio?.productos?.fotos?.map((foto, index) => (
                 <div
                   key={index}
-                  className="w-full p-2 h-80 bg-gray-300 flex-shrink-0"
+                  className="w-full flex-shrink-0 snap-center p-2 h-80"
                 >
                   <img
-                    className="w-full h-full rounded-md object-contain"
-                    src={foto.url} // Display each product photo
-                    alt={`Product image ${index + 1}`}
+                    className="w-full h-full rounded-lg object-contain bg-gray-100"
+                    src={foto.url}
+                    alt={`${anuncio.productos.nombre} - Imagen ${index + 1}`}
+                    loading="lazy"
                   />
                 </div>
               ))}
@@ -64,46 +98,59 @@ const ViewProduct: React.FC = () => {
           </div>
         </div>
 
-        {/* Product Details */}
-        <div className="flex p-4 flex-col justify-between w-full h-[50%]">
-          <div className=" h-full">
-            <h1 className="text-xl font-bold text-black">
-              {anuncio?.productos?.nombre || "Product Name"}
+        {/* Detalles del Producto */}
+        <div className="flex-1 p-4 space-y-6">
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900">
+              {anuncio?.productos?.nombre}
             </h1>
-            <p className="text-green-600">
-              MX${anuncio?.productos?.precio || "N/A"}
+            <p className="text-xl font-semibold text-green-600">
+              MX${anuncio?.productos?.precio?.toLocaleString()}
             </p>
+          </div>
 
-            <div className="my-4">
-              <h2 className="text-md font-semibold text-black">
+          {/* Ofertas */}
+          {anuncio?.ofertas && anuncio.ofertas.length > 0 && (
+            <div>
+              <h2 className="text-lg font-semibold text-gray-900 mb-3">
                 Mejores Ofertas:
               </h2>
-              <div className="flex space-x-2 mt-2">
-                {anuncio?.ofertas?.map((oferta: any, index: any) => (
-                  <button
+              <div className="flex flex-wrap gap-2">
+                {anuncio.ofertas.map((oferta, index) => (
+                  <div
                     key={index}
-                    className="bg-green-600 py-2 px-4 rounded-lg"
+                    className="bg-green-600 text-white py-2 px-4 rounded-lg"
                   >
-                    {index + 1}. Oferta: ${oferta.monto}
-                  </button>
+                    Oferta {index + 1}: ${oferta.monto?.toLocaleString()}
+                  </div>
                 ))}
               </div>
             </div>
+          )}
 
-            <div className="mt-6">
-              <h3 className="text-md font-semibold">Descripción:</h3>
-              <p className="text-gray-600 text-justify">
-                {anuncio?.descripcion || "No description available."}
-              </p>
-            </div>
+          {/* Descripción */}
+          <div>
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">
+              Descripción:
+            </h3>
+            <p className="text-gray-600 text-justify">
+              {anuncio?.descripcion || "Sin descripción disponible."}
+            </p>
           </div>
-            <button onClick={() => history.push(route.pathname+"/offerhub/"+id)} className="w-full bg-blue-500 text-white py-2 rounded-lg mt-4">
-              Enviar propuesta al vendedor
-            </button>
+
+          {/* Botón de Oferta */}
+          <button
+            onClick={handleMakeOffer}
+            className="w-full bg-blue-500 text-white py-3 rounded-lg 
+                     font-semibold transition-colors hover:bg-blue-600 
+                     focus:outline-none focus:ring-2 focus:ring-blue-500 
+                     focus:ring-offset-2"
+          >
+            Enviar propuesta al vendedor
+          </button>
         </div>
       </div>
     </IonPage>
-   
   );
 };
 

@@ -20,7 +20,27 @@ const perfilService = {
             console.error('Unexpected error:', (error as Error).message);
             return { isSuccess: false, message: 'Error al obtener perfil', result: (error as Error)};
         }
+    },
+    async deletePerfil(id: string): Promise<IResponse> {
+        const token = await authService.getToken();
+        try {
+            const response = await fetch(`${API_URL}personas/${id}`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                }
+            });
+            const data = await response.json();
+            return { isSuccess: true, message: "Perfil eliminado exitosamente", result: data };
+        } catch (error) {
+            console.error('Unexpected error:', (error as Error).message);
+            return { isSuccess: false, message: 'Error al eliminar perfil', result: (error as Error)};
+        }
     }
 }
+
+
+
 
 export default perfilService;
