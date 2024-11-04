@@ -19,6 +19,7 @@ namespace Repository.Context
         public virtual DbSet<Localizaciones> localizaciones { get; set; }
         public virtual DbSet<Ofertas> ofertas { get; set; }
         public virtual DbSet<Ofertas_Productos> ofertas_productos { get; set; } // Agregar DbSet para Ofertas_Productos
+        public DbSet<Mensajes> mensajes { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -63,6 +64,13 @@ namespace Repository.Context
                 .WithMany()
                 .HasForeignKey(a => a.IdProducto);
 
+
+            // Relación entre Ofertas y Personas
+            modelBuilder.Entity<Ofertas>()
+                .HasOne(a => a.Personas)
+                .WithMany()
+                .HasForeignKey(a => a.idPersona);
+
             // Configuración de la relación entre Ofertas y Ofertas_Productos
             modelBuilder.Entity<Ofertas_Productos>()
                 .HasKey(op => new { op.ofertas_id, op.productos_id });
@@ -86,6 +94,18 @@ namespace Repository.Context
                   .WithMany(a => a.Ofertas)
                   .HasForeignKey(o => o.idAnuncio)
                   .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Mensajes>()
+                .HasOne(m => m.Oferta)
+                .WithMany(o => o.Mensajes)
+                .HasForeignKey(m => m.IdOferta)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Mensajes>()
+                .HasOne(m => m.Persona)
+                .WithMany(p => p.Mensajes)
+                .HasForeignKey(m => m.IdPersona)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }
