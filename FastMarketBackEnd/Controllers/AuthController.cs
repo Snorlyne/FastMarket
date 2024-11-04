@@ -57,7 +57,7 @@ namespace FastMarketBackEnd.Controllers
                     new Claim(ClaimTypes.Email, usuario.Correo),       // Incluir el correo
                     new Claim(ClaimTypes.Role, rolNombre)              // Incluir el rol
                 }),
-                Expires = DateTime.UtcNow.AddHours(1),
+                Expires = DateTime.UtcNow.AddHours(12),
                 Issuer = _configuration["Jwt:Issuer"],
                 Audience = _configuration["Jwt:Audience"],
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)

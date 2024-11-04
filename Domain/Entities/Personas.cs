@@ -15,6 +15,7 @@ namespace Domain.Entities
         public string Apellido { get; set; }  
         public int IdUsuario { get; set; } 
         public Usuarios Usuario { get; set; }
-        }
+        public virtual ICollection<Mensajes> Mensajes { get; set; }
+    }
 
 }

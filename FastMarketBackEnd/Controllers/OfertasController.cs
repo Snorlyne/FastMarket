@@ -6,6 +6,7 @@ using Services.IServices;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using static Common.Utilities.Enums;
 
 namespace FastMarketBackEnd.Controllers
 {
@@ -66,9 +67,10 @@ namespace FastMarketBackEnd.Controllers
             }
         }
         // POST api/<OfertasController>
-        [HttpPost]
-        public async Task<IActionResult> Post([FromBody] CrearOfertaRequest request)
+        [HttpPost("anuncio/{idAnuncio}")]
+        public async Task<IActionResult> Post(int idAnuncio, [FromBody] CrearOfertaRequest request)
         {
+            int idPersona = TokenHelper.ObtenerIdPersona(User);
             // Validar la solicitud
             if (request == null)
             {
@@ -115,7 +117,7 @@ namespace FastMarketBackEnd.Controllers
                     return BadRequest("El tipo de oferta es inválido.");
             }
 
-            var response = await _ofertasServices.CrearOferta(request.Oferta, request.Productos);
+            var response = await _ofertasServices.CrearOferta(idPersona, idAnuncio, request.Oferta, request.Productos);
             return Ok(response);
         }
 
@@ -173,6 +175,13 @@ namespace FastMarketBackEnd.Controllers
             return Ok(response);
         }
 
+        [HttpPut("estado/{id}")]
+        public async Task<IActionResult> CambiarEstado(int id, [FromBody] EstadoOferta nuevoEstado)
+        {
+            var response = await _ofertasServices.CambiarEstadoOferta(id, nuevoEstado);
+            return Ok(response);
+        }
+
         // DELETE api/<OfertasController>/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
@@ -185,7 +194,7 @@ namespace FastMarketBackEnd.Controllers
     // Clases para la creación y actualización de ofertas
     public class CrearOfertaRequest
     {
-        public OfertasDto Oferta { get; set; }
+        public OfertasCreateDto Oferta { get; set; }
         public List<ProductosDto> Productos { get; set; }
     }
 

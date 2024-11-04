@@ -16,5 +16,13 @@ namespace Common.Utilities
             [Display(Name = "Oferta")]
             oferta
         }
+        public enum EstadoOferta
+        {
+            Activa,
+            Rechazada,
+            Aceptada,
+            Cancelada,
+            Pagada
+        }
     }
 }

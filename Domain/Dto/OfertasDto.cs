@@ -14,4 +14,11 @@ namespace Domain.Dto
         public AnunciosDto Anuncio { get; set; }
         public List<ProductosDto> Productos { get; set; }
     }
+    public class OfertasCreateDto
+    {
+        public decimal monto { get; set; }
+        public string Tipo { get; set; } = null!;
+        //public List<ProductosDto> Productos { get; set; }
+
+    }
 }
