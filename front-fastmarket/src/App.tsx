@@ -39,7 +39,9 @@ import "./theme/variables.css";
 
 // Custom components
 import LoginPage from "./pages/auth/LoginPage";
+import Login from "./pages/auth/Login";
 import RegisterPage from "./pages/auth/RegisterPage";
+import RegisterP from "./pages/auth/Registro";
 import IndexTabs from "./pages/Tabs/IndexTabs";
 import {AuthProvider } from "./services/auth/AuthContext";
 import PrivateRoute from "./services/auth/PrivateRoute";
@@ -54,8 +56,8 @@ const App: React.FC = () => {
       <IonApp>
         <IonReactRouter>
           <IonRouterOutlet>
-            <Route exact path="/login" component={LoginPage} />
-            <Route exact path="/register" component={RegisterPage} />
+            <Route exact path="/login" component={Login} />
+            <Route exact path="/register" component={RegisterP} />
             <PrivateRoute path="/dashboard" component={IndexTabs} />
             <Redirect exact from="/" to="/login" />
           </IonRouterOutlet>

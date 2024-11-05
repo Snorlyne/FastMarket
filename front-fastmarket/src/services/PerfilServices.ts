@@ -18,29 +18,41 @@ const perfilService = {
             return { isSuccess: true, message: "", result: data };
         } catch (error) {
             console.error('Unexpected error:', (error as Error).message);
-            return { isSuccess: false, message: 'Error al obtener perfil', result: (error as Error)};
+            return { isSuccess: false, message: 'Error al obtener perfil', result: error };
         }
     },
     async deletePerfil(id: string): Promise<IResponse> {
-        const token = await authService.getToken();
         try {
             const response = await fetch(`${API_URL}personas/${id}`, {
                 method: 'DELETE',
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json',
-                }
             });
-            const data = await response.json();
-            return { isSuccess: true, message: "Perfil eliminado exitosamente", result: data };
+            
+            if (!response.ok) {
+                throw new Error('Error al eliminar perfil');
+            }
+            
+            return { isSuccess: true, message: "Perfil eliminado exitosamente", result: await response.json() };
         } catch (error) {
             console.error('Unexpected error:', (error as Error).message);
-            return { isSuccess: false, message: 'Error al eliminar perfil', result: (error as Error)};
+            return { isSuccess: false, message: 'Error al eliminar perfil', result: error };
+        }
+    },
+    async deleteCorreo(id: string): Promise<IResponse> {
+        try {
+            const correoEliminar = await fetch(`${API_URL}Usuarios/${id}`, {
+                method: 'DELETE',
+            });
+            
+            if (!correoEliminar.ok) {
+                throw new Error('Error al eliminar correo');
+            }
+            
+            return { isSuccess: true, message: "Correo eliminado exitosamente", result: await correoEliminar.json() };
+        } catch (error) {
+            console.error('Unexpected error:', (error as Error).message);
+            return { isSuccess: false, message: 'Error al eliminar correo', result: error };
         }
     }
-}
-
-
-
+};
 
 export default perfilService;

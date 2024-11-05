@@ -43,7 +43,7 @@ const HomePage: React.FC = () => {
         </div>
       )}
       <HeaderHome title="FastMarket"/>
-      <div className="h-screen overflow-y-auto bg-white">
+      <div className="min-h-screen overflow-y-auto bg-gray-100">
         <div className="py-1 my-4">
           <h2 className="text-2xl text-black text-center font-bold mb-1">
             Subasta de productos

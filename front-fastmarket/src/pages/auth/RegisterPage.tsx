@@ -184,7 +184,9 @@ const RegisterPage: React.FC = () => {
           <p className="text-center mt-4 text-gray-600">
             ¿Ya tienes cuenta?{" "}
             <span
-              className="text-green-500 cursor-pointer hover:underline"
+              className={`text-green-500 cursor-pointer hover:underline ${
+                isLoading ? 'pointer-events-none opacity-70' : ''
+              }`}
               onClick={() => history.push("/login")}
             >
               Inicia sesión

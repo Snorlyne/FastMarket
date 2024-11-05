@@ -3,6 +3,7 @@ import { trashOutline } from 'ionicons/icons';
 import { IonIcon, IonPage } from '@ionic/react';
 import perfilService from '../services/PerfilServices';
 import { IPersona } from '../interfaces/IPersona';
+import { IUsuario } from '../interfaces/IUsuario';
 import { useAuth } from '../services/auth/AuthContext';
 
 /* Componentes */
@@ -51,18 +52,27 @@ const ProfileView: React.FC = () => {
   };
 
   const confirmDeleteUser = async () => {
-    if (perfil && perfil.id) {
-      const response = await perfilService.deletePerfil(perfil.id.toString());
-      setIsModalOpen(false);
+    if (perfil && perfil.id && perfil.idUsuario) { // Asegúrate de tener acceso a `idUsuario`
+        // Eliminar el perfil primero
+        const responsePerfil = await perfilService.deletePerfil(perfil.id.toString());
 
-      if (response.isSuccess) {
-        console.log(response.message);
-        await auth.logout();
-      } else {
-        console.error(response.message);
-      }
+        if (responsePerfil.isSuccess) {
+            // Si eliminar el perfil fue exitoso, procedemos a eliminar el correo
+            const responseCorreo = await perfilService.deleteCorreo(perfil.idUsuario.toString());
+            
+            if (responseCorreo.isSuccess) {
+                console.log(responseCorreo.message);
+                setIsModalOpen(false);
+                await auth.logout();
+            } else {
+                console.error(responseCorreo.message);
+            }
+        } else {
+            console.error(responsePerfil.message);
+        }
     }
-  };
+};
+
 
   return (
     <IonPage> 
