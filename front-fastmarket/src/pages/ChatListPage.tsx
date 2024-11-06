@@ -33,7 +33,7 @@ const ChatList: React.FC = () => {
   return (
     <IonPage>
       <Header title="Chats" />
-      <div className="w-full max-w-md mx-auto  px-4 bg-white h-screen shadow-lg">
+      <div className="w-full min-h-screen max-w-md mx-auto  px-4 bg-white h-screen shadow-lg">
         {/* Chat List */}
         <ul className="space-y-4 w-full mt-4">
           {chats.map((chat) => (

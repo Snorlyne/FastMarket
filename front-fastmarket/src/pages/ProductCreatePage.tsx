@@ -1,242 +1,133 @@
-import React, { useState, useRef, ChangeEvent, FormEvent } from "react";
-import Header from "../components/Header";
-import { IonPage } from "@ionic/react";
-import { XCircleIcon } from "@heroicons/react/24/solid";
-import { storage } from "../firebaseConfig";
-/* import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
- */interface ImageData {
-  url: string;
-  file: File;
-}
+import React, { useState } from 'react';
+import { IonPage, IonContent, IonInput, IonLabel, IonButton, IonLoading, IonAlert } from '@ionic/react';
+import { InputChangeEventDetail } from '@ionic/core'; // Si es necesario importar este tipo
+import { IonInputCustomEvent } from '@ionic/core';
+import { IFoto } from '../interfaces/IFoto'; // Asegúrate de importar la interfaz IFoto
+import { IAnuncio } from '../interfaces/IAnuncio'; // Asegúrate de importar la interfaz IAnuncio
+import anunciosService from '../services/AnunciosServices';
+const CrearAnuncioPage: React.FC = () => {
+  const [descripcion, setDescripcion] = useState<string>(''); // Descripción del anuncio
+  const [precio, setPrecio] = useState<number>(0); // Precio del anuncio
+  const [fotos, setFotos] = useState<IFoto[]>([]); // Fotos del anuncio
+  const [loading, setLoading] = useState<boolean>(false); // Estado de carga
+  const [showAlert, setShowAlert] = useState<boolean>(false); // Estado de alerta
 
-interface FormData {
-  [key: string]: any; // Permite acceder a propiedades mediante índices dinámicos
-  descripcion: string;
-  tipo: string;
-  productos: {
-    nombre: string;
-    precio: string;
-    cantidad: string;
-    tipo: string;
-  };
-  localizacion: {
-    ciudad: string;
-    estado: string;
-    pais: string;
-    codigoPostal: string;
-    latitud: string;
-    longitud: string;
-  };
-}
+// Manejador de cambio para el campo de texto 'descripcion'
+const handleDescripcionChange = (event: IonInputCustomEvent<any>) => {
+  setDescripcion(event.detail.value!); // Obtén el valor del evento y actualiza el estado
+};
 
-const ProductCreate: React.FC = () => {
-  const [formData, setFormData] = useState<FormData>({
-    descripcion: "",
-    tipo: "",
-    productos: {
-      nombre: "",
-      precio: "",
-      cantidad: "",
-      tipo: "",
-    },
-    localizacion: {
-      ciudad: "",
-      estado: "",
-      pais: "",
-      codigoPostal: "",
-      latitud: "",
-      longitud: "",
-    },
-  });
+// Manejador de cambio para el campo 'precio'
+const handlePrecioChange = (event: IonInputCustomEvent<any>) => {
+  setPrecio(Number(event.detail.value!)); // Convierte el valor a número y actualiza el estado
+};
 
-  const [images, setImages] = useState<ImageData[]>([]);
-  const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleChange = (
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ): void => {
-    const { name, value } = e.target;
-    const keys = name.split(".");
-    if (keys.length > 1) {
-      setFormData((prevState) => ({
-        ...prevState,
-        [keys[0]]: {
-          ...prevState[keys[0]],
-          [keys[1]]: value,
-        },
-      }));
-    } else {
-      setFormData((prevState) => ({
-        ...prevState,
-        [name]: value,
-      }));
-    }
-  };
-
-  const handleImageUpload = (e: ChangeEvent<HTMLInputElement>): void => {
+  // Manejador de cambio para el campo 'fotos' (subida de imágenes)
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (files) {
-      const newImages: ImageData[] = Array.from(files).map((file) => ({
-        url: URL.createObjectURL(file),
-        file: file,
+      const newFotos: IFoto[] = Array.from(files).map((file, index) => ({
+        id: index, // Asignamos un ID temporal basado en el índice
+        url: URL.createObjectURL(file), // Usamos la URL del archivo para la imagen
       }));
-      setImages((prev) => [...prev, ...newImages]);
+      setFotos(newFotos); // Establecer el estado de las fotos
     }
   };
 
-  const removeImage = (indexToRemove: number): void => {
-    setImages((prev) => {
-      const newImages = prev.filter((_, index) => index !== indexToRemove);
-      URL.revokeObjectURL(prev[indexToRemove].url);
-      return newImages;
-    });
-  };
+  // Manejador para enviar el formulario y crear el anuncio
+  const handleCreateAnuncio = async () => {
+    setLoading(true);
+    try {
+      const nuevoAnuncio: IAnuncio = {
+        id: 0, // ID temporal
+        estado: 'activo',
+        fecha_publicacion: new Date(),
+        fecha_expiracion: new Date(), // Puedes ajustar la fecha de expiración según lo necesites
+        precio_anuncio: precio,
+        descripcion: descripcion,
+        tipo: 'venta', // Ajusta el tipo según lo necesites
+        productos: { // Aquí puedes agregar un producto vacío si lo necesitas
+          id: 0,
+          nombre: 'Producto de ejemplo',
+          descripcion: 'Descripción del producto',
+          precio: precio,
+          cantidad: 1,
+          tipo: 'fisico',
+          fotos: fotos, // Agregamos las fotos al producto
+          etiquetas: [{id:0,  nombre: 'Etiqueta1' }] // Puedes agregar etiquetas aquí
+        },
+        localizacion: { // Definir la localización (puedes ajustarlo según lo necesites)
+          id: 1,
+          ciudad: 'Ciudad de ejemplo',
+          estado: 'Estado de ejemplo',
+          pais: 'País de ejemplo',
+          codigoPostal: '00000',
+          latitud: 0,
+          longitud: 0
+        },
+        ofertas: [], // Las ofertas estarán vacías en este ejemplo
+      };
 
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    console.log('Form submitted:', { ...formData, images });
+      // Llamada al servicio para crear el anuncio
+      await anunciosService.createAnuncio(nuevoAnuncio);
+      setShowAlert(true); // Mostrar la alerta de éxito
+    } catch (error) {
+      console.error('Error al crear el anuncio:', error);
+      setShowAlert(false); // Si hubo un error, no mostrar la alerta de éxito
+    } finally {
+      setLoading(false); // Finalizar el estado de carga
+    }
   };
 
   return (
     <IonPage>
-      <Header title="Crear Anuncio" />
-      <div className="bg-gray-100 p-4 overflow-y-auto">
-        <input
-          type="file"
-          ref={fileInputRef}
-          className="hidden"
-          multiple
-          accept="image/*"
-          onChange={handleImageUpload}
+      <IonContent>
+        <IonLabel>Descripción</IonLabel>
+        <IonInput
+          value={descripcion}
+          onIonInput={handleDescripcionChange} // Usamos el evento correcto para IonInput
+          placeholder="Escribe la descripción del anuncio"
+        />
+        
+        <IonLabel>Precio</IonLabel>
+        <IonInput
+          value={precio.toString()}
+          onIonInput={handlePrecioChange} // Usamos el evento correcto para IonInput
+          placeholder="Escribe el precio del anuncio"
+          type="number"
         />
 
-        {images.length === 0 ? (
-          <button
-            type="button"
-            onClick={() => fileInputRef.current?.click()}
-            className="w-full h-48 bg-white border-2 border-dashed border-gray-300 rounded-lg flex flex-col items-center justify-center space-y-3 hover:bg-gray-50 transition-colors group"
-          >
-            <div className="text-center">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
-  <path strokeLinecap="round" strokeLinejoin="round" d="M6.827 6.175A2.31 2.31 0 0 1 5.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 0 0-1.134-.175 2.31 2.31 0 0 1-1.64-1.055l-.822-1.316a2.192 2.192 0 0 0-1.736-1.039 48.774 48.774 0 0 0-5.232 0 2.192 2.192 0 0 0-1.736 1.039l-.821 1.316Z" />
-  <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 12.75a4.5 4.5 0 1 1-9 0 4.5 4.5 0 0 1 9 0ZM18.75 10.5h.008v.008h-.008V10.5Z" />
-</svg>
+        <IonLabel>Fotos</IonLabel>
+        <input
+          type="file"
+          accept="image/*"
+          onChange={handleFileChange} // Maneja los archivos seleccionados
+          multiple
+        />
 
+        <div>
+          {fotos.map((foto, index) => (
+            <img key={index} src={foto.url} alt={`Foto ${index}`} style={{ width: '100px', height: '100px', margin: '5px' }} />
+          ))}
+        </div>
 
-              <p className="text-gray-600 font-medium">Agregar fotos</p>
-              <p className="text-gray-400 text-sm">Haz clic para seleccionar</p>
-            </div>
-          </button>
-        ) : (
-          <div className="grid grid-cols-3 gap-4">
-            {images.map((image, index) => (
-              <div key={index} className="relative aspect-square group">
-                <img
-                  src={image.url}
-                  alt={`Preview ${index + 1}`}
-                  className="w-full h-full object-cover rounded-lg"
-                />
-                <XCircleIcon
-                  className="absolute top-2 right-2 w-5 h-5 text-red-500 cursor-pointer"
-                  onClick={() => removeImage(index)}
-                />
-              </div>
-            ))}
-          </div>
-        )}
+        <IonButton onClick={handleCreateAnuncio} disabled={loading}>
+          Crear Anuncio
+        </IonButton>
 
-        <form onSubmit={handleSubmit} className="space-y-4 mt-4">
-          {/* <input
-            type="text"
-            name="estado"
-            placeholder="Estado"
-            value={formData.estado}
-            onChange={handleChange}
-            className="w-full p-2 border rounded-lg bg-white placeholder:text-gray-400 text-black"
-          /> */}
-         
+        <IonLoading isOpen={loading} message="Creando anuncio..." />
 
-          <div className="space-y-2">
-            <h3 className="font-medium text-black">Productos</h3>
-            <input
-              type="text"
-              name="productos.nombre"
-              placeholder="Nombre del Productos"
-              value={formData.productos.nombre}
-              onChange={handleChange}
-              className="w-full p-2 border rounded-lg bg-white placeholder:text-gray-400 text-black"
-            />
-            <input
-              type="number"
-              name="productos.precio"
-              placeholder="Precio del Productos"
-              value={formData.productos.precio}
-              onChange={handleChange}
-              className="w-full p-2 border rounded-lg bg-white placeholder:text-gray-400 text-black"
-            />
-            <input
-              type="number"
-              name="productos.cantidad"
-              placeholder="Cantidad del Productos"
-              value={formData.productos.cantidad}
-              onChange={handleChange}
-              className="w-full p-2 border rounded-lg bg-white placeholder:text-gray-400 text-black"
-            />
-          </div>
-          <textarea
-            name="descripcion"
-            placeholder="Descripción"
-            value={formData.descripcion}
-            onChange={handleChange}
-            className="w-full p-2 border rounded-lg bg-white placeholder:text-gray-400 text-black"
-          />
-
-          <div className="space-y-2">
-            <h3 className="font-medium text-black">Localización</h3>
-            <input
-              type="text"
-              name="localizacion.ciudad"
-              placeholder="Ciudad"
-              value={formData.localizacion.ciudad}
-              onChange={handleChange}
-              className="w-full p-2 border rounded-lg bg-white placeholder:text-gray-400 text-black"
-            />
-            <input
-              type="text"
-              name="localizacion.estado"
-              placeholder="Estado"
-              value={formData.localizacion.estado}
-              onChange={handleChange}
-              className="w-full p-2 border rounded-lg bg-white placeholder:text-gray-400 text-black"
-            />
-            <input
-              type="text"
-              name="localizacion.pais"
-              placeholder="País"
-              value={formData.localizacion.pais}
-              onChange={handleChange}
-              className="w-full p-2 border rounded-lg bg-white placeholder:text-gray-400 text-black"
-            />
-            <input
-              type="text"
-              name="localizacion.codigoPostal"
-              placeholder="Código Postal"
-              value={formData.localizacion.codigoPostal}
-              onChange={handleChange}
-              className="w-full p-2 border rounded-lg bg-white placeholder:text-gray-400 text-black"
-            />
-          </div>
-
-          <button
-            type="submit"
-            className="w-full bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 transition-colors"
-          >
-            Crear publicación
-          </button>
-        </form>
-      </div>
+        {/* Alerta de éxito/error */}
+        <IonAlert
+          isOpen={showAlert}
+          onDidDismiss={() => setShowAlert(false)}
+          message={loading ? 'Creando anuncio...' : 'Anuncio creado correctamente'}
+          buttons={['OK']}
+        />
+      </IonContent>
     </IonPage>
   );
 };
 
-export default ProductCreate;
+export default CrearAnuncioPage;

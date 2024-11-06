@@ -104,7 +104,6 @@ const SignUpPage: React.FC = () => {
   return (
     <IonPage>
       <div className="min-h-full bg-gray-900 ">
-        {/* Header with improved title styling */}
         <div className="pt-12 px-6">
           <h1 className="text-4xl font-bold text-white  tracking-wide">
             FastMarket

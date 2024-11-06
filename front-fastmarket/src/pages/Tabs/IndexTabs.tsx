@@ -25,7 +25,7 @@ import ProfileView from "../ProfileViewPage";
 import OffersHubPage from "../OfferHubPage";
 import ChatList from "../ChatListPage";
 import PrivateChat from "../ChatPrivateVendPage";
-
+import CoffeeHome from "./Home";
 const IndexTabs: React.FC = () => {
   const location = useLocation();
 

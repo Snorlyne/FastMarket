@@ -45,9 +45,9 @@ return (
         </div>
     </IonContent>
 
-    <IonFooter className="fixed bottom-0 w-full bg-white p-4 border-t border-gray-300">
-        <div className="flex items-center space-x-2">
-        <IonItem className="flex-grow bg-gray-100 rounded-full">
+    <IonFooter className="fixed bottom-0 w-full  bg-white p-4 border-t border-gray-300">
+        <div className="flex items-center space-x-2 ">
+        <IonItem className="flex-grow bg-gray-100 rounded-full ">
             <IonLabel position="stacked" className="hidden">Tu mensaje</IonLabel>
             <IonInput
             value={newMessage}

@@ -1,4 +1,5 @@
 import { IAnuncio } from "../interfaces/IAnuncio";
+import { IProducto } from "../interfaces/IProducto";
 import { IResponse } from "../interfaces/IResponse";
 import authService from "./AuthService";
 
@@ -56,6 +57,50 @@ const anunciosService = {
             return { isSuccess: false, message: 'Error al obtener anuncios', result: null };
         }
     },
+    PostAnuncios: async (IAnuncio: IAnuncio): Promise<IResponse> => {
+        const token = await authService.getToken();
+        try {
+            const producto = await fetch(`${API_URL}Anuncios`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(IAnuncio)  
+            });
+            const data = await producto.json();
+            return { isSuccess: true, message: "", result: data.result };
+        } catch (error) {
+            console.error('Unexpected error:', (error as Error).message);
+            return { isSuccess: false, message: 'Error al obtener anuncios', result: null };
+        }
+    },
+    createAnuncio : async (anuncioData: IAnuncio): Promise<IAnuncio> => {
+        try {
+          const response = await fetch(`${API_URL}/anuncios`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              ...anuncioData,
+            }),
+          });
+      
+          if (!response.ok) {
+            throw new Error('Error al crear el anuncio');
+          }
+      
+          const data: IAnuncio = await response.json();
+          return data;
+        } catch (error) {
+          console.error('Error al crear anuncio:', error);
+          throw error;
+        }
+      }
+
+
+
 }
 
 export default anunciosService;

@@ -12,7 +12,7 @@ const MyAdvert: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const fetchAnuncios = async () => {
     try {
-      setIsLoading(true); // Start loading animation
+      setIsLoading(true); 
       const response = await anunciosService.getAllByToken();
       if (response.isSuccess && response.result) {
         setAnuncios(response.result);
@@ -51,9 +51,7 @@ const MyAdvert: React.FC = () => {
           </div>
         </div>
 
-        {/* Scrollable product list */}
         <div className="max-w-4xl mx-auto px-4 py-4 overflow-y-auto h-[80vh]">
-            {/* Map sobre los anuncios obtenidos */}
             <div className="grid grid-cols-2 gap-4">
             {anuncios.length > 0 ? (
               anuncios.map((anuncio, index) => (
