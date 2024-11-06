@@ -1,64 +1,84 @@
-import React, { useState, useRef, ChangeEvent, FormEvent } from "react";
+import React, { useState, useRef, useEffect, ChangeEvent, FormEvent } from "react";
+import { useHistory, useParams } from "react-router-dom";
 import Header from "../components/Header";
 import { IonPage } from "@ionic/react";
 import { XCircleIcon } from "@heroicons/react/24/solid";
 import { storage } from "../firebaseConfig";
-/* import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
- */interface ImageData {
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import anunciosService from "../services/AnunciosServices";
+import LoadingWave from "../components/Loader";
+
+interface ImageData {
   url: string;
-  file: File;
+  file: File | null; // Permitir null para imágenes existentes sin archivo
 }
 
 interface FormData {
-  [key: string]: any; // Permite acceder a propiedades mediante índices dinámicos
-  descripcion: string;
-  tipo: string;
   productos: {
     nombre: string;
+    descripcion: string;
     precio: string;
     cantidad: string;
     tipo: string;
+    fotos: { url: string }[];
+    etiquetas: { nombre: string }[];
   };
   localizacion: {
     ciudad: string;
     estado: string;
     pais: string;
     codigoPostal: string;
-    latitud: string;
-    longitud: string;
+    latitud: number | null;
+    longitud: number | null;
   };
 }
 
-const ProductCreate: React.FC = () => {
+const ProductForm: React.FC = () => {
+  const history = useHistory();
+  const [isLoading, setIsLoading] = useState(false);
+  const { id } = useParams<{ id: string }>(); // Detectar el parámetro id en la URL
   const [formData, setFormData] = useState<FormData>({
-    descripcion: "",
-    tipo: "",
     productos: {
       nombre: "",
+      descripcion: "",
       precio: "",
       cantidad: "",
-      tipo: "",
+      tipo: "venta",
+      fotos: [{ url: "" }],
+      etiquetas: [{ nombre: "" }]
     },
     localizacion: {
       ciudad: "",
       estado: "",
       pais: "",
       codigoPostal: "",
-      latitud: "",
-      longitud: "",
+      latitud: 0,
+      longitud: 0,
     },
   });
-
   const [images, setImages] = useState<ImageData[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleChange = (
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ): void => {
+  // Cargar datos existentes si el id está presente
+  useEffect(() => {
+    if (id) {
+      setIsLoading(true);
+      anunciosService.getById(id).then((product: any) => {
+        console.log(product)
+        setFormData(product.result);
+        setImages(product.result.productos.fotos.map((foto: { url: string }) => ({ url: foto.url, file: null })));
+
+      }).finally(() => {
+        setIsLoading(false);
+      });
+    }
+  }, [id]);
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>): void => {
     const { name, value } = e.target;
     const keys = name.split(".");
     if (keys.length > 1) {
-      setFormData((prevState) => ({
+      setFormData((prevState: any) => ({
         ...prevState,
         [keys[0]]: {
           ...prevState[keys[0]],
@@ -92,15 +112,79 @@ const ProductCreate: React.FC = () => {
     });
   };
 
+  const handleDelete = async (id: string) => {
+    setIsLoading(true);
+    try {
+      await anunciosService.delete(id);
+      console.log("Producto eliminado con éxito");
+      history.replace("/dashboard/profile/MyAdvert");
+    } catch (error: any) {
+      console.error("Error al eliminar producto:", error.message);
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    setIsLoading(true);
     e.preventDefault();
-    console.log('Form submitted:', { ...formData, images });
+
+    // Subir nuevas imágenes a Firebase Storage y obtener sus URLs
+    const uploadImages = images.map(async (image) => {
+      if (image.file) {
+        const imageRef = ref(storage, `/productosFM/${image.file.name}-${Date.now()}`);
+        await uploadBytes(imageRef, image.file);
+        return getDownloadURL(imageRef);
+      }
+      return image.url; // Si es una imagen existente, conserva la URL original
+    });
+
+    try {
+      const imageUrls = await Promise.all(uploadImages);
+
+      const formDataWithImages = {
+        ...formData,
+        productos: {
+          ...formData.productos,
+          fotos: imageUrls.map((url) => ({ url })),
+        },
+      };
+
+      if (id) {
+        // Modo edición
+        const response = await anunciosService.put(parseInt(id), formDataWithImages);
+        if (response.isSuccess) {
+          console.log("Producto actualizado con éxito");
+          history.replace(`/ViewProduct/${id}`);
+        } else {
+          console.error("Error al actualizar producto:", response.message);
+        }
+      } else {
+        // Modo creación
+        const response = await anunciosService.post(formDataWithImages);
+        if (response.isSuccess) {
+          console.log("Producto creado con éxito");
+          history.goBack();
+        } else {
+          console.error("Error al crear producto:", response.message);
+        }
+      }
+    } catch (error) {
+      console.error("Error al subir las imágenes:", error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
     <IonPage>
-      <Header title="Crear Anuncio" />
-      <div className="bg-gray-100 p-4 overflow-y-auto">
+      {isLoading && (
+        <div className="fixed h-screen inset-0 z-10 flex items-center justify-center bg-white">
+          <LoadingWave />
+        </div>
+      )}
+      <Header title={id ? "Editar Producto" : "Crear Producto"} />
+      <div className="bg-gray-100 p-4 overflow-y-auto h-full">
         <input
           type="file"
           ref={fileInputRef}
@@ -117,12 +201,7 @@ const ProductCreate: React.FC = () => {
             className="w-full h-48 bg-white border-2 border-dashed border-gray-300 rounded-lg flex flex-col items-center justify-center space-y-3 hover:bg-gray-50 transition-colors group"
           >
             <div className="text-center">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
-  <path strokeLinecap="round" strokeLinejoin="round" d="M6.827 6.175A2.31 2.31 0 0 1 5.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 0 0-1.134-.175 2.31 2.31 0 0 1-1.64-1.055l-.822-1.316a2.192 2.192 0 0 0-1.736-1.039 48.774 48.774 0 0 0-5.232 0 2.192 2.192 0 0 0-1.736 1.039l-.821 1.316Z" />
-  <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 12.75a4.5 4.5 0 1 1-9 0 4.5 4.5 0 0 1 9 0ZM18.75 10.5h.008v.008h-.008V10.5Z" />
-</svg>
-
-
+              {/* SVG icon */}
               <p className="text-gray-600 font-medium">Agregar fotos</p>
               <p className="text-gray-400 text-sm">Haz clic para seleccionar</p>
             </div>
@@ -146,22 +225,12 @@ const ProductCreate: React.FC = () => {
         )}
 
         <form onSubmit={handleSubmit} className="space-y-4 mt-4">
-          {/* <input
-            type="text"
-            name="estado"
-            placeholder="Estado"
-            value={formData.estado}
-            onChange={handleChange}
-            className="w-full p-2 border rounded-lg bg-white placeholder:text-gray-400 text-black"
-          /> */}
-         
-
           <div className="space-y-2">
-            <h3 className="font-medium text-black">Productos</h3>
+            <h3 className="font-medium text-black">Producto</h3>
             <input
               type="text"
               name="productos.nombre"
-              placeholder="Nombre del Productos"
+              placeholder="Nombre del Producto"
               value={formData.productos.nombre}
               onChange={handleChange}
               className="w-full p-2 border rounded-lg bg-white placeholder:text-gray-400 text-black"
@@ -169,7 +238,7 @@ const ProductCreate: React.FC = () => {
             <input
               type="number"
               name="productos.precio"
-              placeholder="Precio del Productos"
+              placeholder="Precio del Producto"
               value={formData.productos.precio}
               onChange={handleChange}
               className="w-full p-2 border rounded-lg bg-white placeholder:text-gray-400 text-black"
@@ -177,16 +246,16 @@ const ProductCreate: React.FC = () => {
             <input
               type="number"
               name="productos.cantidad"
-              placeholder="Cantidad del Productos"
+              placeholder="Cantidad del Producto"
               value={formData.productos.cantidad}
               onChange={handleChange}
               className="w-full p-2 border rounded-lg bg-white placeholder:text-gray-400 text-black"
             />
           </div>
           <textarea
-            name="descripcion"
+            name="productos.descripcion"
             placeholder="Descripción"
-            value={formData.descripcion}
+            value={formData.productos.descripcion}
             onChange={handleChange}
             className="w-full p-2 border rounded-lg bg-white placeholder:text-gray-400 text-black"
           />
@@ -226,17 +295,25 @@ const ProductCreate: React.FC = () => {
               className="w-full p-2 border rounded-lg bg-white placeholder:text-gray-400 text-black"
             />
           </div>
-
           <button
             type="submit"
             className="w-full bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 transition-colors"
           >
-            Crear publicación
+            {id ? "Actualizar Producto" : "Crear Producto"}
           </button>
+          {id && (
+            <button
+              type="button"
+              className="w-full mt-4 bg-red-600 text-white py-2 rounded-lg hover:bg-red-700 transition-colors"
+              onClick={() => handleDelete(id)}
+            >
+              Eliminar Producto
+            </button>
+          )}
         </form>
       </div>
     </IonPage>
   );
 };
 
-export default ProductCreate;
+export default ProductForm;

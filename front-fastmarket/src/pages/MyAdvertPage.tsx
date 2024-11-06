@@ -8,6 +8,7 @@ import anunciosService from "../services/AnunciosServices";
 
 const MyAdvert: React.FC = () => {
   const history = useHistory();
+  const route = history.location
   const [anuncios, setAnuncios] = useState<IAnuncio[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const fetchAnuncios = async () => {
@@ -33,12 +34,12 @@ const MyAdvert: React.FC = () => {
   return (
     <IonPage>
       {isLoading && (
-        <div className="fixed inset-0 z-10 flex items-center justify-center bg-white">
+        <div className="fixed h-screen inset-0 z-10 flex items-center justify-center bg-white">
           <LoadingWave />
         </div>
       )}
       <div className="min-h-screen bg-gray-100">
-        <Header title="Mis publicaciones" />
+        <Header title="Mis Anuncios" />
 
         <div className="p-2 m-2">
           <div className="flex items-center justify-center sticky top-0 z-10">
@@ -46,13 +47,13 @@ const MyAdvert: React.FC = () => {
               className="w-80 mt-3 py-2.5 p-8 bg-green-500 text-white rounded-md hover:bg-green-700 transition-colors"
               onClick={() => history.push("/dashboard/profile/MyAdvert/ProductCreate")}
             >
-              Crear publicación
+              Crear nuevo anuncio
             </button>
           </div>
         </div>
 
         {/* Scrollable product list */}
-        <div className="max-w-4xl mx-auto px-4 py-4 overflow-y-auto h-[80vh]">
+        <div className="max-w-4xl mx-auto px-4 py-4 overflow-y-auto h-[75vh]">
             {/* Map sobre los anuncios obtenidos */}
             <div className="grid grid-cols-2 gap-4">
             {anuncios.length > 0 ? (
@@ -60,6 +61,7 @@ const MyAdvert: React.FC = () => {
                   <div
                     key={index}
                     className="flex flex-col bg-white rounded-2xl overflow-hidden shadow-lg"
+                    onClick={() => history.push(route.pathname + "/ViewProduct/" + anuncio.id)}
                   >
                     <div className="relative w-full aspect-square">
                       {/* Mostrar imagen del primer producto en el anuncio */}
@@ -84,8 +86,8 @@ const MyAdvert: React.FC = () => {
                       </p>
                       <button
                         className="w-full bg-blue-500 text-white text-sm font-bold py-2 rounded-lg hover:bg-blue-800 transition-colors"
-                       /*  onClick={() => history.push("/ViewProduct")} */
-                      >
+                        onClick={() => history.push(route.pathname + "/ViewProduct/" + anuncio.id)}
+                        >
                         Entrar
                       </button>
                     </div>
@@ -95,7 +97,7 @@ const MyAdvert: React.FC = () => {
             </div>
             {anuncios.length == 0 ? (
               <p className="w-full text-center text-gray-500">
-                No hay ofertas en este momento.
+                No hay anuncios en este momento.
               </p>
             ) : null }
           </div>

@@ -68,7 +68,7 @@ namespace FastMarketBackEnd.Controllers
         }
         // POST api/<AnunciosController>
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] AnunciosDto request)
+        public async Task<IActionResult> Post([FromBody] AnunciosCreateDto request)
         {
             try
             {
@@ -87,7 +87,7 @@ namespace FastMarketBackEnd.Controllers
 
         // PUT api/<AnunciosController>
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(int id, [FromBody] AnunciosDto request)
+        public async Task<IActionResult> Put(int id, [FromBody] AnunciosCreateDto request)
         {
             var response = await _anunciosServices.ActualizarAnuncio(id, request);
             return Ok(response);

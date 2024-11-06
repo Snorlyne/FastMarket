@@ -13,4 +13,5 @@ export interface IAnuncio {
     productos: IProducto;
     localizacion: Ilocalizacion;
     ofertas: IOferta[];
+    propietario: boolean;
 }

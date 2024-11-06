@@ -87,7 +87,7 @@ namespace Services.Services
             try
             {
                 // Crear el producto
-                Productos producto = new()
+                Productos producto = new()  
                 {
                     Cantidad = request.Cantidad,
                     Descripcion = request.Descripcion,

@@ -9,6 +9,7 @@ namespace Domain.Dto
     public class AnunciosDto
     {
         public int Id { get; set; }
+        public int IdPersona { get; set; }
         public PersonasDto? Personas { get; set; }
         public ProductosDto Productos { get; set; } = null!;
         public LocalizacionesDto Localizacion { get; set; } = null!;
@@ -20,5 +21,10 @@ namespace Domain.Dto
         public string Descripcion { get; set; } = null!;
         public string Tipo { get; set; }
         public bool Propietario { get; set; }
+    }
+    public class AnunciosCreateDto
+    {
+        public ProductosDto Productos { get; set; } = null!;
+        public LocalizacionesDto Localizacion { get; set; } = null!;
     }
 }

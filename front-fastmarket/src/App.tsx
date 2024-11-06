@@ -53,7 +53,7 @@ setupIonicReact();
 
 const App: React.FC = () => {
   return (
-      <IonApp>
+      <IonApp style={{backgroundColor: "white"}}>
         <IonReactRouter>
           <IonRouterOutlet>
             <Route exact path="/login" component={Login} />

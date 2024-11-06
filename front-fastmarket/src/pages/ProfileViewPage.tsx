@@ -77,7 +77,7 @@ const ProfileView: React.FC = () => {
   return (
     <IonPage> 
       <div className="min-h-screen w-full bg-white">
-        <Header title="perfil" />
+        <Header title="Perfil" />
         <div className="w-full h-full overflow-auto p-4">
           {/* Título */}
           <h1 className="text-xl font-bold text-center mb-6">Perfil</h1>

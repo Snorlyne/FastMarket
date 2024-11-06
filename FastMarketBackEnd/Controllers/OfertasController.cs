@@ -58,7 +58,8 @@ namespace FastMarketBackEnd.Controllers
         {
             try
             {
-                var response = await _ofertasServices.ObtenerOfertasPorAnuncio(idAnuncio);
+                int idPersona = TokenHelper.ObtenerIdPersona(User);
+                var response = await _ofertasServices.ObtenerOfertasPorAnuncio(idPersona, idAnuncio);
                 return Ok(response);
             }
             catch (Exception ex)
@@ -117,7 +118,7 @@ namespace FastMarketBackEnd.Controllers
                     return BadRequest("El tipo de oferta es inválido.");
             }
 
-            var response = await _ofertasServices.CrearOferta(idPersona, idAnuncio, request.Oferta, request.Productos);
+            var response = await _ofertasServices.CrearEditarOferta(idPersona, idAnuncio, request.Oferta, request.Productos);
             return Ok(response);
         }
 

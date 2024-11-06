@@ -6,7 +6,6 @@ import { ArrowLeftIcon } from "@heroicons/react/24/outline";
 
 const Header = ({ title }: { title: string }) => {
     const history = useHistory(); 
-    
 
     const goBack = () => {
         history.goBack(); 
@@ -19,7 +18,7 @@ const Header = ({ title }: { title: string }) => {
                   
 
                     <div className="button-container" onClick={goBack}>
-                    <ArrowLeftIcon className="w-6 h-6 text-gray-300 " />
+                    <ArrowLeftIcon className="w-6 h-6 text-gray-700 " />
                             
 						</div>
                 </IonButtons>
