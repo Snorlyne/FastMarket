@@ -66,7 +66,7 @@ namespace FastMarketBackEnd.Controllers
             var token = tokenHandler.CreateToken(tokenDescriptor);
             var jwtToken = tokenHandler.WriteToken(token);
 
-            return Ok(new { Token = jwtToken });
+            return Ok(new { Token = jwtToken, persona.Id });
         }
     }
 }

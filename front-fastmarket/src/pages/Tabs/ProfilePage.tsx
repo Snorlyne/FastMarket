@@ -59,7 +59,7 @@ const ProfilePage: React.FC = () => {
   return (
     <IonPage>
       {isLoading && (
-        <div className="fixed inset-0 z-10 flex items-center justify-center bg-white">
+        <div className="fixed h-screen  inset-0 z-10 flex items-center justify-center bg-white">
           <LoadingWave />
         </div>
       )}

@@ -16,10 +16,12 @@ namespace Services.Services
     public class OfertasServices : IOfertasServices
     {
         private readonly ApplicationDBContext _context;
+        private readonly IAnunciosServices _anunciosServices;
 
-        public OfertasServices(ApplicationDBContext context)
+        public OfertasServices(ApplicationDBContext context, IAnunciosServices anunciosServices)
         {
             _context = context;
+            _anunciosServices = anunciosServices;
         }
 
         public async Task<Response<List<OfertasDto>>> ObtenerOfertas()
@@ -85,7 +87,7 @@ namespace Services.Services
             try
             {
                 var ofertas = await _context.ofertas
-                    .Where(o => o.idPersona == idPersona)
+                    .Where(o => o.idPersona == idPersona && o.estado == "activa")
                     .Include(o => o.Anuncio)
                         .ThenInclude(a => a.Productos)
                             .ThenInclude(p => p.Fotos)
@@ -199,13 +201,13 @@ namespace Services.Services
         }
 
 
-        public async Task<Response<List<OfertasDto>>> ObtenerOfertasPorAnuncio(int idAnuncio)
+        public async Task<Response<object>> ObtenerOfertasPorAnuncio(int idPersona, int idAnuncio)
         {
             try
             {
-                // Obtener ofertas filtrando por idAnuncio
+                // Obtener ofertas filtrando por idAnuncio y estado "activa"
                 var ofertas = await _context.ofertas
-                    .Where(o => o.idAnuncio == idAnuncio) // Filtrar por el ID del anuncio
+                    .Where(o => o.idAnuncio == idAnuncio && o.estado == "activa") // Filtrar por el ID del anuncio y estado "activa"
                     .Include(o => o.OfertasProductos)
                         .ThenInclude(op => op.Producto)
                             .ThenInclude(pf => pf.Fotos)
@@ -231,13 +233,24 @@ namespace Services.Services
                     })
                     .ToListAsync();
 
-                return new Response<List<OfertasDto>>(ofertas);
+                // Obtener anuncio y su propietario
+                var anuncios = await _anunciosServices.ObtenerAnuncio(idAnuncio, idPersona);
+
+                // Crear un objeto para devolver en la respuesta
+                var result = new
+                {
+                    Ofertas = ofertas,
+                    anuncios.Result?.Propietario
+                };
+
+                return new Response<object>(result);
             }
             catch (Exception ex)
             {
-                return new Response<List<OfertasDto>>("Error al obtener las ofertas del anuncio: " + ex.Message);
+                return new Response<object>("Error al obtener las ofertas del anuncio: " + ex.Message);
             }
         }
+
         public async Task<Response<Boolean>> CambiarEstadoOferta(int idOferta, EstadoOferta nuevoEstado)
         {
             try
@@ -264,50 +277,99 @@ namespace Services.Services
             }
         }
 
-        public async Task<Response<OfertasCreateDto>> CrearOferta(int idPersona, int idAnuncio, OfertasCreateDto request, List<ProductosDto> productos)
+        public async Task<Response<OfertasCreateDto>> CrearEditarOferta(int idPersona, int idAnuncio, OfertasCreateDto request, List<ProductosDto> productos)
         {
             try
             {
-                var nuevaOferta = new Ofertas
+                var nuevaOferta = new Ofertas { };
+                var oferta = await _context.ofertas.FirstOrDefaultAsync(o => o.idPersona == idPersona && o.idAnuncio == idAnuncio && o.estado == "activa");
+                if (oferta != null)
                 {
-                    idPersona = idPersona,
-                    idAnuncio = idAnuncio,
-                    monto = request.monto,
-                    fecha_oferta = DateTime.Now,
-                    estado = "activa",
-                    Tipo = request.Tipo
-                };
+                    oferta.monto = request.monto;
+                    oferta.fecha_oferta = DateTime.Now;
 
-                // Añadir la oferta a la base de datos y guardar para obtener su Id
-                _context.ofertas.Add(nuevaOferta);
-                await _context.SaveChangesAsync();
-
-                // Crear productos asociados y relaciones
-                foreach (var producto in productos)
-                {
-                    // Crear y guardar el producto en la base de datos
-                    var nuevoProducto = new Productos
-                    {
-                        Nombre = producto.Nombre,
-                        Descripcion = producto.Descripcion,
-                        Precio = producto.Precio,
-                        Cantidad = producto.Cantidad,
-                        Tipo = producto.Tipo
-                    };
-                    _context.productos.Add(nuevoProducto);
+                    _context.ofertas.Update(oferta);
                     await _context.SaveChangesAsync();
 
-                    // Crear la relación de producto con la oferta en la tabla ofertas_productos
-                    var ofertaProducto = new Ofertas_Productos
+                    // Actualizar los productos asociados
+                    var ofertasProductos = await _context.ofertas_productos
+                        .Where(op => op.ofertas_id == oferta.Id)
+                        .ToListAsync();
+
+                    // Eliminar asociaciones antiguas
+                    _context.ofertas_productos.RemoveRange(ofertasProductos);
+
+                    // Crear nuevos productos y asociarlos a la oferta
+                    foreach (var producto in productos)
                     {
-                        ofertas_id = nuevaOferta.Id,
-                        productos_id = nuevoProducto.Id
+                        var nuevoProducto = new Productos
+                        {
+                            Nombre = producto.Nombre, // Asegúrate de que los nombres de las propiedades sean correctos
+                            Descripcion = producto.Descripcion,
+                            Precio = producto.Precio,
+                            Cantidad = producto.Cantidad,
+                            Tipo = producto.Tipo
+                        };
+
+                        _context.productos.Add(nuevoProducto);
+                        await _context.SaveChangesAsync(); // Guarda el nuevo producto en la base de datos
+
+                        // Ahora asociamos el nuevo producto a la oferta
+                        var ofertaProducto = new Ofertas_Productos
+                        {
+                            ofertas_id = oferta.Id,
+                            productos_id = nuevoProducto.Id // Usamos el nuevo ID del producto creado
+                        };
+
+                        _context.ofertas_productos.Add(ofertaProducto);
+                    }
+
+                    await _context.SaveChangesAsync();
+
+                }
+                else
+                {
+                    nuevaOferta = new Ofertas
+                    {
+                        idPersona = idPersona,
+                        idAnuncio = idAnuncio,
+                        monto = request.monto,
+                        fecha_oferta = DateTime.Now,
+                        estado = "activa",
+                        Tipo = request.Tipo
                     };
-                    _context.ofertas_productos.Add(ofertaProducto);
+                    _context.ofertas.Add(nuevaOferta);
+                    await _context.SaveChangesAsync();
+
+
+                    // Crear productos asociados y relaciones
+                    foreach (var producto in productos)
+                    {
+                        // Crear y guardar el producto en la base de datos
+                        var nuevoProducto = new Productos
+                        {
+                            Nombre = producto.Nombre,
+                            Descripcion = producto.Descripcion,
+                            Precio = producto.Precio,
+                            Cantidad = producto.Cantidad,
+                            Tipo = producto.Tipo
+                        };
+                        _context.productos.Add(nuevoProducto);
+                        await _context.SaveChangesAsync();
+
+                        // Crear la relación de producto con la oferta en la tabla ofertas_productos
+                        var ofertaProducto = new Ofertas_Productos
+                        {
+                            ofertas_id = nuevaOferta.Id,
+                            productos_id = nuevoProducto.Id
+                        };
+                        _context.ofertas_productos.Add(ofertaProducto);
+                    }
+
+                    // Guardar las relaciones creadas en ofertas_productos
+                    await _context.SaveChangesAsync();
                 }
 
-                // Guardar las relaciones creadas en ofertas_productos
-                await _context.SaveChangesAsync();
 
                 return new Response<OfertasCreateDto>(request);
             }

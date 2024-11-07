@@ -19,7 +19,7 @@ const MyOffert: React.FC = () => {
       setIsLoading(true);
       const response = await ofertasService.getAllByToken();
       if (response.isSuccess && response.result) {
-        setOfertas(ofertasMockData);
+        setOfertas(response.result);
         console.log("Ofertas obtenidas:", response.result);
       } else {
         console.log("Error al obtener ofertas:", response.message);
@@ -48,7 +48,7 @@ const MyOffert: React.FC = () => {
   return (
     <IonPage>
       {isLoading && (
-        <div className="fixed inset-0 z-10 flex items-center justify-center bg-white">
+        <div className="fixed h-screen  inset-0 z-10 flex items-center justify-center bg-white">
           <LoadingWave />
         </div>
       )}
@@ -63,23 +63,23 @@ const MyOffert: React.FC = () => {
               {ofertas.length > 0 ? (
                 ofertas.map((oferta) => (
                   <div
-                  onClick={() => history.push(route+"/ViewProduct/"+ oferta.Id)}
+                    onClick={() => history.push(route.pathname + "/ViewProduct/" + oferta.anuncio.id)}
                     key={oferta.Id}
                     className="flex flex-col bg-white rounded-2xl overflow-hidden shadow-lg"
                   >
                     <div className="relative w-full aspect-square">
                       <img
                         src={
-                          oferta.producto?.[0]?.fotos?.[0]?.url ||
+                          oferta.anuncio?.productos?.fotos?.[0]?.url ||
                           "https://via.placeholder.com/150"
                         }
                         className="w-full h-full object-cover bg-gray-200"
-                        alt={oferta.producto?.[0]?.nombre || "Producto"}
+                        alt={oferta.anuncio?.productos?.nombre || "Producto"}
                       />
                     </div>
                     <div className="p-2 space-y-1">
                       <h3 className="text-xl font-bold text-gray-600">
-                        {oferta.producto?.[0]?.nombre || "Sin nombre"}
+                        {oferta.anuncio?.productos?.nombre || "Sin nombre"}
                       </h3>
                       <p className="text-gray-500">
                         Monto Ofrecido: MX$
@@ -106,7 +106,7 @@ const MyOffert: React.FC = () => {
 
         {/* Modal de Detalles del Producto */}
         <IonModal isOpen={isModalOpen} onDidDismiss={closeModal}>
-            <h2 className="text-2xl font-bold text-center my-4 px-4">Detalles de los productos ofertados</h2>
+          <h2 className="text-2xl font-bold text-center my-4 px-4">Detalles de los productos ofertados</h2>
           <div className="p-4 flex h-full flex-col justify-between items-center">
             {selectedOferta && selectedOferta.producto && (
               <div className="gap-4 w-full grid grid-cols-2 shrink-0 ">

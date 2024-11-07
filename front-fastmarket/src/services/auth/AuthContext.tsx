@@ -22,6 +22,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       if (token) {
         setIsAuthenticated(true);
         history.replace("/dashboard"); // Redirige si hay token
+      }else {
+        setIsAuthenticated(false);
+        history.replace("/"); // Redirigir al home si no hay token
       }
     };
     checkToken();

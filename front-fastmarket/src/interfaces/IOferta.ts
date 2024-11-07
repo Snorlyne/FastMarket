@@ -12,3 +12,10 @@ export interface IOferta {
     anuncio: IAnuncio
     producto: IProducto[];
 }
+export interface ICreateOferta {
+    oferta: {
+        monto: number;
+        tipo: string;
+    }
+    productos: IProducto[];
+}

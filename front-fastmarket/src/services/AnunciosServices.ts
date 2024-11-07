@@ -3,8 +3,8 @@ import { IProducto } from "../interfaces/IProducto";
 import { IResponse } from "../interfaces/IResponse";
 import authService from "./AuthService";
 
-const API_URL = /* import.meta.env.VITE_APP_API_URL  */ 'https://localhost:7087/';
-
+// const API_URL = /* import.meta.env.VITE_APP_API_URL  */ 'https://localhost:7087/';
+const API_URL = import.meta.env.VITE_APP_API_URL
 const anunciosService = {
     getAll: async (): Promise<IResponse> => {
         const token = await authService.getToken();
@@ -40,7 +40,7 @@ const anunciosService = {
             return { isSuccess: false, message: 'Error al obtener anuncios', result: null };
         }
     },
-    getById: async (id:string): Promise<IResponse> => {
+    getById: async (id: string): Promise<IResponse> => {
         const token = await authService.getToken();
         try {
             const response = await fetch(`${API_URL}anuncios/${parseInt(id)}`, {
@@ -57,50 +57,59 @@ const anunciosService = {
             return { isSuccess: false, message: 'Error al obtener anuncios', result: null };
         }
     },
-    PostAnuncios: async (IAnuncio: IAnuncio): Promise<IResponse> => {
+    post: async (req: any): Promise<IResponse> => {
         const token = await authService.getToken();
         try {
-            const producto = await fetch(`${API_URL}Anuncios`, {
+            const response = await fetch(`${API_URL}anuncios`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(IAnuncio)  
+                body: JSON.stringify(req)
             });
-            const data = await producto.json();
+            const data = await response.json();
             return { isSuccess: true, message: "", result: data.result };
         } catch (error) {
             console.error('Unexpected error:', (error as Error).message);
-            return { isSuccess: false, message: 'Error al obtener anuncios', result: null };
+            return { isSuccess: false, message: 'Error al crear anuncio', result: null };
         }
     },
-    createAnuncio : async (anuncioData: IAnuncio): Promise<IAnuncio> => {
+    put: async (id: number, req: any): Promise<IResponse> => {
+        const token = await authService.getToken();
         try {
-          const response = await fetch(`${API_URL}/anuncios`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              ...anuncioData,
-            }),
-          });
-      
-          if (!response.ok) {
-            throw new Error('Error al crear el anuncio');
-          }
-      
-          const data: IAnuncio = await response.json();
-          return data;
+            const response = await fetch(`${API_URL}anuncios/`+id, {
+                method: 'PUT',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(req)
+            });
+            const data = await response.json();
+            return { isSuccess: true, message: "", result: data.result };
         } catch (error) {
-          console.error('Error al crear anuncio:', error);
-          throw error;
+            console.error('Unexpected error:', (error as Error).message);
+            return { isSuccess: false, message: 'Error al crear anuncio', result: null };
         }
-      }
-
-
-
+    },
+    delete: async (id: string): Promise<IResponse> => {
+        const token = await authService.getToken();
+        try {
+            const response = await fetch(`${API_URL}anuncios/${parseInt(id)}`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                }
+            });
+            const data = await response.json();
+            return { isSuccess: true, message: "", result: data.result };
+        } catch (error) {
+            console.error('Unexpected error:', (error as Error).message);
+            return { isSuccess: false, message: 'Error al ELIMINAR anuncios', result: null };
+        }
+    },
 }
 
 export default anunciosService;

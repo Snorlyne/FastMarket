@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useIonViewDidEnter } from "@ionic/react";
+import { IonItem, useIonViewDidEnter } from "@ionic/react";
 import anunciosService from "../../services/AnunciosServices";
 import { IonPage } from "@ionic/react";
 import LoadingWave from "../../components/Loader";
@@ -38,12 +38,12 @@ const HomePage: React.FC = () => {
   return (
     <IonPage>
       {isLoading && (
-        <div className="fixed inset-0 z-10 flex items-center justify-center bg-white">
+        <div className="fixed h-screen  inset-0 z-10 flex items-center justify-center bg-white">
           <LoadingWave />
         </div>
       )}
       <HeaderHome title="FastMarket"/>
-      <div className="min-h-screen overflow-y-auto bg-gray-100">
+      <div className="h-[screen] overflow-y-auto bg-gray-100">
         <div className="py-1 my-4">
           <h2 className="text-2xl text-black text-center font-bold mb-1">
             Subasta de productos
@@ -60,7 +60,7 @@ const HomePage: React.FC = () => {
           <div className="overflow-x-auto whitespace-nowrap py-4 mx-4">
             <div className="flex space-x-4">
               {anuncios.map((anuncio, index) => (
-                <div onClick={() => history.push("/dashboard/home/ViewProduct/"+anuncio.id)}
+                <div  onClick={() => history.push(route.pathname+"/ViewProduct/"+anuncio.id)}
                   key={index}
                   className="inline-block bg-white rounded-lg shadow-lg p-4 w-11/12 flex-shrink-0"
                 >
@@ -104,7 +104,7 @@ const HomePage: React.FC = () => {
           <div className="py-4 mx-4">
             <div className="grid grid-cols-2 md:grid-cols-2 gap-4">
               {anuncios.map((anuncio, index) => (
-                <div onClick={() =>  history.push("/dashboard/home/ViewProduct/"+anuncio.id)}
+                <div onClick={() =>  history.push(route.pathname+"/ViewProduct/"+anuncio.id)}
                   key={index}
                   className="bg-white rounded-lg shadow-lg p-4 w-full"
                 >

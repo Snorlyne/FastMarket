@@ -44,7 +44,8 @@ const removeStorageItem = async (): Promise<void> => {
 };
 
 // API URL from environment variables
-const API_URL = /* import.meta.env.VITE_APP_API_URL  */ 'https://localhost:7087/';
+// const API_URL = /* import.meta.env.VITE_APP_API_URL  */ 'https://localhost:7087/';
+const API_URL =  import.meta.env.VITE_APP_API_URL 
 
 // AuthService object
 const authService = {
@@ -66,7 +67,9 @@ const authService = {
 
             if (data.token !== undefined) {
                 const token  = data.token;
+                const id = data.id;
                 await setStorageItem('token', token);
+                await setStorageItem('id', id);
                 return { isSuccess: true, message: "Login exitoso", result: null };
             }
 
@@ -109,6 +112,10 @@ const authService = {
     // Function to get the token from storage
     getToken: async (): Promise<string | null> => {
         return await getStorageItem('token');
+    },
+    // Function to get the id from storage
+    getId: async (): Promise<string | null> => {
+        return await getStorageItem('id');
     },
 };
 

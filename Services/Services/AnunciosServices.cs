@@ -362,7 +362,7 @@ namespace Services.Services
                 return new Response<List<AnunciosDto>>("Ocurrió un error al obtener los anuncios filtrados: " + ex.Message);
             }
         }
-        public async Task<Response<AnunciosDto>> CrearAnuncio(AnunciosDto request, int idPersona)
+        public async Task<Response<AnunciosDto>> CrearAnuncio(AnunciosCreateDto request, int idPersona)
         {
             using var transaction = await _dBContext.Database.BeginTransactionAsync();
 
@@ -395,11 +395,11 @@ namespace Services.Services
                     IdProducto = productoResponse.Result.Id,
                     IdLocalizacion = localizacionResponse.Result.Id, 
                     fecha_publicacion = DateTime.Now,
-                    fecha_expiracion = request.fecha_expiracion,
-                    Estado = request.Estado,
-                    precio_anuncio = request.precio_anuncio,
-                    Descripcion = request.Descripcion,
-                    Tipo = request.Tipo
+                    fecha_expiracion = DateTime.Now.AddDays(3),
+                    Estado = "activo",
+                    precio_anuncio = producto.Precio,
+                    Descripcion = productoResponse.Result.Descripcion,
+                    Tipo = "subasta"
                 };
                 _dBContext.anuncios.Add(nuevoAnuncio);
                 await _dBContext.SaveChangesAsync();
@@ -450,7 +450,7 @@ namespace Services.Services
                 return new Response<AnunciosDto>("Ocurrió un error al crear el anuncio: " + ex.Message);
             }
         }
-        public async Task<Response<AnunciosDto>> ActualizarAnuncio(int id, AnunciosDto request)
+        public async Task<Response<AnunciosDto>> ActualizarAnuncio(int id, AnunciosCreateDto request)
         {
             try
             {
@@ -484,11 +484,8 @@ namespace Services.Services
                 }
 
                 // Actualizar los detalles del anuncio
-                anuncioExistente.fecha_expiracion = request.fecha_expiracion;
-                anuncioExistente.Estado = request.Estado;
-                anuncioExistente.precio_anuncio = request.precio_anuncio;
-                anuncioExistente.Descripcion = request.Descripcion;
-                anuncioExistente.Tipo = request.Tipo;
+                anuncioExistente.precio_anuncio = productoResponse.Result.Precio;
+                anuncioExistente.Descripcion = productoResponse.Result.Descripcion;
 
                 _dBContext.anuncios.Update(anuncioExistente);
                 await _dBContext.SaveChangesAsync();

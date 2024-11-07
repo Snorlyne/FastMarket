@@ -23,8 +23,9 @@ namespace Services.IServices
                 string? codigoPostal = null
             );
         Task<Response<List<AnunciosDto>>> ObtenerAnunciosUsuario(int idPersona);
-        Task<Response<AnunciosDto>> CrearAnuncio(AnunciosDto request, int idPersona);
-        Task<Response<AnunciosDto>> ActualizarAnuncio(int id, AnunciosDto request);
+        Task<Response<AnunciosDto>> CrearAnuncio(AnunciosCreateDto request, int idPersona);
+        Task<Response<AnunciosDto>> ActualizarAnuncio(int id, AnunciosCreateDto request);
         Task<Response<AnunciosDto>> EliminarAnuncio(int id);
     }
 }
+;
