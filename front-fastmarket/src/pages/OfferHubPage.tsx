@@ -73,7 +73,7 @@ const OffersHubPage: React.FC = () => {
         const response = await ofertasService.postOferta(id, req); // Send new proposal
         if (response.isSuccess) {
           setNewMonto(""); // Clear input
-          fetchPropuestas(); // Refresh list
+          fetchPropuestas() // Refresh list
         } else {
           console.log("Error submitting proposal: " + response.message);
         }
@@ -97,14 +97,12 @@ const OffersHubPage: React.FC = () => {
       if (response.isSuccess) {
         console.log("Oferta cancelada con éxito:", response.result);
         fetchPropuestas(); // Refresh list
-        // Aquí puedes hacer alguna actualización adicional en la UI o en el estado si es necesario
+        setPropietarioId(null);
       } else {
         console.error("Error al cancelar la oferta:", response.message);
       }
     } catch (error) {
       console.error("Error inesperado al cancelar la oferta:", error);
-    } finally {
-      setIsLoading(false);
     }
   }
 

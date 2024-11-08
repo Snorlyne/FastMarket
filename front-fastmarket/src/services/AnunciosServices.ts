@@ -56,6 +56,38 @@ const anunciosService = {
             return { isSuccess: false, message: 'Error al obtener anuncios', result: null };
         }
     },
+    getByParams: async (params: { nombreProducto?: string; etiquetas?: string; ciudad?: string; estado?: string; pais?: string; codigoPostal?: string }): Promise<IResponse> => {
+        const token = await authService.getToken();
+
+        // Construcción de la URL con parámetros de consulta
+        const query = new URLSearchParams();
+        if (params.nombreProducto) query.append('nombreProducto', params.nombreProducto);
+        if (params.etiquetas) query.append('etiquetas', params.etiquetas);
+        if (params.ciudad) query.append('ciudad', params.ciudad);
+        if (params.estado) query.append('estado', params.estado);
+        if (params.pais) query.append('pais', params.pais);
+        if (params.codigoPostal) query.append('codigoPostal', params.codigoPostal);
+
+        try {
+            const response = await fetch(`${API_URL}anuncios/filtrar?${query.toString()}`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            const data = await response.json();
+            if (response.ok) {
+                return { isSuccess: true, message: "", result: data.result };
+            } else {
+                return { isSuccess: false, message: data.message || 'Error al obtener anuncios', result: null };
+            }
+        } catch (error) {
+            console.error('Unexpected error:', (error as Error).message);
+            return { isSuccess: false, message: 'Error al obtener anuncios', result: null };
+        }
+    },
     post: async (req: any): Promise<IResponse> => {
         const token = await authService.getToken();
         try {
