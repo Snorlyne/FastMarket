@@ -74,7 +74,7 @@ const EditAdvert: React.FC = () => {
 
   return (
     <IonPage>
-      <div className="bg-gray-100 overflow-x-auto">
+      <div className="bg-gray-900 overflow-x-auto">
         <Header title="Editar Anuncio" />
         <div className='min-h-screen p-4 '>
           <div className="space-y-4">

@@ -105,12 +105,12 @@ const IndexTabs: React.FC = () => {
         )} */}
         <IonTabBar
           slot="bottom"
-          className="bg-white max-w-md shadow-2xl rounded-full px-4 py-2  mb-6 transform translate-y-2"
+          className="bg-gray-950  shadow-2xl rounded-full px-4 py-2  mb-6 transform translate-y-2"
         >
           <IonTabButton
             tab="home"
             href="/dashboard/home"
-            className=" hover:text-green-500 transition-colors duration-300"
+            className="bg-transparent  hover:text-green-500 transition-colors duration-300"
             
             // style={{
             //   '--color-selected': '#10B981 ',
@@ -123,7 +123,7 @@ const IndexTabs: React.FC = () => {
           <IonTabButton
             tab="busqueda"
             href="/dashboard/search"
-            className="flex flex-col items-center  hover:text-green-500 transition-colors duration-300"
+            className="flex flex-col items-center bg-transparent  hover:text-green-500 transition-colors duration-300"
             // style={{
             //   '--color-selected': '#10B981',
             // }}
@@ -135,7 +135,7 @@ const IndexTabs: React.FC = () => {
           <IonTabButton
             tab="profile"
             href="/dashboard/profile"
-            className="flex flex-col items-center  hover:text-green-500 transition-colors duration-300"
+            className="flex flex-col items-center bg-transparent hover:text-green-500 transition-colors duration-300"
             // style={{
             //   '--color-selected': '#10B981',
             // }}
@@ -145,6 +145,7 @@ const IndexTabs: React.FC = () => {
           </IonTabButton>
         </IonTabBar>
       </IonTabs>
+      
     </IonReactRouter>
   );
 };

@@ -12,18 +12,19 @@ const Header = ({ title }: { title: string }) => {
     };
 
     return (
-        <IonHeader translucent className='bg-gray-900'>
-            <IonToolbar className='flex items-center justify-between px-4 bg-gray-900'>
+        <IonHeader >
+       
+            <IonToolbar className='flex items-center justify-between px-4 custom-toolbar'>
                 <IonButtons slot="start">
                   
 
                     <div className="button-container" onClick={goBack}>
-                    <ArrowLeftIcon className="w-6 h-6 text-gray-700 " />
+                    <ArrowLeftIcon className="w-6 h-6 text-gray-200 " />
                             
 						</div>
                 </IonButtons>
                 
-                <IonTitle className="text-black font-medium">
+                <IonTitle className="text-white font-medium">
                     {title}
                 </IonTitle>
             </IonToolbar>

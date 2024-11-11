@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
 import {IonPage} from '@ionic/react';
 import { useHistory } from "react-router-dom";
-import authService from "../../services/AuthService";
-import Modal from "../../components/Modals/Modal";
-import { useAuth } from "../../services/auth/AuthContext";
+import authService from '../../services/AuthService';
+import Modal from '../../components/Modals/Modal';
+import { useAuth } from '../../services/auth/AuthContext';
+import Inputs from '../../Components2/Inputs';
 
 
 
 
-const SignUpPage: React.FC = () => {
+const LoginPage: React.FC = () => {
     const history = useHistory();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -110,7 +111,7 @@ const SignUpPage: React.FC = () => {
           </h1>
         </div>
 
-        {/* Content moved lower with flex */}
+ 
         <div className="px-6 pt-12">
           <p className="text-white mb-8  text-lg">
             Bienvenido a una aplicación de subastas!
@@ -119,27 +120,27 @@ const SignUpPage: React.FC = () => {
           <form  className="space-y-6 ">
             <div className="space-y-2">
               <label className="text-[#E8D5FF] text-sm">Correo Electrónico:</label>
-              <input
-                type="email"
-                className="w-full h-12 rounded-xl bg-gray-800 text-white px-4 placeholder-white/80 focus:outline-none focus:ring-2 focus:ring-green-600 transition-all"
-                value={email}
+            
+               <Inputs
+              type="email"
+              value={email}
               placeholder="Correo Electrónico..."
               onChange={(e) => setEmail(e.target.value)}
               disabled={isLoading}
-              />
+              
+              /> 
             </div>
 
             <div className="space-y-2">
               <label className="text-[#E8D5FF] text-sm">Contraseña:</label>
-              <input
-                type="password"
-               
-                className="w-full h-12 rounded-xl bg-gray-800 text-white px-4 placeholder-white/80 focus:outline-none focus:ring-2 focus:ring-green-600 transition-all"
-                value={password}
-                placeholder="Contraseña..."
-                onChange={(e) => setPassword(e.target.value)}
-                disabled={isLoading}
-              />       
+              
+              <Inputs
+              type="password"
+              value={password}
+              placeholder="Contraseña..."
+              onChange={(e) => setPassword(e.target.value)}
+              disabled={isLoading}
+              />  
         
             </div>
 
@@ -197,4 +198,4 @@ const SignUpPage: React.FC = () => {
   );
 };
 
-export default SignUpPage;
+export default LoginPage;

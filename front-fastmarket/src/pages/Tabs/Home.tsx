@@ -6,9 +6,8 @@ import LoadingWave from "../../components/Loader";
 import { useHistory } from "react-router";
 import Modal from "../../components/Modals/Modal";
 import { IAnuncio } from "../../interfaces/IAnuncio";
-import HeaderHome from "../../components/Header copy";
 
-const Mysale: React.FC = () => {
+const HomePage: React.FC = () => {
   const [anuncios, setAnuncios] = useState<IAnuncio[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -149,4 +148,4 @@ const Mysale: React.FC = () => {
   );
 };
 
-export default Mysale;
+export default HomePage;

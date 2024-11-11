@@ -7,6 +7,7 @@ import { storage } from "../firebaseConfig";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import anunciosService from "../services/AnunciosServices";
 import LoadingWave from "../components/Loader";
+import { IFoto } from "../interfaces/IFoto";
 
 interface ImageData {
   url: string;

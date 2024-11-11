@@ -26,7 +26,7 @@ return (
     <IonPage>
         <Header title={'Chat Privado'} />
 
-    <IonContent className="p-4 pb-20 bg-gray-50">
+    <IonContent className="p-4 pb-20 bg-gray-900">
         <div className="space-y-4 py-4 px-2">
         {messages.map((message, index) => (
             <div
@@ -45,7 +45,7 @@ return (
         </div>
     </IonContent>
 
-    <IonFooter className="fixed bottom-0 w-full  bg-white p-4 border-t border-gray-300">
+    <IonFooter className="fixed bottom-0 w-full  bg-gray-900 p-4 border-t border-gray-300">
         <div className="flex items-center space-x-2 ">
         <IonItem className="flex-grow bg-gray-100 rounded-full ">
             <IonLabel position="stacked" className="hidden">Tu mensaje</IonLabel>
