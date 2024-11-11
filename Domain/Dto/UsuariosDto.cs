@@ -9,8 +9,8 @@ namespace Domain.Dto
 {
     public class UsuariosDto
     {
-        public int Id { get; set; }  
-        public string Correo { get; set; }  
+        public int Id { get; set; }
+        public string Correo { get; set; } = string.Empty;
         public int IdRol { get; set; } 
     }
 

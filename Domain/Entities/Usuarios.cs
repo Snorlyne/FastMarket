@@ -7,13 +7,17 @@ using System.Threading.Tasks;
 
 namespace Domain.Entities
 {
-   public class Usuarios
-        {
+    public class Usuarios
+    {
         [Key]
         public int Id { get; set; } 
-        public string Correo { get; set; } 
-        public string Contraseña { get; set; }  
-        public int IdRol { get; set; } 
-        }
 
+        [Required(ErrorMessage = "El correo es obligatorio.")]
+        public string Correo { get; set; } = string.Empty; // Valor predeterminado para string
+
+        [Required(ErrorMessage = "La contraseña es obligatoria.")]
+        public string Contraseña { get; set; } = string.Empty; // Valor predeterminado para string
+
+        public int IdRol { get; set; }
+    }
 }

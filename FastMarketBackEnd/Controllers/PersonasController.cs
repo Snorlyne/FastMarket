@@ -1,4 +1,5 @@
 ﻿using Domain.Dto;
+using FastMarketBackEnd.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Services.IServices;
@@ -9,7 +10,6 @@ namespace FastMarketBackEnd.Controllers
 {
     [Route("[controller]")]
     [ApiController]
-    [Authorize(Roles = "Admin")]
     public class PersonasController : ControllerBase
     {
         private readonly IPersonasServices _personasServices;
@@ -26,10 +26,12 @@ namespace FastMarketBackEnd.Controllers
             return Ok(personas);
         }
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult<PersonasDto>> GetPersona(int id)
+        [HttpGet("byToken")]
+        public async Task<ActionResult<PersonasDto>> GetPersona()
         {
-            var persona = await _personasServices.ObtenerPersonaPorId(id);
+            int idPersona = TokenHelper.ObtenerIdPersona(User);
+
+            var persona = await _personasServices.ObtenerPersonaPorId(idPersona);
             if (persona == null)
             {
                 return NotFound();
@@ -41,7 +43,7 @@ namespace FastMarketBackEnd.Controllers
         public async Task<IActionResult> PostPersona([FromBody] PersonasDto personaDto)
         {
             var personaCreada = await _personasServices.CrearPersona(personaDto);
-            return CreatedAtAction(nameof(GetPersona), new { id = personaCreada.Id }, personaCreada);
+            return CreatedAtAction(nameof(GetPersona), new { id = personaCreada.Result.Id }, personaCreada);
         }
 
         [HttpPut("{id}")]

@@ -1,0 +1,5 @@
+.view-product-container {
+    min-height: 100vh; 
+    overflow-y: auto;  
+    background-color: white;
+  }

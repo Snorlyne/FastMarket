@@ -1,12 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Domain.Dto;
-using static Common.Utilities.Enums;
+
 namespace Domain.Entities
 {
     public class Productos
@@ -31,8 +27,8 @@ namespace Domain.Entities
         [Required]
         public string Tipo { get; set; } = null!;
 
-        public ICollection<Fotos> Fotos { get; set; } = [];
-        public virtual ICollection<Productos_Etiquetas> ProductosEtiquetas { get; set; } = [];
-
+        // Inicializa correctamente las colecciones
+        public ICollection<Fotos> Fotos { get; set; } = new List<Fotos>();
+        public virtual ICollection<Productos_Etiquetas> ProductosEtiquetas { get; set; } = new List<Productos_Etiquetas>();
     }
 }
