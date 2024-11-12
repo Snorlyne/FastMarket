@@ -11,7 +11,7 @@ import Inputs from '../../Components2/Inputs';
 
 
 
-const RegisterP: React.FC = () => {
+const RegisterPage: React.FC = () => {
   const history = useHistory();
   const [formData, setFormData] = useState({
     firstName: "",

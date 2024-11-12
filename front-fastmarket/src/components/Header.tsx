@@ -19,12 +19,12 @@ const Header = ({ title }: { title: string }) => {
 
 
                     <div className="button-container" onClick={goBack}>
-                        <ArrowLeftIcon className="w-6 h-6 text-gray-700 " />
+                        <ArrowLeftIcon className="w-6 h-6 text-gray-300 " />
 
                     </div>
                 </IonButtons>
 
-                <IonTitle className="text-black font-medium">
+                <IonTitle className="text-white font-medium">
                     {title}
                 </IonTitle>
             </IonToolbar>

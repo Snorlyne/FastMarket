@@ -9,7 +9,7 @@ import Inputs from '../../Components2/Inputs';
 
 
 
-const SignUpPage: React.FC = () => {
+const LoginPage: React.FC = () => {
   const history = useHistory();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");

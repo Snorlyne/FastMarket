@@ -11,7 +11,7 @@ import { IFoto } from "../interfaces/IFoto";
 
 interface ImageData {
   url: string;
-  file: File | null; // Permitir null para imágenes existentes sin archivo
+  file: File | null;
 }
 
 interface FormData {
@@ -37,7 +37,7 @@ interface FormData {
 const ProductForm: React.FC = () => {
   const history = useHistory();
   const [isLoading, setIsLoading] = useState(false);
-  const { id } = useParams<{ id: string }>(); // Detectar el parámetro id en la URL
+  const { id } = useParams<{ id: string }>();
   const [formData, setFormData] = useState<FormData>({
     productos: {
       nombre: "",
@@ -60,15 +60,13 @@ const ProductForm: React.FC = () => {
   const [images, setImages] = useState<ImageData[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Cargar datos existentes si el id está presente
   useEffect(() => {
     if (id) {
       setIsLoading(true);
       anunciosService.getById(id).then((product: any) => {
-        console.log(product)
+        console.log(product);
         setFormData(product.result);
         setImages(product.result.productos.fotos.map((foto: { url: string }) => ({ url: foto.url, file: null })));
-
       }).finally(() => {
         setIsLoading(false);
       });
@@ -98,10 +96,10 @@ const ProductForm: React.FC = () => {
     const files = e.target.files;
     if (files) {
       const newFotos: IFoto[] = Array.from(files).map((file, index) => ({
-        id: index, // Asignamos un ID temporal basado en el índice
-        url: URL.createObjectURL(file), // Usamos la URL del archivo para la imagen
+        id: index,
+        url: URL.createObjectURL(file),
       }));
-      setFotos(newFotos); // Establecer el estado de las fotos
+      setImages(newFotos);
     }
   };
 
@@ -124,20 +122,19 @@ const ProductForm: React.FC = () => {
     } finally {
       setIsLoading(false);
     }
-  }
+  };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     setIsLoading(true);
     e.preventDefault();
 
-    // Subir nuevas imágenes a Firebase Storage y obtener sus URLs
     const uploadImages = images.map(async (image) => {
       if (image.file) {
         const imageRef = ref(storage, `/productosFM/${image.file.name}-${Date.now()}`);
         await uploadBytes(imageRef, image.file);
         return getDownloadURL(imageRef);
       }
-      return image.url; // Si es una imagen existente, conserva la URL original
+      return image.url;
     });
 
     try {
@@ -152,7 +149,6 @@ const ProductForm: React.FC = () => {
       };
 
       if (id) {
-        // Modo edición
         const response = await anunciosService.put(parseInt(id), formDataWithImages);
         if (response.isSuccess) {
           console.log("Producto actualizado con éxito");
@@ -161,7 +157,6 @@ const ProductForm: React.FC = () => {
           console.error("Error al actualizar producto:", response.message);
         }
       } else {
-        // Modo creación
         const response = await anunciosService.post(formDataWithImages);
         if (response.isSuccess) {
           console.log("Producto creado con éxito");
@@ -180,12 +175,12 @@ const ProductForm: React.FC = () => {
   return (
     <IonPage>
       {isLoading && (
-        <div className="fixed h-screen inset-0 z-10 flex items-center justify-center bg-white">
+        <div className="fixed h-screen inset-0 z-10 flex items-center justify-center bg-gray-100">
           <LoadingWave />
         </div>
       )}
       <Header title={id ? "Editar Producto" : "Crear Producto"} />
-      <div className="bg-gray-100 p-4 overflow-y-auto h-full">
+      <div className="bg-gray-800 p-4 overflow-y-auto min-h-full">
         <input
           type="file"
           accept="image/*"
@@ -196,12 +191,11 @@ const ProductForm: React.FC = () => {
           <button
             type="button"
             onClick={() => fileInputRef.current?.click()}
-            className="w-full h-48 bg-white border-2 border-dashed border-gray-300 rounded-lg flex flex-col items-center justify-center space-y-3 hover:bg-gray-50 transition-colors group"
+            className="w-full h-48 bg-gray-900 border-2 border-dashed border-gray-950 rounded-lg flex flex-col items-center justify-center space-y-3 hover:bg-gray-800 transition-colors group"
           >
             <div className="text-center">
-              {/* SVG icon */}
-              <p className="text-gray-600 font-medium">Agregar fotos</p>
-              <p className="text-gray-400 text-sm">Haz clic para seleccionar</p>
+              <p className="text-gray-400 font-medium">Agregar fotos</p>
+              <p className="text-gray-200 text-sm">Haz clic para seleccionar</p>
             </div>
           </button>
         ) : (
@@ -224,7 +218,7 @@ const ProductForm: React.FC = () => {
 
         <form onSubmit={handleSubmit} className="space-y-4 mt-4">
           <div className="space-y-2">
-            <h3 className="font-medium text-black">Producto</h3>
+            <h3 className="font-medium text-white">Producto</h3>
             <input
               type="text"
               name="productos.nombre"
@@ -259,7 +253,7 @@ const ProductForm: React.FC = () => {
           />
 
           <div className="space-y-2">
-            <h3 className="font-medium text-black">Localización</h3>
+            <h3 className="font-medium text-white">Localización</h3>
             <input
               type="text"
               name="localizacion.ciudad"
@@ -293,17 +287,19 @@ const ProductForm: React.FC = () => {
               className="w-full p-2 border rounded-lg bg-white placeholder:text-gray-400 text-black"
             />
           </div>
+
           <button
             type="submit"
-            className="w-full bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 transition-colors"
+            className="w-full p-2 rounded-lg bg-blue-500 text-white font-medium hover:bg-blue-600 transition-colors"
           >
             {id ? "Actualizar Producto" : "Crear Producto"}
           </button>
+
           {id && (
             <button
               type="button"
-              className="w-full mt-4 bg-red-600 text-white py-2 rounded-lg hover:bg-red-700 transition-colors"
               onClick={() => handleDelete(id)}
+              className="w-full p-2 rounded-lg bg-red-500 text-white font-medium hover:bg-red-600 transition-colors mt-2"
             >
               Eliminar Producto
             </button>
