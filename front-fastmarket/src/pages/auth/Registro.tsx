@@ -5,11 +5,13 @@ import AuthService from "../../services/AuthService";
 import { IRegistro } from "../../interfaces/IRegister";
 import { IResponse } from "../../interfaces/IResponse";
 import Modal from "../../components/Modals/Modal";
+import Inputs from '../../Components2/Inputs';
 
 
 
 
-const RegisterP: React.FC = () => {
+
+const RegisterPage: React.FC = () => {
   const history = useHistory();
   const [formData, setFormData] = useState({
     firstName: "",
@@ -136,11 +138,11 @@ const RegisterP: React.FC = () => {
 
             <div className="space-y-2">
               <label className="text-[#E8D5FF] text-sm">Nombre:</label>
-              <input
+            
+                <Inputs
                 type="text"
                 name="firstName"
                 onChange={handleInputChange}
-                className="w-full h-12 rounded-xl bg-gray-800 text-white px-4 placeholder-white/80 focus:outline-none focus:ring-2 focus:ring-green-600 transition-all"
                 value={formData.firstName}
                 placeholder="Nombre..."
               />
@@ -148,12 +150,11 @@ const RegisterP: React.FC = () => {
 
             <div className="space-y-2">
               <label className="text-[#E8D5FF] text-sm">Apellido:</label>
-              <input
+         
+                 <Inputs
                 type="text"
                 name="lastName"
-
                 onChange={handleInputChange}
-                className="w-full h-12 rounded-xl bg-gray-800 text-white px-4 placeholder-white/80 focus:outline-none focus:ring-2 focus:ring-green-600 transition-all"
                 value={formData.lastName}
                 placeholder="Apellidos..."
 
@@ -161,27 +162,26 @@ const RegisterP: React.FC = () => {
             </div>
             <div className="space-y-2">
               <label className="text-[#E8D5FF] text-sm">correo electrónico:</label>
-              <input
-                type="email"
-                name="email"
-                placeholder="Correo electrónico..."
-                onChange={handleInputChange}
-
-                value={formData.email}
-                className="w-full h-12 rounded-xl bg-gray-800 text-white px-4 placeholder-white/80 focus:outline-none focus:ring-2 focus:ring-green-600 transition-all"
-              />
+          
+               <Inputs
+                 type="email"
+                 name="email"
+                 placeholder="Correo electrónico..."
+                 onChange={handleInputChange}
+                 value={formData.email}
+                />
             </div>
 
             <div className="space-y-2">
               <label className="text-[#E8D5FF] text-sm">Contraseña:</label>
-              <input
-                type="password"
-                name="password"
-                value={formData.password}
-                placeholder="Contraseña..."
-                onChange={handleInputChange}
-                className="w-full h-12 rounded-xl bg-gray-800 text-white px-4 placeholder-white/80 focus:outline-none focus:ring-2 focus:ring-green-600 transition-all"
-              />
+          
+               <Inputs
+               type="password"
+               name="password"
+               value={formData.password}
+               placeholder="Contraseña..."
+               onChange={handleInputChange}
+                />
             </div>
 
             <button
@@ -230,4 +230,4 @@ const RegisterP: React.FC = () => {
   );
 };
 
-export default RegisterP;
+export default RegisterPage;

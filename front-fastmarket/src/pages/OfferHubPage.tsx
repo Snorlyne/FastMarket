@@ -137,12 +137,12 @@ const OffersHubPage: React.FC = () => {
       )}
       <Header title={"Propuestas"} />
       <div className="h-[95%] flex justify-between flex-col">
-        <div className="p-4  bg-white overflow-y-auto">
+        <div className="p-4  bg-gray-900 overflow-y-auto">
           <div className="space-y-4">
             {propuestas.map((propuesta, index) => (
               <div
                 key={propuesta.id}
-                className="p-4 bg-white rounded-lg shadow-md border border-gray-200 flex justify-between items-start"
+                className="p-4 bg-gray-900 rounded-lg shadow-md border border-gray-200 flex justify-between items-start"
               >
                 <div>
                   <p className="text-lg text-black font-semibold">

@@ -6,7 +6,6 @@ import LoadingWave from "../../components/Loader";
 import { useHistory } from "react-router";
 import Modal from "../../components/Modals/Modal";
 import { IAnuncio } from "../../interfaces/IAnuncio";
-import HeaderHome from "../../components/Header copy";
 
 const HomePage: React.FC = () => {
   const [anuncios, setAnuncios] = useState<IAnuncio[]>([]);
@@ -46,7 +45,7 @@ const HomePage: React.FC = () => {
           <LoadingWave />
         </div>
       )}
-      <div className="bg-gray-900 min-h-screen text-white p-4 overflow-y-auto">
+      <div className="bg-gray-950 min-h-screen text-white p-4 overflow-y-auto">
         <header className="flex justify-between items-center mb-6">
           <div className="items-center gap-2 p-2">
             <h1 className="text-2xl font-bold">FastMarket</h1>

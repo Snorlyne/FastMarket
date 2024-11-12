@@ -6,6 +6,7 @@ export interface IProducto {
     nombre: string;
     precio: number;
     cantidad: number;
+    descripcion: string;
     tipo: string;
     fotos: IFoto[];
     etiquetas: IEtiqueta[];

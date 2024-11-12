@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "@firebase/storage": "^0.13.3"
+  }
+}

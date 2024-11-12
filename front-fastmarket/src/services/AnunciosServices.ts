@@ -1,10 +1,11 @@
 import { IAnuncio } from "../interfaces/IAnuncio";
+import { IProducto } from "../interfaces/IProducto";
 import { IResponse } from "../interfaces/IResponse";
 import authService from "./AuthService";
 
-// const API_URL = /* import.meta.env.VITE_APP_API_URL  */ 'https://localhost:7087/';
-const API_URL = import.meta.env.VITE_APP_API_URL
-const anunciosService = {
+ const API_URL = /* import.meta.env.VITE_APP_API_URL  */ 'https://localhost:7087/';
+/* const API_URL = import.meta.env.VITE_APP_API_URL
+ */const anunciosService = {
     getAll: async (): Promise<IResponse> => {
         const token = await authService.getToken();
         try {

@@ -1,6 +1,7 @@
 import { IonPage, useIonViewDidEnter } from "@ionic/react";
 import React, { useState } from "react";
 import { useHistory } from "react-router";
+import { BuildingStorefrontIcon } from '@heroicons/react/24/outline';
 import { IonCard, IonCardHeader, IonCardTitle } from "@ionic/react";
 import LoadingWave from "../../components/Loader";
 import authService from "../../services/AuthService";
@@ -9,6 +10,11 @@ import perfilService from "../../services/PerfilServices";
 import { IPersona } from "../../interfaces/IPersona";
 import Modal from "../../components/Modals/Modal";
 import HeaderHome from "../../components/Header copy";
+
+import Inputs from "../../Components2/Inputs";
+import Card from "../../Components2/Cards";
+
+
 
 const ProfilePage: React.FC = () => {
   const [email, setEmail] = useState("");
@@ -20,7 +26,7 @@ const ProfilePage: React.FC = () => {
     type: "info",
     title: "",
     message: "",
-    onConfirm: () => {},
+    onConfirm: () => { },
   });
   const [isLoading, setIsLoading] = useState(true);
 
@@ -58,119 +64,38 @@ const ProfilePage: React.FC = () => {
 
   return (
     <IonPage>
-      {isLoading && (
-        <div className="fixed h-screen  inset-0 z-10 flex items-center justify-center bg-white">
-          <LoadingWave />
-        </div>
-      )}
-      <HeaderHome title="FastMarket" />
-      <div className="p-4 bg-gray-100 min-h-screen">
-        <IonCard
-          className="bg-white shadow-lg rounded-lg max-w-sm"
-          onClick={() => history.push("/dashboard/profile/Profile")}
-        >
-          <IonCardHeader>
-            <div className="flex items-center p-6">
-              <img
-                src="https://raw.githubusercontent.com/RogelioGR/Proyect-RoomClean/refs/heads/Developer/public/usuario.png"
-                alt="Avatar"
-                className="w-16 h-16 rounded-full mr-6"
-              />
-              <IonCardTitle className="text-xl font-bold text-black">
+    {isLoading && (
+      <div className="fixed h-screen inset-0 z-10 flex items-center justify-center bg-slate-950">
+        <LoadingWave />
+      </div>
+    )}
+    <HeaderHome title="FastMarket" />
+    <div className="p-4 bg-slate-950 min-h-screen">
+      <div className="bg-slate-900 shadow-xl rounded-xl max-w-sm mx-auto border border-slate-800 hover:border-slate-700 transition-all duration-300" onClick={() => history.push("*/Profileiew")}>
+        <div className="p-6">
+          <div className="flex items-center mb-6">
+            <img
+              src="https://raw.githubusercontent.com/RogelioGR/Proyect-RoomClean/refs/heads/Developer/public/usuario.png"
+              alt="Avatar"
+              className="w-16 h-16 rounded-full mr-6 border-2 border-green-500"
+            />
+            <div>
+              <h2 className="text-xl font-bold text-white">
                 {perfil?.nombre} {perfil?.apellido}
-              </IonCardTitle>
+              </h2>
+              <p className="text-green-400 text-sm">{email}</p>
             </div>
-            <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Correo Electrónico
-              </label>
-              <input
-                type="email"
-                readOnly
-                className="w-full px-4 py-2 rounded-lg text-gray-700 bg-gray-200 border-b-2"
-                value={email}
-                placeholder="Correo Electrónico..."
-              />
-            </div>
-          </IonCardHeader>
-        </IonCard>
-        <div className="mb-6">
-          <h3 className="text-lg font-semibold mb-2 text-black">Opciones:</h3>
-
-          <div className="grid grid-cols-2 gap-2 place-items-center mx-auto">
-            <IonCard
-              className="w-44 rounded-xl"
-              onClick={() => history.push("/dashboard/profile/Mysale")}
-            >
-              <IonCardHeader>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={1.5}
-                  stroke="currentColor"
-                  className="size-6"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M13.5 21v-7.5a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 .75.75V21m-4.5 0H2.36m11.14 0H18m0 0h3.64m-1.39 0V9.349M3.75 21V9.349m0 0a3.001 3.001 0 0 0 3.75-.615A2.993 2.993 0 0 0 9.75 9.75c.896 0 1.7-.393 2.25-1.016a2.993 2.993 0 0 0 2.25 1.016c.896 0 1.7-.393 2.25-1.015a3.001 3.001 0 0 0 3.75.614m-16.5 0a3.004 3.004 0 0 1-.621-4.72l1.189-1.19A1.5 1.5 0 0 1 5.378 3h13.243a1.5 1.5 0 0 1 1.06.44l1.19 1.189a3 3 0 0 1-.621 4.72M6.75 18h3.75a.75.75 0 0 0 .75-.75V13.5a.75.75 0 0 0-.75-.75H6.75a.75.75 0 0 0-.75.75v3.75c0 .414.336.75.75.75Z"
-                  />
-                </svg>
-                <IonCardTitle>Mis ventas</IonCardTitle>
-              </IonCardHeader>
-            </IonCard>
-
-            <IonCard
-              className="w-44 rounded-xl"
-              onClick={() => history.push("/dashboard/profile/MyAdvert")}
-            >
-              <IonCardHeader>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={1.5}
-                  stroke="currentColor"
-                  className="size-6"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0M3.124 7.5A8.969 8.969 0 0 1 5.292 3m13.416 0a8.969 8.969 0 0 1 2.168 4.5"
-                  />
-                </svg>
-                <IonCardTitle>Mis Anuncios</IonCardTitle>
-              </IonCardHeader>
-            </IonCard>
-            <IonCard
-              className="w-44 rounded-xl"
-              onClick={() => history.push("/dashboard/profile/MyOffert")}
-            >
-              <IonCardHeader>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={1.5}
-                  stroke="currentColor"
-                  className="size-6"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M12 6v12m-3-2.818.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
-                  />
-                </svg>
-                <IonCardTitle>Mis Ofertas</IonCardTitle>
-              </IonCardHeader>
-            </IonCard>
           </div>
         </div>
-        <div className="fixed bottom-2 left-0 right-0 p-4 bg-white ">
-          <button
-            className="w-full bg-red-500 text-white py-2 rounded-lg hover:bg-red-600 transition flex justify-center items-center"
-            onClick={() => authService.logout().then(() => logOut())}
+      </div>
+
+      {/* Sección de opciones */}
+      <div className="mt-8 mb-20">
+        <h3 className="text-lg font-semibold mb-4 text-white px-2">Opciones:</h3>
+        <div className="grid grid-cols-2 gap-3 max-w-sm mx-auto">
+          <button 
+            onClick={() => history.push('/dashboard/profile/Mysale')}
+            className="flex flex-col items-center justify-center p-4 bg-slate-900 rounded-xl border border-slate-800 hover:border-indigo-500 hover:bg-slate-800 transition-all duration-300"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -178,27 +103,95 @@ const ProfilePage: React.FC = () => {
               viewBox="0 0 24 24"
               strokeWidth={1.5}
               stroke="currentColor"
-              className="size-6 p-1"
+              className="w-6 h-6 text-green-400 mb-2"
             >
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                d="M5.636 5.636a9 9 0 1 0 12.728 0M12 3v9"
+                d="M13.5 21v-7.5a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 .75.75V21m-4.5 0H2.36m11.14 0H18m0 0h3.64m-1.39 0V9.349M3.75 21V9.349m0 0a3.001 3.001 0 0 0 3.75-.615A2.993 2.993 0 0 0 9.75 9.75c.896 0 1.7-.393 2.25-1.016a2.993 2.993 0 0 0 2.25 1.016c.896 0 1.7-.393 2.25-1.015a3.001 3.001 0 0 0 3.75.614m-16.5 0a3.004 3.004 0 0 1-.621-4.72l1.189-1.19A1.5 1.5 0 0 1 5.378 3h13.243a1.5 1.5 0 0 1 1.06.44l1.19 1.189a3 3 0 0 1-.621 4.72M6.75 18h3.75a.75.75 0 0 0 .75-.75V13.5a.75.75 0 0 0-.75-.75H6.75a.75.75 0 0 0-.75.75v3.75c0 .414.336.75.75.75Z"
               />
             </svg>
-            Cerrar sesión
+            <span className="text-white text-sm font-medium">Mis ventas</span>
+          </button>
+
+          <button
+            onClick={() => history.push("/dashboard/profile/MyAdvert")}
+            className="flex flex-col items-center justify-center p-4 bg-slate-900 rounded-xl border border-slate-800 hover:border-indigo-500 hover:bg-slate-800 transition-all duration-300"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+              className="w-6 h-6 text-green-400 mb-2"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0M3.124 7.5A8.969 8.969 0 0 1 5.292 3m13.416 0a8.969 8.969 0 0 1 2.168 4.5"
+              />
+            </svg>
+            <span className="text-white text-sm font-medium">Mis Anuncios</span>
+          </button>
+
+          <button
+            onClick={() => history.push("/dashboard/profile/MyOffert")}
+            className="flex flex-col items-center justify-center p-4 bg-slate-900 rounded-xl border border-slate-800 hover:border-indigo-500 hover:bg-slate-800 transition-all duration-300"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+              className="w-6 h-6 text-green-400 mb-2"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M12 6v12m-3-2.818.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+              />
+            </svg>
+            <span className="text-white text-sm font-medium">Mis Ofertas</span>
           </button>
         </div>
       </div>
-      <Modal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        type={"warning"}
-        title={modalData.title}
-        message={modalData.message}
-        onConfirm={modalData.onConfirm}
-      />
-    </IonPage>
+
+      {/* Botón de cerrar sesión */}
+      <div className="fixed bottom-4 left-4 right-4">
+        <button
+          className="w-full bg-rose-600 text-white py-3 rounded-xl hover:bg-rose-700 transition-colors duration-300 flex justify-center items-center gap-2 font-medium"
+          onClick={() => authService.logout().then(() => logOut())}
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={1.5}
+            stroke="currentColor"
+            className="w-5 h-5"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M5.636 5.636a9 9 0 1 0 12.728 0M12 3v9"
+            />
+          </svg>
+          Cerrar sesión
+        </button>
+      </div>
+    </div>
+
+    <Modal
+      isOpen={isModalOpen}
+      onClose={() => setIsModalOpen(false)}
+      type="warning"
+      title={modalData.title}
+      message={modalData.message}
+      onConfirm={modalData.onConfirm}
+    />
+  </IonPage>
   );
 };
 

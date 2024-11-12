@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
 import { IonPage } from '@ionic/react';
 import { useHistory } from "react-router-dom";
-import authService from "../../services/AuthService";
-import Modal from "../../components/Modals/Modal";
-import { useAuth } from "../../services/auth/AuthContext";
+import authService from '../../services/AuthService';
+import Modal from '../../components/Modals/Modal';
+import { useAuth } from '../../services/auth/AuthContext';
+import Inputs from '../../Components2/Inputs';
 
 
 
 
-const SignUpPage: React.FC = () => {
+const LoginPage: React.FC = () => {
   const history = useHistory();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -102,14 +103,13 @@ const SignUpPage: React.FC = () => {
   return (
     <IonPage>
       <div className="min-h-full bg-gray-900 ">
-        {/* Header with improved title styling */}
         <div className="pt-12 px-6">
           <h1 className="text-4xl font-bold text-white  tracking-wide">
             FastMarket
           </h1>
         </div>
 
-        {/* Content moved lower with flex */}
+ 
         <div className="px-6 pt-12">
           <p className="text-white mb-8  text-lg">
             Bienvenido a una aplicación de subastas!
@@ -194,4 +194,4 @@ const SignUpPage: React.FC = () => {
   );
 };
 
-export default SignUpPage;
+export default LoginPage;
