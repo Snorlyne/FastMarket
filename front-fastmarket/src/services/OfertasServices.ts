@@ -3,6 +3,7 @@ import { IAnuncio } from "../interfaces/IAnuncio";
 import { ICreateOferta, IOferta } from "../interfaces/IOferta";
 import { IResponse } from "../interfaces/IResponse";
 import authService from "./AuthService";
+import chatService from "./ChatServices";
 
 const API_URL = /*  import.meta.env.VITE_APP_API_URL */ 'https://localhost:7087/';
 /* const API_URL = import.meta.env.VITE_APP_API_URL
@@ -59,6 +60,23 @@ const ofertasService = {
             return { isSuccess: false, message: 'Error al obtener ofertas', result: null };
         }
     },
+    getOferta: async (id: string): Promise<IResponse> => {
+        const token = await authService.getToken();
+        try {
+            const response = await fetch(`${API_URL}ofertas/` + id, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                }
+            });
+            const data = await response.json();
+            return { isSuccess: true, message: "", result:  data.result};
+        } catch (error) {
+            console.error('Unexpected error:', (error as Error).message);
+            return { isSuccess: false, message: 'Error al obtener ofertas', result: null };
+        }
+    },
     postOferta: async (id: string, req: ICreateOferta): Promise<IResponse> => {
         const token = await authService.getToken();
         try {
@@ -89,6 +107,10 @@ const ofertasService = {
                 body: JSON.stringify(req)
             });
             const data = await response.json();
+
+            if(data.isSuccess && req == EstadoOferta.Aceptada)[
+                chatService.postMensaje(id, 'Hola, he aceptado tu oferta sobre mi producto')
+            ]
             return { isSuccess: true, message: "", result: data.result };
         } catch (error) {
             console.error('Unexpected error:', (error as Error).message);

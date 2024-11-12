@@ -49,6 +49,9 @@ namespace Services.Services
                         Id = m.Persona.Id,
                         Nombre = m.Persona.Nombre,
                     },
+                    UltimoMensaje = m.Oferta.idPersona == idPersona
+                        ? m.Oferta.Personas.Nombre
+                        : m.Oferta.Anuncio.Personas.Nombre,
                     NombreChat = m.Oferta.idPersona == idPersona
                         ? m.Oferta.Anuncio.Personas.Nombre // Nombre del dueño del anuncio
                         : m.Oferta.Personas.Nombre // Nombre del dueño de la oferta
@@ -85,7 +88,7 @@ namespace Services.Services
                         Id = m.Persona.Id,
                         Nombre = m.Persona.Nombre,
                     },
-                    NombreChat = m.IdPersona == idPersona
+                    UltimoMensaje = m.IdPersona == idPersona
                         ? "propio" // Nombre del dueño del anuncio
                         : "entrante" // Nombre del dueño de la oferta
                 })

@@ -87,7 +87,7 @@ namespace Services.Services
             try
             {
                 var ofertas = await _context.ofertas
-                    .Where(o => o.idPersona == idPersona && o.estado == "activa")
+                    .Where(o => o.idPersona == idPersona && (o.estado == "activa" || o.estado == "aceptada"))
                     .Include(o => o.Anuncio)
                         .ThenInclude(a => a.Productos)
                             .ThenInclude(p => p.Fotos)
@@ -207,7 +207,7 @@ namespace Services.Services
             {
                 // Obtener ofertas filtrando por idAnuncio y estado "activa"
                 var ofertas = await _context.ofertas
-                    .Where(o => o.idAnuncio == idAnuncio && o.estado == "activa") // Filtrar por el ID del anuncio y estado "activa"
+                    .Where(o => o.idAnuncio == idAnuncio && (o.estado == "activa"  || o.estado == "aceptada")) 
                     .Include(o => o.OfertasProductos)
                         .ThenInclude(op => op.Producto)
                             .ThenInclude(pf => pf.Fotos)

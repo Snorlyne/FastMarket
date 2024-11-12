@@ -109,6 +109,7 @@ namespace Services.Services
                 var topOfertas = anuncio.Ofertas
                     .OrderByDescending(o => o.monto)
                     .Take(3)
+                    .Where(o => o.estado == "activa")
                     .Select(o => new OfertasDto
                     {
                         Id = o.Id,

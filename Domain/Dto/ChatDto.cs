@@ -10,6 +10,8 @@
         public OfertasDto Oferta { get; set; }
         public PersonasDto Persona { get; set; }
         public string NombreChat { get; set; }
+        public string UltimoMensaje { get; set; }
+
     }
     public class MensajesCreateDto
     {
