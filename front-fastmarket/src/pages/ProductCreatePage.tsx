@@ -92,11 +92,12 @@ const ProductForm: React.FC = () => {
     }
   };
 
+
   const handleImageUpload = (e: ChangeEvent<HTMLInputElement>): void => {
     const files = e.target.files;
     if (files) {
-      const newFotos: IFoto[] = Array.from(files).map((file, index) => ({
-        id: index,
+      const newFotos = Array.from(files).map((file) => ({
+        file,
         url: URL.createObjectURL(file),
       }));
       setImages(newFotos);
@@ -124,21 +125,25 @@ const ProductForm: React.FC = () => {
     }
   };
 
+  const uploadImagesToFirebase = async (images: any[]) => {
+    return await Promise.all(
+      images.map(async (image) => {
+        if (image.file) {
+          const imageRef = ref(storage, `/productosFM/${image.file.name}-${Date.now()}`);
+          await uploadBytes(imageRef, image.file);
+          return await getDownloadURL(imageRef);
+        }
+        return image.url; // URL existente si ya está en Firebase
+      })
+    );
+  };
+
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     setIsLoading(true);
     e.preventDefault();
 
-    const uploadImages = images.map(async (image) => {
-      if (image.file) {
-        const imageRef = ref(storage, `/productosFM/${image.file.name}-${Date.now()}`);
-        await uploadBytes(imageRef, image.file);
-        return getDownloadURL(imageRef);
-      }
-      return image.url;
-    });
-
     try {
-      const imageUrls = await Promise.all(uploadImages);
+      const imageUrls = await uploadImagesToFirebase(images);
 
       const formDataWithImages = {
         ...formData,
@@ -180,7 +185,7 @@ const ProductForm: React.FC = () => {
         </div>
       )}
       <Header title={id ? "Editar Producto" : "Crear Producto"} />
-      <div className="bg-gray-800 p-4 overflow-y-auto min-h-full">
+      <div className="bg-gray-800 p-4 overflow-y-auto h-screen">
         <input
           type="file"
           accept="image/*"

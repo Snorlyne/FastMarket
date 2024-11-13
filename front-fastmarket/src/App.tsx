@@ -43,7 +43,6 @@ import Login from "./pages/auth/Login";
 import RegisterPage from "./pages/auth/RegisterPage";
 import RegisterP from "./pages/auth/Registro";
 import IndexTabs from "./pages/Tabs/IndexTabs";
-import {AuthProvider } from "./services/auth/AuthContext";
 import PrivateRoute from "./services/auth/PrivateRoute";
 
 
@@ -53,7 +52,7 @@ setupIonicReact();
 
 const App: React.FC = () => {
   return (
-      <IonApp style={{backgroundColor: "white"}}>
+      <IonApp>
         <IonReactRouter>
           <IonRouterOutlet>
             <Route exact path="/login" component={Login} />

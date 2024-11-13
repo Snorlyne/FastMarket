@@ -36,6 +36,11 @@ const IndexTabs: React.FC = () => {
   //   "/dashboard/search"
   // ].some((path) => location.pathname.startsWith(path));
 
+  const tabChange = () => {
+    // Aquí puedes hacer algo cuando cambia el tab
+    console.log("Cambio")
+  };
+
   return (
     <IonReactRouter>
       <IonTabs >
@@ -105,7 +110,7 @@ const IndexTabs: React.FC = () => {
         )} */}
         <IonTabBar
           slot="bottom"
-          className="bg-gray-950  shadow-2xl rounded-full px-4 py-2  mb-6 transform translate-y-2"
+          className="bg-gray-950 shadow-2xl rounded-full px-4 py-2  mb-6 transform translate-y-2"
         >
           <IonTabButton
             tab="home"

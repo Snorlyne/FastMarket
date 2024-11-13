@@ -22,7 +22,7 @@ interface Venta {
   descripcion: string;
 }
 
-const Mysale: React.FC = () => {
+const MyBuy: React.FC = () => {
   const history = useHistory();
   const [isLoading, setIsLoading] = useState(true);
   const [ventas, setVentas] = useState<Venta[]>([]);
@@ -84,4 +84,4 @@ const Mysale: React.FC = () => {
   );
 };
 
-export default Mysale;
+export default MyBuy;

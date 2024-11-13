@@ -79,7 +79,7 @@ namespace Services.Services
                     .Include(a => a.Productos)
                         .ThenInclude(ap => ap.Fotos)
                     .Include(a => a.Ofertas)
-                    .Where(a => a.Estado == "pagado" && a.IdPersona == idPersona)
+                    .Where(a => a.Estado == "vendido" && a.IdPersona == idPersona)
                     .Select(a => new AnunciosDto
                     {
                         Id = a.Id,
@@ -102,7 +102,7 @@ namespace Services.Services
                             }).ToList()
                         },
                         Ofertas = a.Ofertas
-                        .Where(o => o.estado == "pagado")
+                        .Where(o => o.estado == "pagada")
                         .Select(o => new OfertasDto
                         {
                             Id = o.Id,

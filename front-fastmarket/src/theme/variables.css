@@ -2,7 +2,8 @@
 http://ionicframework.com/docs/theming/ */
 
 :root {
-    --ion-color-primary:  #10B981
+    --ion-color-primary:  #10B981;
+    --ion-background-color: rgb(17 24 39);
 }
 .custom-toolbar {
     --background:rgb(7, 15, 37);
