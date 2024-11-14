@@ -75,87 +75,89 @@ const ViewProduct: React.FC = () => {
   return (
     <IonPage>
       <div className="flex flex-col h-screen bg-slate-900">
-        <Header title={anuncio?.productos?.nombre ?? 'Detalles del Producto'} />
+        <div className="h-[95%] overflow-y-auto">
+          <Header title={anuncio?.productos?.nombre ?? 'Detalles del Producto'} />
 
-        {/* Image Carousel */}
-        <div className="w-full bg-gray-900">
-          <div className="overflow-x-auto">
-            <div className="flex snap-x snap-mandatory">
-              {anuncio?.productos?.fotos?.map((foto, index) => (
-                <div key={index} className="w-full flex-shrink-0 snap-center p-2 h-64">
-                  <img
-                    className="w-full h-full object-contain"
-                    src={foto.url}
-                    alt={`${anuncio.productos.nombre} - Imagen ${index + 1}`}
-                    loading="lazy"
-                  />
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* Content Section */}
-        <div className="flex-1 p-4">
-          {/* Title & Price */}
-          <h1 className="text-2xl font-semibold text-gray-100 mb-2">
-            {anuncio?.productos?.nombre}
-          </h1>
-          
-          <p className="text-lg font-medium text-green-600 mb-4">
-            Precio anunciado: MX${anuncio?.productos?.precio?.toLocaleString()}
-          </p>
-
-          {/* Description */}
-          <div className="mb-4">
-            <h3 className="text-lg font-semibold text-gray-100 mb-2">Descripción:</h3>
-            <p className="text-gray-400">
-              {anuncio?.descripcion || "Sin descripción disponible."}
-            </p>
-          </div>
-
-          {/* Offers Section */}
-          {anuncio?.ofertas && anuncio.ofertas.length > 0 && (
-            <div className="mb-4">
-              <h2 className="text-lg font-semibold text-gray-100 mb-2">
-                Mejores Ofertas:
-              </h2>
-              <div className="flex flex-wrap gap-2">
-                {anuncio.ofertas.map((oferta, index) => (
-                  <div key={index} className="bg-green-600 text-white py-2 px-4 rounded-lg">
-                    Oferta {index + 1}: ${oferta.monto?.toLocaleString()}
+          {/* Image Carousel */}
+          <div className="w-full bg-gray-900">
+            <div className="overflow-x-auto">
+              <div className="flex snap-x snap-mandatory">
+                {anuncio?.productos?.fotos?.map((foto, index) => (
+                  <div key={index} className="w-full flex-shrink-0 snap-center p-2 h-64">
+                    <img
+                      className="w-full h-full object-contain"
+                      src={foto.url}
+                      alt={`${anuncio.productos.nombre} - Imagen ${index + 1}`}
+                      loading="lazy"
+                    />
                   </div>
                 ))}
               </div>
             </div>
-          )}
-        </div>
+          </div>
 
-        {/* Fixed Bottom Buttons with extra padding for tabs */}
-        <div className="sticky bottom-0 w-full bg-transparent p-4 ">
-          {anuncio?.propietario ? (
-            <div className="space-y-2">
+          {/* Content Section */}
+          <div className="flex-1 p-4">
+            {/* Title & Price */}
+            <h1 className="text-2xl font-semibold text-gray-100 mb-2">
+              {anuncio?.productos?.nombre}
+            </h1>
+
+            <p className="text-lg font-medium text-green-600 mb-4">
+              Precio anunciado: MX${anuncio?.productos?.precio?.toLocaleString()}
+            </p>
+
+            {/* Description */}
+            <div className="mb-4">
+              <h3 className="text-lg font-semibold text-gray-100 mb-2">Descripción:</h3>
+              <p className="text-gray-400 text-justify">
+                {anuncio?.descripcion || "Sin descripción disponible."}
+              </p>
+            </div>
+
+            {/* Offers Section */}
+            {anuncio?.ofertas && anuncio.ofertas.length > 0 && (
+              <div className="mb-4">
+                <h2 className="text-lg font-semibold text-gray-100 mb-2">
+                  Mejores Ofertas:
+                </h2>
+                <div className="flex flex-wrap gap-2">
+                  {anuncio.ofertas.map((oferta, index) => (
+                    <div key={index} className="bg-green-600 text-white py-2 px-4 rounded-lg">
+                      Oferta {index + 1}: ${oferta.monto?.toLocaleString()}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Fixed Bottom Buttons with extra padding for tabs */}
+          <div className="h-[25vh] w-full bg-transparent p-4 ">
+            {anuncio?.propietario ? (
+              <div className="space-y-2">
+                <button
+                  onClick={handleMakeOffer}
+                  className="w-full bg-green-500 text-white py-3 rounded-lg font-semibold transition-colors hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
+                >
+                  Ver propuestas
+                </button>
+                <button
+                  onClick={() => history.replace(`${history.location.pathname}/EditAdvert/${anuncio.id}`)}
+                  className="w-full bg-blue-500 text-white py-3 rounded-lg font-semibold transition-colors hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                >
+                  Modificar
+                </button>
+              </div>
+            ) : (
               <button
                 onClick={handleMakeOffer}
-                className="w-full bg-green-500 text-white py-3 rounded-lg font-semibold transition-colors hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
-              >
-                Ver propuestas
-              </button>
-              <button
-                onClick={() => history.replace(`${history.location.pathname}/EditAdvert/${anuncio.id}`)}
                 className="w-full bg-blue-500 text-white py-3 rounded-lg font-semibold transition-colors hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
               >
-                Modificar
+                Enviar propuesta al vendedor
               </button>
-            </div>
-          ) : (
-            <button
-              onClick={handleMakeOffer}
-              className="w-full bg-blue-500 text-white py-3 rounded-lg font-semibold transition-colors hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-            >
-              Enviar propuesta al vendedor
-            </button>
-          )}
+            )}
+          </div>
         </div>
       </div>
     </IonPage>

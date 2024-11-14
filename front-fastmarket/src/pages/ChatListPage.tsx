@@ -59,7 +59,7 @@ const ChatList: React.FC = () => {
                                 </div>
                                 <div>
                                     <p className="font-semibold text-white">{chat.nombreChat}</p>
-                                    <p className="text-gray-400 text-sm">
+                                    <p className="text-gray-400 text-sm pr-2">
                                         {chat.ultimoMensaje.slice(0, 30)}
                                         {chat.ultimoMensaje.length > 30 ? '...' : ''}:
                                         {chat.contenido.slice(0, 30)}
