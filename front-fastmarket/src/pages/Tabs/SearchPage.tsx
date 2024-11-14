@@ -81,8 +81,7 @@ const SearchPage: React.FC = () => {
                 </div>
 
                 {/* Contenedor de resultados con scroll */}
-                <div className="flex-1 overflow-y-auto px-4">
-                    <div className="h-screen mx-auto">
+                    <div className="h-[75%] overflow-y-auto px-4">
                         <h2 className="text-lg font-semibold text-gray-200 mb-4">Resultados de búsqueda</h2>
                         {filteredItems.length > 0 ? (
                             <div className="flex flex-col gap-4 pb-4">
@@ -127,7 +126,7 @@ const SearchPage: React.FC = () => {
                         )}
                     </div>
                 </div>
-            </div>
+
         </IonPage>
     );
 };

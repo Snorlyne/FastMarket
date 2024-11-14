@@ -117,7 +117,10 @@ const PrivateChat: React.FC = () => {
         <IonPage>
             <Header title="Chat Privado" />
             <IonContent className="p-4 pb-20 ">
-                <div className="space-y-4 py-4 px-2" >
+                <div
+                    className={`overflow-y-auto ${oferta?.estado === 'Aceptada' ? 'h-[90%]' : 'h-[100%]'
+                        } space-y-4 py-4 px-2`}
+                >
                     {messages.map((message) => (
                         <div
                             key={message.id}
@@ -134,8 +137,8 @@ const PrivateChat: React.FC = () => {
                 </div>
             </IonContent>
             {(oferta && oferta.estado == 'aceptada') && (
-                <IonFooter className="fixed bottom-0 w-full p-4 bg-slate-900 ">
-                    <div className="flex items-center space-x-2 p-4">
+                <IonFooter className="fixed bottom-0 w-full py-1 bg-slate-900 ">
+                    <div className="flex items-center space-x-2 p-1">
                         <input
                             value={newMessage}
                             onChange={(e) => setNewMessage(e.target.value)}
@@ -162,7 +165,7 @@ const PrivateChat: React.FC = () => {
                 className="p-4"
             >
                 <div className="p-4">
-                    <h2 className="text-lg font-semibold mb-4 text-center">Selecciona una acción</h2>
+                    <h2 className="text-lg font-semibold mb-4 text-center text-white">Selecciona una acción</h2>
                     {oferta && oferta.idPersona === idUser ? (
                         <div>
                             <button onClick={() => handleOptionSelect(EstadoOferta.Pagada)} className="mt-4 p-2 rounded-md font-bold text-white w-full bg-green-600">
