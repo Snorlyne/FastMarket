@@ -106,11 +106,12 @@ const SearchPage: React.FC = () => {
                                         <div className="flex flex-col flex-grow">
                                             <h3 className="text-xl font-semibold text-gray-200 mb-2">{anuncio.productos.nombre}</h3>
                                             <p className="text-2xl font-bold text-gray-200 mb-2">$ {anuncio.precio_anuncio}</p>
-                                            <p className="text-gray-400 text-sm mb-2">                                        {
-                                                anuncio.descripcion.slice(0, 30)}
+                                            <p className="text-gray-400 text-sm mb-2">                                        
+                                                {anuncio.descripcion.slice(0, 30)}
                                                 {anuncio.descripcion.length > 30 ? '...' : ''}:
                                                 {anuncio.descripcion.slice(0, 30)}
-                                                {anuncio.descripcion.length > 30 ? '...' : ''}</p>
+                                                {anuncio.descripcion.length > 30 ? '...' : ''}
+                                                </p>
                                             <p className="text-gray-400 text-sm">
                                                 Ubicación: {anuncio.localizacion.ciudad}, {anuncio.localizacion.estado}, {anuncio.localizacion.pais}
                                             </p>

@@ -50,10 +50,10 @@ const HomePage: React.FC = () => {
         <header className="flex justify-between items-center mb-6">
           <div className="items-center gap-2 p-2">
             <h1 className="text-2xl font-bold">FastMarket</h1>
-        
-          <p className="text-md ">
-            Encuentra tus productos
-          </p>
+
+            <p className="text-md ">
+              Encuentra tus productos
+            </p>
           </div>
 
         </header>
@@ -62,7 +62,7 @@ const HomePage: React.FC = () => {
         <div className=" relative mb-8 rounded-xl overflow-hidden">
           <div className="relative h-48">
             <div className="absolute w-full h-full transition-transform duration-500 ease-in-out"
-                 style={{ transform: `translateX(-${currentSlide * 100}%)` }}>
+              style={{ transform: `translateX(-${currentSlide * 100}%)` }}>
               {anuncios.map((anuncio, index) => (
                 <div
                   key={anuncio.id}
@@ -76,10 +76,15 @@ const HomePage: React.FC = () => {
                   />
                   <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-4">
                     <h3 className="text-lg font-bold">{anuncio.productos.nombre}</h3>
-                    <p className="text-sm text-gray-200">{anuncio.descripcion}</p>
-                    <button className="w-full bg-transparent text-green-600 py-1 rounded-lg mt-2 hover:text-green-700 transition-colors" 
-                  onClick={() => history.push(route.pathname+"/ViewProduct/"+anuncio.id)}
-                  > Entrar</button>
+                    <p className="text-sm text-gray-200">
+                      {anuncio.descripcion.slice(0, 30)}
+                      {anuncio.descripcion.length > 30 ? '...' : ''}:
+                      {anuncio.descripcion.slice(0, 30)}
+                      {anuncio.descripcion.length > 30 ? '...' : ''}
+                    </p>
+                    <button className="w-full bg-transparent text-green-600 py-1 rounded-lg mt-2 hover:text-green-700 transition-colors"
+                      onClick={() => history.push(route.pathname + "/ViewProduct/" + anuncio.id)}
+                    > Entrar</button>
                   </div>
                 </div>
               ))}
@@ -105,9 +110,8 @@ const HomePage: React.FC = () => {
                 <button
                   key={index}
                   onClick={() => setCurrentSlide(index)}
-                  className={`w-2 h-2 rounded-full ${
-                    currentSlide === index ? 'bg-white' : 'bg-white/50'
-                  }`}
+                  className={`w-2 h-2 rounded-full ${currentSlide === index ? 'bg-white' : 'bg-white/50'
+                    }`}
                 />
               ))}
             </div>
