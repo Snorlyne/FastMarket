@@ -30,8 +30,7 @@ namespace Services.Services
                             .ThenInclude(p => p.Personas)
                     .Include(m => m.Oferta)
                         .ThenInclude(po => po.Personas)
-                    .Where(m => m.Oferta.Anuncio.IdPersona == idPersona || m.Oferta.idPersona == idPersona &&   // Filtra por la persona
-                                m.Oferta.estado == "aceptada") // Filtra solo las ofertas aceptadas
+                    .Where(m => m.Oferta.Anuncio.IdPersona == idPersona || m.Oferta.idPersona == idPersona)
                     .GroupBy(m => m.IdOferta)
                     .Select(g => g.OrderByDescending(m => m.fecha_envio).FirstOrDefault())
                     .ToListAsync(); // Trae los mensajes a memoria
