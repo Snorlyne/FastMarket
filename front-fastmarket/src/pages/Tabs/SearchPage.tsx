@@ -65,8 +65,6 @@ const SearchPage: React.FC = () => {
             {/* Contenedor principal con altura fija */}
             <div className="h-screen bg-gray-950 flex flex-col">
                 <HeaderHome title="FastMarket" />
-
-                {/* Barra de búsqueda fija en la parte superior */}
                 <div className="w-full px-4 py-4 bg-transparent">
                     <div className="max-w-xl mx-auto">
                         <div className="flex items-center bg-gray-800 rounded-full shadow-md p-2">
