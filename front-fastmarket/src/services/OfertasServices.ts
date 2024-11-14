@@ -5,7 +5,6 @@ import { IResponse } from "../interfaces/IResponse";
 import authService from "./AuthService";
 import chatService from "./ChatServices";
 
-//  const API_URL = /*  import.meta.env.VITE_APP_API_URL */ 'https://localhost:7087/';
 const API_URL = import.meta.env.VITE_APP_API_URL
 
 const ofertasService = {
