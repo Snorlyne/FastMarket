@@ -116,12 +116,12 @@ const PrivateChat: React.FC = () => {
     return (
         <IonPage>
             <Header title="Chat Privado" />
-            <IonContent className="p-4 pb-20 bg-gray-50">
+            <IonContent className="p-4 pb-20 ">
                 <div className="space-y-4 py-4 px-2">
                     {messages.map((message) => (
                         <div
                             key={message.id}
-                            className={`p-4 rounded-2xl shadow-md max-w-[75%] ${userColors[message.ultimoMensaje === 'propio' ? 'propio' : 'entrante'] || 'bg-gray-200 text-gray-800'
+                            className={`p-4 rounded-2xl shadow-md max-w-[75%] ${userColors[message.ultimoMensaje === 'propio' ? 'propio' : 'entrante'] || 'bg-gray-400 text-gray-800'
                                 } ${message.ultimoMensaje === 'propio' ? 'self-end ml-auto' : 'self-start mr-auto'}`}
                         >
                             <IonText>
@@ -134,13 +134,13 @@ const PrivateChat: React.FC = () => {
                 </div>
             </IonContent>
             {(oferta && oferta.estado == 'aceptada') && (
-                <IonFooter className="fixed bottom-0 w-full bg-white p-4 border-t border-gray-300">
+                <IonFooter className="fixed bottom-0 w-full p-4 bg-slate-900 ">
                     <div className="flex items-center space-x-2 p-4">
                         <input
                             value={newMessage}
                             onChange={(e) => setNewMessage(e.target.value)}
                             placeholder="Escribe tu mensaje..."
-                            className="text-sm text-black placeholder:text-gray-500 bg-white w-4/6 focus:border-none"
+                            className="text-sm text-black placeholder:text-gray-500 bg-white w-4/6 focus:border-none rounded-xl p-2 "
                         />
                         <div className="w-2/6 space-y-2">
                             <button onClick={sendMessage} className="w-full p-1 rounded-md bg-green-600 text-white font-medium">
