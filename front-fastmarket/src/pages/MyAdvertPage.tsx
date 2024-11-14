@@ -40,7 +40,7 @@ const MyAdvert: React.FC = () => {
           <LoadingWave />
         </div>
       )}
-      <div className="min-h-screen bg-slate-950">
+      <div className="min-h-screen bg-slate-900">
         <Header title="Mis Anuncios" />
 
         {/* Botón de crear nuevo anuncio */}

@@ -93,7 +93,7 @@ const ProfilePage: React.FC = () => {
         <div className="grid grid-cols-2 gap-3 max-w-sm mx-auto">
           <button 
             onClick={() => history.push('/dashboard/profile/Mysale')}
-            className="flex flex-col items-center justify-center p-4 bg-slate-800 rounded-xl border border-slate-900 hover:border-green-500 hover:bg-slate-900 transition-all duration-300"
+            className="flex flex-col items-center justify-center p-4 bg-slate-800 rounded-xl border border-slate-900 hover:border-green-500 hover:bg-slate-950 transition-all duration-300"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -114,7 +114,7 @@ const ProfilePage: React.FC = () => {
 
           <button
             onClick={() => history.push("/dashboard/profile/MyAdvert")}
-            className="flex flex-col items-center justify-center p-4 bg-slate-800 rounded-xl border border-slate-900 hover:border-green-500 hover:bg-slate-900 transition-all duration-300"
+            className="flex flex-col items-center justify-center p-4 bg-slate-800 rounded-xl border border-slate-900 hover:border-green-500 hover:bg-slate-950 transition-all duration-300"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -135,7 +135,7 @@ const ProfilePage: React.FC = () => {
 
           <button
             onClick={() => history.push("/dashboard/profile/MyOffert")}
-            className="flex flex-col items-center justify-center p-4 bg-slate-800 rounded-xl border border-slate-900 hover:border-green-500 hover:bg-slate-900 transition-all duration-300"
+            className="flex flex-col items-center justify-center p-4 bg-slate-800 rounded-xl border border-slate-950 hover:border-green-500 hover:bg-slate-900 transition-all duration-300"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"

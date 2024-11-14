@@ -117,7 +117,7 @@ const PrivateChat: React.FC = () => {
         <IonPage>
             <Header title="Chat Privado" />
             <IonContent className="p-4 pb-20 ">
-                <div className="space-y-4 py-4 px-2">
+                <div className="space-y-4 py-4 px-2" >
                     {messages.map((message) => (
                         <div
                             key={message.id}

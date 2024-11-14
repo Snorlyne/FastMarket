@@ -40,42 +40,70 @@ const Mysale: React.FC = () => {
 
   return (
     <IonPage>
-      <div className="min-h-screen bg-slate-900">
-        <Header title="Mis ventas" />
-        <div className="p-2 m-2" />
+      <div className="h-screen bg-gray-900 flex flex-col">
+        <Header title="Mis Ventas" />
+        <div className="p-2" />
 
         {isLoading ? (
           <LoadingWave />
         ) : (
-          <div className="max-w-4xl mx-auto px-4 py-4">
-            <h2 className="text-2xl text-white font-medium mb-3">Mis Ventas:</h2>
-            <div className="grid grid-cols-2 gap-4">
-              {ventas.map((venta) => (
-                <div key={venta.id} onClick={() => history.push(history.location+'/chat/'+venta.ofertas[0].id)} className="flex flex-col bg-white rounded-2xl overflow-hidden shadow-lg">
-                  <div className="relative w-full aspect-square">
-                    <img
-                      src={venta.productos.fotos[0]?.url || "https://via.placeholder.com/150"}
-                      className="w-full h-full object-cover bg-gray-200"
-                      alt={venta.productos.nombre}
-                    />
-                  </div>
-                  <div className="p-2 space-y-1 block">
-                    <h3 className="text-xl font-bold text-gray-600">{venta.productos.nombre}</h3>
-                    <div className='flex justify-between'>
-                      <p className={`text-lg font-bold text-green-700`}>
-                        Precio inicial
-                      </p>
-                      <p className="text-gray-700 font-medium">${venta.precio_anuncio}</p>
+          <div className="flex-1 overflow-y-auto px-4">
+            <div className="h-screen mx-auto">
+              <h2 className="text-lg font-semibold text-gray-200 mb-4">Mis Ventas</h2>
+              {ventas.length > 0 ? (
+                <div className="flex flex-col gap-4 pb-4">
+                  {ventas.map((venta) => (
+                    <div 
+                      key={venta.id} 
+                      className="bg-gray-800 rounded-lg shadow-md p-4 flex flex-row gap-4"
+                      onClick={() => history.push(history.location+'/chat/'+venta.ofertas[0].id)}
+                    >
+                      {/* Contenedor de imagen */}
+                      <div className="w-32 h-32 bg-gray-700 rounded-lg overflow-hidden flex-shrink-0">
+                        {venta.productos.fotos.length > 0 ? (
+                          <img
+                            src={venta.productos.fotos[0].url}
+                            alt={venta.productos.nombre}
+                            className="w-32 h-32 object-cover"
+                          />
+                        ) : (
+                          <div className="flex items-center justify-center h-full text-gray-400">
+                            Sin Imagen
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Contenedor de información */}
+                      <div className="flex flex-col flex-grow">
+                        <h3 className="text-xl font-semibold text-gray-200 mb-2">
+                          {venta.productos.nombre}
+                        </h3>
+                        <div className="flex justify-between items-center mb-2">
+                          <span className="text-gray-400">Precio inicial:</span>
+                          <span className="text-2xl font-bold text-gray-200">
+                            $ {venta.precio_anuncio}
+                          </span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span className="text-gray-400">Oferta actual:</span>
+                          <span className="text-2xl font-bold text-green-500">
+                            $ {venta.ofertas[0].monto}
+                          </span>
+                        </div>
+                        <div className="mt-2">
+                          <span className={`px-3 py-1 rounded-full text-sm font-medium ${
+                            venta.estado === "vendido" ? 'bg-red-500/20 text-red-400' : 'bg-green-500/20 text-green-400'
+                          }`}>
+                            {venta.estado.charAt(0).toUpperCase() + venta.estado.slice(1)}
+                          </span>
+                        </div>
+                      </div>
                     </div>
-                    <div className='flex justify-between'>
-                      <p className={`text-lg font-bold ${venta.estado === "vendido" ? 'text-red-400' : 'text-green-400'}`}>
-                        {venta.estado.charAt(0).toUpperCase() + venta.estado.slice(1)} por 
-                      </p>
-                      <p className="text-gray-700 font-medium">${venta.ofertas[0].monto}</p>
-                    </div>
-                  </div>
+                  ))}
                 </div>
-              ))}
+              ) : (
+                <p className="text-gray-400">No tienes ventas activas</p>
+              )}
             </div>
           </div>
         )}
