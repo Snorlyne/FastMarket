@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "tailwindcss/tailwind.css";
 import { ChatBubbleBottomCenterIcon } from "@heroicons/react/24/outline";
-import { IonPage } from "@ionic/react";
+import { IonPage, useIonViewDidEnter } from "@ionic/react";
 import Header from "../components/Header";
 import { useHistory } from "react-router";
 import chatService from "../services/ChatServices";
@@ -29,7 +29,7 @@ const ChatList: React.FC = () => {
     const [isLoading, setIsLoading] = useState(true);
     const history = useHistory();
 
-    useEffect(() => {
+    useIonViewDidEnter(() => {
         const fetchChats = async () => {
             setIsLoading(true);
             const data = await chatService.getChats();

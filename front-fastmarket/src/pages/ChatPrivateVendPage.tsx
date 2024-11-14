@@ -117,7 +117,10 @@ const PrivateChat: React.FC = () => {
         <IonPage>
             <Header title="Chat Privado" />
             <IonContent className="p-4 pb-20 ">
-                <div className="overflow-y-auto h-[90%] space-y-4 py-4 px-2">
+                <div
+                    className={`overflow-y-auto ${oferta?.estado === 'Aceptada' ? 'h-[90%]' : 'h-[100%]'
+                        } space-y-4 py-4 px-2`}
+                >
                     {messages.map((message) => (
                         <div
                             key={message.id}
