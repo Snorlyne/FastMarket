@@ -44,8 +44,8 @@ const removeStorageItem = async (): Promise<void> => {
 };
 
 // API URL from environment variables
- const API_URL = /* import.meta.env.VITE_APP_API_URL  */ 'https://localhost:7087/';
-//const API_URL =  import.meta.env.VITE_APP_API_URL 
+ //const API_URL = /* import.meta.env.VITE_APP_API_URL  */ 'https://localhost:7087/';
+const API_URL =  import.meta.env.VITE_APP_API_URL 
 
 // AuthService object
 const authService = {

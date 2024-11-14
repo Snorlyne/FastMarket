@@ -5,6 +5,7 @@ import HeaderHome from '../../components/Header copy';
 import anunciosService from '../../services/AnunciosServices';
 import { IResponse } from '../../interfaces/IResponse';
 import { useHistory } from "react-router";
+import LoadingWave from '../../components/Loader';
 
 
 interface Anuncio {
@@ -29,6 +30,7 @@ interface Anuncio {
 const SearchPage: React.FC = () => {
     const [searchTerm, setSearchTerm] = useState<string>("");
     const [filteredItems, setFilteredItems] = useState<Anuncio[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
     const history = useHistory();
     const route = history.location;
 
@@ -60,7 +62,8 @@ const SearchPage: React.FC = () => {
 
     return (
         <IonPage>
-            <div className="min-h-screen bg-slate-900 flex flex-col">
+            {/* Contenedor principal con altura fija */}
+            <div className="h-screen bg-gray-950 flex flex-col">
                 <HeaderHome title="FastMarket" />
                 <div className="w-full px-4 py-4 bg-transparent">
                     <div className="max-w-xl mx-auto">
@@ -79,7 +82,7 @@ const SearchPage: React.FC = () => {
 
                 {/* Contenedor de resultados con scroll */}
                 <div className="flex-1 overflow-y-auto px-4">
-                    <div className="max-w-4xl mx-auto">
+                    <div className="h-screen mx-auto">
                         <h2 className="text-lg font-semibold text-gray-200 mb-4">Resultados de búsqueda</h2>
                         {filteredItems.length > 0 ? (
                             <div className="flex flex-col gap-4 pb-4">
