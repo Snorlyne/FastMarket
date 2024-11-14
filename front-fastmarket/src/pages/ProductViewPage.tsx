@@ -74,7 +74,7 @@ const ViewProduct: React.FC = () => {
 
   return (
     <IonPage>
-      <div className="flex flex-col h-screen bg-gray-800">
+      <div className="flex flex-col h-screen bg-slate-900">
         <Header title={anuncio?.productos?.nombre ?? 'Detalles del Producto'} />
 
         {/* Image Carousel */}
@@ -132,7 +132,7 @@ const ViewProduct: React.FC = () => {
         </div>
 
         {/* Fixed Bottom Buttons with extra padding for tabs */}
-        <div className="sticky bottom-0 w-full bg-gray-800 p-4 border-t border-gray-700">
+        <div className="sticky bottom-0 w-full bg-transparent p-4 ">
           {anuncio?.propietario ? (
             <div className="space-y-2">
               <button

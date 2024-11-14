@@ -40,7 +40,7 @@ const Mysale: React.FC = () => {
 
   return (
     <IonPage>
-      <div className="min-h-screen bg-gray-800">
+      <div className="min-h-screen bg-slate-900">
         <Header title="Mis ventas" />
         <div className="p-2 m-2" />
 

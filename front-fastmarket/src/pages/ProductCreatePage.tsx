@@ -2,12 +2,13 @@ import React, { useState, useRef, useEffect, ChangeEvent, FormEvent } from "reac
 import { useHistory, useParams } from "react-router-dom";
 import Header from "../components/Header";
 import { IonPage } from "@ionic/react";
-import { XCircleIcon } from "@heroicons/react/24/solid";
+import { XCircleIcon, PlusCircleIcon } from "@heroicons/react/24/solid";
 import { storage } from "../firebaseConfig";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import anunciosService from "../services/AnunciosServices";
 import LoadingWave from "../components/Loader";
 import { IFoto } from "../interfaces/IFoto";
+import Inputs from "../components/Inputs";
 
 interface ImageData {
   url: string;
@@ -92,7 +93,6 @@ const ProductForm: React.FC = () => {
     }
   };
 
-
   const handleImageUpload = (e: ChangeEvent<HTMLInputElement>): void => {
     const files = e.target.files;
     if (files) {
@@ -100,7 +100,7 @@ const ProductForm: React.FC = () => {
         file,
         url: URL.createObjectURL(file),
       }));
-      setImages(newFotos);
+      setImages((prevImages) => [...prevImages, ...newFotos]);
     }
   };
 
@@ -125,7 +125,7 @@ const ProductForm: React.FC = () => {
     }
   };
 
-  const uploadImagesToFirebase = async (images: any[]) => {
+  const uploadImagesToFirebase = async (images: ImageData[]) => {
     return await Promise.all(
       images.map(async (image) => {
         if (image.file) {
@@ -133,7 +133,7 @@ const ProductForm: React.FC = () => {
           await uploadBytes(imageRef, image.file);
           return await getDownloadURL(imageRef);
         }
-        return image.url; // URL existente si ya está en Firebase
+        return image.url;
       })
     );
   };
@@ -185,11 +185,14 @@ const ProductForm: React.FC = () => {
         </div>
       )}
       <Header title={id ? "Editar Producto" : "Crear Producto"} />
-      <div className="bg-gray-800 p-4 overflow-y-auto h-screen">
+      <div className="bg-gray-900 p-4 overflow-y-auto h-screen">
         <input
           type="file"
           accept="image/*"
+          ref={fileInputRef}
           onChange={handleImageUpload}
+          className="hidden"
+          multiple
         />
 
         {images.length === 0 ? (
@@ -204,98 +207,105 @@ const ProductForm: React.FC = () => {
             </div>
           </button>
         ) : (
-          <div className="grid grid-cols-3 gap-4">
-            {images.map((image, index) => (
-              <div key={index} className="relative aspect-square group">
-                <img
-                  src={image.url}
-                  alt={`Preview ${index + 1}`}
-                  className="w-full h-full object-cover rounded-lg"
-                />
-                <XCircleIcon
-                  className="absolute top-2 right-2 w-5 h-5 text-red-500 cursor-pointer"
-                  onClick={() => removeImage(index)}
-                />
-              </div>
-            ))}
+          <div className="space-y-4">
+            <div className="grid grid-cols-3 gap-4">
+              {images.map((image, index) => (
+                <div key={index} className="relative aspect-square group">
+                  <img
+                    src={image.url}
+                    alt={`Preview ${index + 1}`}
+                    className="w-full h-full object-cover rounded-lg"
+                  />
+                  <XCircleIcon
+                    className="absolute top-2 right-2 w-5 h-5 text-red-500 cursor-pointer"
+                    onClick={() => removeImage(index)}
+                  />
+                </div>
+              ))}
+            </div>
+            
+            <button
+              type="button"
+              onClick={() => fileInputRef.current?.click()}
+              className="w-full p-3 bg-gray-800 border border-dashed border-gray-700 rounded-lg flex items-center justify-center space-x-2 hover:bg-gray-700 transition-colors"
+            >
+              <PlusCircleIcon className="w-5 h-5 text-green-500" />
+              <span className="text-white font-medium">Agregar más fotos</span>
+            </button>
           </div>
         )}
 
         <form onSubmit={handleSubmit} className="space-y-4 mt-4">
           <div className="space-y-2">
             <h3 className="font-medium text-white">Producto</h3>
-            <input
+
+            <Inputs
               type="text"
               name="productos.nombre"
               placeholder="Nombre del Producto"
               value={formData.productos.nombre}
               onChange={handleChange}
-              className="w-full p-2 border rounded-lg bg-white placeholder:text-gray-400 text-black"
             />
-            <input
+            <Inputs
               type="number"
               name="productos.precio"
               placeholder="Precio del Producto"
               value={formData.productos.precio}
               onChange={handleChange}
-              className="w-full p-2 border rounded-lg bg-white placeholder:text-gray-400 text-black"
             />
-            <input
+            <Inputs
               type="number"
               name="productos.cantidad"
               placeholder="Cantidad del Producto"
               value={formData.productos.cantidad}
               onChange={handleChange}
-              className="w-full p-2 border rounded-lg bg-white placeholder:text-gray-400 text-black"
             />
           </div>
+
           <textarea
             name="productos.descripcion"
             placeholder="Descripción"
             value={formData.productos.descripcion}
             onChange={handleChange}
-            className="w-full p-2 border rounded-lg bg-white placeholder:text-gray-400 text-black"
+            className="w-full h-12 rounded-xl bg-gray-800 text-white px-4 p-2 placeholder-white/80 focus:outline-none focus:ring-2 focus:ring-green-600 transition-all"
           />
 
           <div className="space-y-2">
             <h3 className="font-medium text-white">Localización</h3>
-            <input
+          
+            <Inputs
               type="text"
               name="localizacion.ciudad"
               placeholder="Ciudad"
               value={formData.localizacion.ciudad}
               onChange={handleChange}
-              className="w-full p-2 border rounded-lg bg-white placeholder:text-gray-400 text-black"
             />
-            <input
+            <Inputs
               type="text"
               name="localizacion.estado"
               placeholder="Estado"
               value={formData.localizacion.estado}
               onChange={handleChange}
-              className="w-full p-2 border rounded-lg bg-white placeholder:text-gray-400 text-black"
             />
-            <input
+            <Inputs
               type="text"
               name="localizacion.pais"
               placeholder="País"
               value={formData.localizacion.pais}
               onChange={handleChange}
-              className="w-full p-2 border rounded-lg bg-white placeholder:text-gray-400 text-black"
             />
-            <input
+            <Inputs
               type="text"
               name="localizacion.codigoPostal"
               placeholder="Código Postal"
               value={formData.localizacion.codigoPostal}
               onChange={handleChange}
-              className="w-full p-2 border rounded-lg bg-white placeholder:text-gray-400 text-black"
             />
           </div>
 
           <button
             type="submit"
-            className="w-full p-2 rounded-lg bg-blue-500 text-white font-medium hover:bg-blue-600 transition-colors"
+            className="w-full p-2 rounded-lg bg-green-500 text-white font-medium hover:bg-green-600 transition-colors"
           >
             {id ? "Actualizar Producto" : "Crear Producto"}
           </button>

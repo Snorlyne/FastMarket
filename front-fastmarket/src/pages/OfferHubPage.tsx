@@ -142,13 +142,13 @@ const OffersHubPage: React.FC = () => {
             {propuestas.map((propuesta, index) => (
               <div
                 key={propuesta.id}
-                className="p-4 bg-gray-900 rounded-lg shadow-md border border-gray-200 flex justify-between items-start"
+                className="p-4 bg-gray-800 rounded-lg shadow-2xl  flex justify-between items-start"
               >
                 <div>
-                  <p className="text-lg text-black font-semibold">
+                  <p className="text-lg text-white font-semibold">
                     Propuesta #{index + 1}
                   </p>
-                  <p className="text-gray-600">Monto: MX${propuesta.monto}</p>
+                  <p className="text-gray-400">Monto:$<span className=" text-green-600">{propuesta.monto} MXM</span></p>
                 </div>
               </div>
             ))}
@@ -156,7 +156,7 @@ const OffersHubPage: React.FC = () => {
         </div>
         {/* New Proposal Form */}
         {!propetario ? (
-          <div className="p-4 bg-white  border-t border-gray-200">
+          <div className="p-4 bg-transparent  ">
             <div className="flex justify-between items-center space-x-2 mb-2">
               <input
                 type="number"

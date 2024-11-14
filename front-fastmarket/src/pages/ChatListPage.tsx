@@ -6,7 +6,6 @@ import Header from "../components/Header";
 import { useHistory } from "react-router";
 import chatService from "../services/ChatServices";
 
-// Definición del tipo para los datos de chat
 interface Chat {
     id: number;
     idOferta: number;
@@ -29,11 +28,10 @@ const ChatList: React.FC = () => {
     const history = useHistory();
 
     useEffect(() => {
-        // Función para obtener los chats al cargar el componente
         const fetchChats = async () => {
             const data = await chatService.getChats();
             if (data) {
-                setChats(data); // Actualiza el estado con los chats recibidos
+                setChats(data); 
             }
         };
         fetchChats();
@@ -42,7 +40,7 @@ const ChatList: React.FC = () => {
     return (
         <IonPage>
             <Header title="Chats" />
-            <div className="w-full max-w-md mx-auto px-4 bg-white h-screen shadow-lg">
+            <div className="w-full max-w-md mx-auto px-4 bg-slate-900 h-screen shadow-lg">
                 {/* Lista de chats */}
                 <ul className="space-y-4 w-full mt-4">
                     {chats.map((chat) => (

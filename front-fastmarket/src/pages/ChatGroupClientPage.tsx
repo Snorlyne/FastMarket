@@ -35,7 +35,7 @@ return (
         </IonToolbar>
     </IonHeader>
 
-    <IonContent className="p-4 pb-20 bg-gray-50">
+    <IonContent className="p-4 pb-20 ">
         <div className="space-y-4">
         {messages.map((message, index) => (
             <div

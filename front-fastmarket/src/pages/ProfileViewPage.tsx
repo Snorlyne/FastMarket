@@ -9,6 +9,7 @@ import { useAuth } from '../services/auth/AuthContext';
 /* Componentes */
 import Header from '../components/Header';
 import Modal from '../components/Modals/Modal';
+import Inputs from '../components/Inputs';
 
 const ProfileView: React.FC = () => {
   const [perfil, setPerfil] = useState<IPersona | null>(null);
@@ -76,12 +77,12 @@ const ProfileView: React.FC = () => {
 
   return (
     <IonPage> 
-      <div className="min-h-screen w-full bg-white">
+      <div className="min-h-screen w-full">
         <Header title="Perfil" />
         <div className="w-full h-full overflow-auto p-4">
           {/* Título */}
           <h1 className="text-xl font-bold text-center mb-6">Perfil</h1>
-          <div className="bg-gray-300 rounded-lg mb-6">
+          <div className="bg-slate-950 rounded-lg mb-6">
             <div className="w-24 h-24 mx-auto rounded-full overflow-hidden">
               <img
                 src={"https://raw.githubusercontent.com/RogelioGR/Proyect-RoomClean/refs/heads/Developer/public/usuario.png"}
@@ -91,33 +92,34 @@ const ProfileView: React.FC = () => {
             </div>
           </div>
           {/* Información personal */}
-          <div className="bg-gray-200 rounded-lg p-4 mb-6">
-            <h2 className="text-sm text-gray-600 mb-4">Información personal</h2>
+
+          <div className="bg-gray-950 rounded-lg p-4 mb-6">
+            <h2 className="text-sm text-gray-200 mb-4">Información personal</h2>
             <div className="mb-4">
-              <label className="text-sm text-gray-600 mb-1 block">Nombre:</label>
-              <input
+              <label className="text-sm text-gray-400 mb-1 block">Nombre:</label>
+            
+              <Inputs
                 type="text"
                 value={perfil?.nombre}
                 readOnly
-                className="w-full p-2 rounded bg-gray-100 text-gray-800"
               />
             </div>
             <div className="mb-4">
-              <label className="text-sm text-gray-600 mb-1 block">Apellidos:</label>
-              <input
-                type="text"
-                value={perfil?.apellido}
-                readOnly
-                className="w-full p-2 rounded bg-gray-100 text-gray-800"
+              <label className="text-sm text-gray-400 mb-1 block">Apellidos:</label>
+             
+               <Inputs
+                  type="text"
+                  value={perfil?.apellido}
+                  readOnly
               />
             </div>
             <div className="mb-4">
-              <label className="text-sm text-gray-600 mb-1 block">Correo:</label>
-              <input
-                type="email"
-                value={email}
-                readOnly
-                className="w-full p-2 rounded bg-gray-100 text-gray-800"
+              <label className="text-sm text-gray-400 mb-1 block">Correo:</label>
+          
+               <Inputs
+               type="email"
+               value={email}
+               readOnly
               />
             </div>
           </div>

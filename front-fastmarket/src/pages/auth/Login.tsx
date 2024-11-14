@@ -4,7 +4,7 @@ import { useHistory } from "react-router-dom";
 import authService from '../../services/AuthService';
 import Modal from '../../components/Modals/Modal';
 import { useAuth } from '../../services/auth/AuthContext';
-import Inputs from '../../Components2/Inputs';
+import Inputs from '../../components/Inputs';
 
 
 
@@ -118,27 +118,28 @@ const LoginPage: React.FC = () => {
           <form className="space-y-6 ">
             <div className="space-y-2">
               <label className="text-[#E8D5FF] text-sm">Correo Electrónico:</label>
-              <input
-                type="email"
-                className="w-full h-12 rounded-xl bg-gray-800 text-white px-4 placeholder-white/80 focus:outline-none focus:ring-2 focus:ring-green-600 transition-all"
-                value={email}
-                placeholder="Correo Electrónico..."
-                onChange={(e) => setEmail(e.target.value)}
-                disabled={isLoading}
+             
+              <Inputs
+              type="email"
+               value={email}
+               placeholder="Correo Electrónico..."
+               onChange={(e) => setEmail(e.target.value)}
+               disabled={isLoading}
               />
             </div>
 
             <div className="space-y-2">
               <label className="text-[#E8D5FF] text-sm">Contraseña:</label>
-              <input
-                type="password"
-
-                className="w-full h-12 rounded-xl bg-gray-800 text-white px-4 placeholder-white/80 focus:outline-none focus:ring-2 focus:ring-green-600 transition-all"
-                value={password}
-                placeholder="Contraseña..."
-                onChange={(e) => setPassword(e.target.value)}
-                disabled={isLoading}
+            
+                  
+              <Inputs
+             type="password"
+              value={password}
+              placeholder="Contraseña..."
+              onChange={(e) => setPassword(e.target.value)}
+              disabled={isLoading}
               />
+
 
             </div>
 

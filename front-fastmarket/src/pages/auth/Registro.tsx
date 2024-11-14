@@ -5,7 +5,7 @@ import AuthService from "../../services/AuthService";
 import { IRegistro } from "../../interfaces/IRegister";
 import { IResponse } from "../../interfaces/IResponse";
 import Modal from "../../components/Modals/Modal";
-import Inputs from '../../Components2/Inputs';
+import Inputs from '../../components/Inputs';
 
 
 

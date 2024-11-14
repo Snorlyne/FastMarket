@@ -60,12 +60,11 @@ const SearchPage: React.FC = () => {
 
     return (
         <IonPage>
-            {/* Contenedor principal con altura fija */}
-            <div className="min-h-screen bg-gray-950 flex flex-col">
+            <div className="min-h-screen bg-slate-900 flex flex-col">
                 <HeaderHome title="FastMarket" />
 
                 {/* Barra de búsqueda fija en la parte superior */}
-                <div className="w-full px-4 py-4 bg-gray-950">
+                <div className="w-full px-4 py-4 bg-transparent">
                     <div className="max-w-xl mx-auto">
                         <div className="flex items-center bg-gray-800 rounded-full shadow-md p-2">
                             <IonIcon icon={searchOutline} className="text-gray-400 w-6 h-6 ml-2" />
@@ -102,7 +101,7 @@ const SearchPage: React.FC = () => {
                                                 </div>
                                             )}
                                         </div>
-                                        
+
                                         {/* Contenedor de información */}
                                         <div className="flex flex-col flex-grow">
                                             <h3 className="text-xl font-semibold text-gray-200 mb-2">{anuncio.productos.nombre}</h3>
@@ -113,8 +112,8 @@ const SearchPage: React.FC = () => {
                                             </p>
                                             <div className="mt-auto">
                                                 <button className="w-full mt-4 bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition"
-                                                                  onClick={() => history.push(route.pathname+"/ViewProduct/"+anuncio.id)}
->
+                                                    onClick={() => history.push(route.pathname + "/ViewProduct/" + anuncio.id)}
+                                                >
                                                     Ver Detalles
                                                 </button>
                                             </div>
