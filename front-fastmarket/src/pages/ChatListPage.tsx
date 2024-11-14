@@ -34,7 +34,7 @@ const ChatList: React.FC = () => {
             setIsLoading(true);
             const data = await chatService.getChats();
             if (data) {
-                setChats(data); 
+                setChats(data);
             }
             setIsLoading(false);
         };
@@ -59,8 +59,12 @@ const ChatList: React.FC = () => {
                                 </div>
                                 <div>
                                     <p className="font-semibold text-white">{chat.nombreChat}</p>
-                                    <p className="text-gray-400 text-sm">{chat.ultimoMensaje}: {chat.contenido}</p>
-                                </div>
+                                    <p className="text-gray-400 text-sm">
+                                        {chat.ultimoMensaje.slice(0, 30)}
+                                        {chat.ultimoMensaje.length > 30 ? '...' : ''}:
+                                        {chat.contenido.slice(0, 30)}
+                                        {chat.contenido.length > 30 ? '...' : ''}
+                                    </p>                                </div>
                             </div>
                             <p className="text-xs text-gray-400">{new Date(chat.fechaEnvio).toLocaleTimeString()}</p>
                         </li>

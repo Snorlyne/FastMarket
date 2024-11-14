@@ -2,8 +2,8 @@ import { IResponse } from "../interfaces/IResponse";
 import authService from "./AuthService";
 import { IProducto } from "../interfaces/IProducto";
 
-const API_URL = /* import.meta.env.VITE_APP_API_URL */ 'https://localhost:7087/';
-//const API_URL =  import.meta.env.VITE_APP_API_URL 
+//const API_URL = /* import.meta.env.VITE_APP_API_URL */ 'https://localhost:7087/';
+const API_URL =  import.meta.env.VITE_APP_API_URL 
 const ProductoService = {
     PostProducto: async (Iproducto: IProducto): Promise<IResponse> => {
         const token = await authService.getToken();
