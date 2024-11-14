@@ -4,6 +4,10 @@ import { searchOutline } from "ionicons/icons";
 import HeaderHome from '../../components/Header copy';
 import anunciosService from '../../services/AnunciosServices';
 import { IResponse } from '../../interfaces/IResponse';
+import { useHistory } from "react-router";
+import LoadingWave from '../../components/Loader';
+
+
 interface Anuncio {
     id: number;
     productos: {
@@ -26,23 +30,19 @@ interface Anuncio {
 const SearchPage: React.FC = () => {
     const [searchTerm, setSearchTerm] = useState<string>("");
     const [filteredItems, setFilteredItems] = useState<Anuncio[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const history = useHistory();
+    const route = history.location;
 
     const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
         setSearchTerm(e.target.value);
     };
-
 
     useEffect(() => {
         const fetchAnuncios = async () => {
             try {
                 const response: IResponse = await anunciosService.getByParams({
                     nombreProducto: searchTerm,
-                    // Añade otros parámetros de búsqueda si es necesario
-                    // etiquetas: 'exampleEtiqueta',
-                    // ciudad: 'exampleCiudad',
-                    // estado: 'exampleEstado',
-                    // pais: 'examplePais',
-                    // codigoPostal: 'exampleCodigoPostal'
                 });
 
                 if (response.isSuccess) {
@@ -56,69 +56,81 @@ const SearchPage: React.FC = () => {
         if (searchTerm.trim()) {
             fetchAnuncios();
         } else {
-            setFilteredItems([]); // Limpiar resultados si el término de búsqueda está vacío
+            setFilteredItems([]);
         }
     }, [searchTerm]);
 
-
     return (
         <IonPage>
-            <div className="min-h-screen bg-gray-100">
+            {/* Contenedor principal con altura fija */}
+            <div className="h-screen bg-gray-950 flex flex-col">
                 <HeaderHome title="FastMarket" />
-
-                {/* Search Bar */}
-                <div className="max-w-xl mx-auto px-4 py-4">
-                    <div className="flex items-center bg-white rounded-full shadow-md p-2">
-                        <IonIcon icon={searchOutline} className="text-gray-500 w-6 h-6 ml-2" />
-                        <input
-                            type="text"
-                            placeholder="Buscar..."
-                            className="flex-1 p-2 bg-transparent outline-none rounded-full text-gray-800 placeholder-gray-500"
-                            value={searchTerm}
-                            onChange={handleSearchChange}
-                        />
+                <div className="w-full px-4 py-4 bg-transparent">
+                    <div className="max-w-xl mx-auto">
+                        <div className="flex items-center bg-gray-800 rounded-full shadow-md p-2">
+                            <IonIcon icon={searchOutline} className="text-gray-400 w-6 h-6 ml-2" />
+                            <input
+                                type="text"
+                                placeholder="Buscar..."
+                                className="flex-1 p-2 bg-transparent outline-none rounded-full text-gray-200 placeholder-gray-400"
+                                value={searchTerm}
+                                onChange={handleSearchChange}
+                            />
+                        </div>
                     </div>
                 </div>
 
-                {/* Search Results */}
-                <div className="max-w-4xl mx-auto px-4 py-4">
-                    <h2 className="text-lg font-semibold text-gray-700 mb-4">Resultados de búsqueda</h2>
-                    {filteredItems.length > 0 ? (
-                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                            {filteredItems.map((anuncio) => (
-                                <div key={anuncio.id} className="bg-white rounded-lg shadow-md p-4 flex flex-col">
-                                    <div className="h-40 bg-gray-200 rounded-lg overflow-hidden">
-                                        {anuncio.productos.fotos.length > 0 ? (
-                                            <img
-                                                src={anuncio.productos.fotos[0].url}
-                                                alt={anuncio.productos.nombre}
-                                                className="w-full h-full object-cover"
-                                            />
-                                        ) : (
-                                            <div className="flex items-center justify-center h-full text-gray-400">
-                                                Sin Imagen
+                {/* Contenedor de resultados con scroll */}
+                    <div className="h-[75%] overflow-y-auto px-4">
+                        <h2 className="text-lg font-semibold text-gray-200 mb-4">Resultados de búsqueda</h2>
+                        {filteredItems.length > 0 ? (
+                            <div className="flex flex-col gap-4 pb-4">
+                                {filteredItems.map((anuncio) => (
+                                    <div key={anuncio.id} className="bg-gray-800 rounded-lg shadow-md p-4 flex flex-row gap-4">
+                                        {/* Contenedor de imagen */}
+                                        <div className=" w-32 h-32 bg-gray-700 rounded-lg overflow-hidden flex-shrink-0">
+                                            {anuncio.productos.fotos.length > 0 ? (
+                                                <img
+                                                    src={anuncio.productos.fotos[0].url}
+                                                    alt={anuncio.productos.nombre}
+                                                    className=" w-32 h-32 object-cover"
+                                                />
+                                            ) : (
+                                                <div className="flex items-center justify-center h-full text-gray-400">
+                                                    Sin Imagen
+                                                </div>
+                                            )}
+                                        </div>
+
+                                        {/* Contenedor de información */}
+                                        <div className="flex flex-col flex-grow">
+                                            <h3 className="text-xl font-semibold text-gray-200 mb-2">{anuncio.productos.nombre}</h3>
+                                            <p className="text-2xl font-bold text-gray-200 mb-2">$ {anuncio.precio_anuncio}</p>
+                                            <p className="text-gray-400 text-sm mb-2">                                        {
+                                                anuncio.descripcion.slice(0, 30)}
+                                                {anuncio.descripcion.length > 30 ? '...' : ''}:
+                                                {anuncio.descripcion.slice(0, 30)}
+                                                {anuncio.descripcion.length > 30 ? '...' : ''}</p>
+                                            <p className="text-gray-400 text-sm">
+                                                Ubicación: {anuncio.localizacion.ciudad}, {anuncio.localizacion.estado}, {anuncio.localizacion.pais}
+                                            </p>
+                                            <div className="mt-auto">
+                                                <button className="w-full mt-4 bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition"
+                                                    onClick={() => history.push(route.pathname + "/ViewProduct/" + anuncio.id)}
+                                                >
+                                                    Ver Detalles
+                                                </button>
                                             </div>
-                                        )}
+                                        </div>
                                     </div>
-                                    <h3 className="mt-4 font-semibold text-gray-800">{anuncio.productos.nombre}</h3>
-                                    <p className="text-gray-500 text-sm">{anuncio.descripcion}</p>
-                                    <p className="text-gray-700 font-bold mt-2">Precio: ${anuncio.precio_anuncio}</p>
-                                    <p className="text-gray-500 text-sm mt-1">
-                                        Ubicación: {anuncio.localizacion.ciudad}, {anuncio.localizacion.estado}, {anuncio.localizacion.pais}
-                                    </p>
-                                    <div className="mt-auto">
-                                        <button className="w-full mt-4 bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition">
-                                            Ver Detalles
-                                        </button>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    ) : (
-                        <p className="text-gray-500">No se encontraron resultados</p>
-                    )}
+                                ))}
+                            </div>
+                        ) : (
+                            <p className="text-gray-400">No se encontraron resultados</p>
+                        )}
+                    </div>
                 </div>
-            </div>
+
         </IonPage>
     );
 };

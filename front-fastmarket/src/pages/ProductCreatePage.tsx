@@ -2,15 +2,17 @@ import React, { useState, useRef, useEffect, ChangeEvent, FormEvent } from "reac
 import { useHistory, useParams } from "react-router-dom";
 import Header from "../components/Header";
 import { IonPage } from "@ionic/react";
-import { XCircleIcon } from "@heroicons/react/24/solid";
+import { XCircleIcon, PlusCircleIcon } from "@heroicons/react/24/solid";
 import { storage } from "../firebaseConfig";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import anunciosService from "../services/AnunciosServices";
 import LoadingWave from "../components/Loader";
+import { IFoto } from "../interfaces/IFoto";
+import Inputs from "../components/Inputs";
 
 interface ImageData {
   url: string;
-  file: File | null; // Permitir null para imágenes existentes sin archivo
+  file: File | null;
 }
 
 interface FormData {
@@ -36,7 +38,7 @@ interface FormData {
 const ProductForm: React.FC = () => {
   const history = useHistory();
   const [isLoading, setIsLoading] = useState(false);
-  const { id } = useParams<{ id: string }>(); // Detectar el parámetro id en la URL
+  const { id } = useParams<{ id: string }>();
   const [formData, setFormData] = useState<FormData>({
     productos: {
       nombre: "",
@@ -59,15 +61,13 @@ const ProductForm: React.FC = () => {
   const [images, setImages] = useState<ImageData[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Cargar datos existentes si el id está presente
   useEffect(() => {
     if (id) {
       setIsLoading(true);
       anunciosService.getById(id).then((product: any) => {
-        console.log(product)
+        console.log(product);
         setFormData(product.result);
         setImages(product.result.productos.fotos.map((foto: { url: string }) => ({ url: foto.url, file: null })));
-
       }).finally(() => {
         setIsLoading(false);
       });
@@ -96,11 +96,11 @@ const ProductForm: React.FC = () => {
   const handleImageUpload = (e: ChangeEvent<HTMLInputElement>): void => {
     const files = e.target.files;
     if (files) {
-      const newImages: ImageData[] = Array.from(files).map((file) => ({
+      const newFotos = Array.from(files).map((file) => ({
+        file,
         url: URL.createObjectURL(file),
-        file: file,
       }));
-      setImages((prev) => [...prev, ...newImages]);
+      setImages((prevImages) => [...prevImages, ...newFotos]);
     }
   };
 
@@ -123,24 +123,27 @@ const ProductForm: React.FC = () => {
     } finally {
       setIsLoading(false);
     }
-  }
+  };
+
+  const uploadImagesToFirebase = async (images: ImageData[]) => {
+    return await Promise.all(
+      images.map(async (image) => {
+        if (image.file) {
+          const imageRef = ref(storage, `/productosFM/${image.file.name}-${Date.now()}`);
+          await uploadBytes(imageRef, image.file);
+          return await getDownloadURL(imageRef);
+        }
+        return image.url;
+      })
+    );
+  };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     setIsLoading(true);
     e.preventDefault();
 
-    // Subir nuevas imágenes a Firebase Storage y obtener sus URLs
-    const uploadImages = images.map(async (image) => {
-      if (image.file) {
-        const imageRef = ref(storage, `/productosFM/${image.file.name}-${Date.now()}`);
-        await uploadBytes(imageRef, image.file);
-        return getDownloadURL(imageRef);
-      }
-      return image.url; // Si es una imagen existente, conserva la URL original
-    });
-
     try {
-      const imageUrls = await Promise.all(uploadImages);
+      const imageUrls = await uploadImagesToFirebase(images);
 
       const formDataWithImages = {
         ...formData,
@@ -151,7 +154,6 @@ const ProductForm: React.FC = () => {
       };
 
       if (id) {
-        // Modo edición
         const response = await anunciosService.put(parseInt(id), formDataWithImages);
         if (response.isSuccess) {
           console.log("Producto actualizado con éxito");
@@ -160,7 +162,6 @@ const ProductForm: React.FC = () => {
           console.error("Error al actualizar producto:", response.message);
         }
       } else {
-        // Modo creación
         const response = await anunciosService.post(formDataWithImages);
         if (response.isSuccess) {
           console.log("Producto creado con éxito");
@@ -179,133 +180,141 @@ const ProductForm: React.FC = () => {
   return (
     <IonPage>
       {isLoading && (
-        <div className="fixed h-screen inset-0 z-10 flex items-center justify-center bg-white">
+        <div className="fixed h-screen inset-0 z-10 flex items-center justify-center bg-gray-100">
           <LoadingWave />
         </div>
       )}
       <Header title={id ? "Editar Producto" : "Crear Producto"} />
-      <div className="bg-gray-100 p-4 overflow-y-auto h-full">
+      <div className="bg-gray-900 p-4 overflow-y-auto h-screen">
         <input
           type="file"
+          accept="image/*"
           ref={fileInputRef}
+          onChange={handleImageUpload}
           className="hidden"
           multiple
-          accept="image/*"
-          onChange={handleImageUpload}
         />
 
         {images.length === 0 ? (
           <button
             type="button"
             onClick={() => fileInputRef.current?.click()}
-            className="w-full h-48 bg-white border-2 border-dashed border-gray-300 rounded-lg flex flex-col items-center justify-center space-y-3 hover:bg-gray-50 transition-colors group"
+            className="w-full h-48 bg-gray-900 border-2 border-dashed border-gray-950 rounded-lg flex flex-col items-center justify-center space-y-3 hover:bg-gray-800 transition-colors group"
           >
             <div className="text-center">
-              {/* SVG icon */}
-              <p className="text-gray-600 font-medium">Agregar fotos</p>
-              <p className="text-gray-400 text-sm">Haz clic para seleccionar</p>
+              <p className="text-gray-400 font-medium">Agregar fotos</p>
+              <p className="text-gray-200 text-sm">Haz clic para seleccionar</p>
             </div>
           </button>
         ) : (
-          <div className="grid grid-cols-3 gap-4">
-            {images.map((image, index) => (
-              <div key={index} className="relative aspect-square group">
-                <img
-                  src={image.url}
-                  alt={`Preview ${index + 1}`}
-                  className="w-full h-full object-cover rounded-lg"
-                />
-                <XCircleIcon
-                  className="absolute top-2 right-2 w-5 h-5 text-red-500 cursor-pointer"
-                  onClick={() => removeImage(index)}
-                />
-              </div>
-            ))}
+          <div className="space-y-4">
+            <div className="grid grid-cols-3 gap-4">
+              {images.map((image, index) => (
+                <div key={index} className="relative aspect-square group">
+                  <img
+                    src={image.url}
+                    alt={`Preview ${index + 1}`}
+                    className="w-full h-full object-cover rounded-lg"
+                  />
+                  <XCircleIcon
+                    className="absolute top-2 right-2 w-5 h-5 text-red-500 cursor-pointer"
+                    onClick={() => removeImage(index)}
+                  />
+                </div>
+              ))}
+            </div>
+            
+            <button
+              type="button"
+              onClick={() => fileInputRef.current?.click()}
+              className="w-full p-3 bg-gray-800 border border-dashed border-gray-700 rounded-lg flex items-center justify-center space-x-2 hover:bg-gray-700 transition-colors"
+            >
+              <PlusCircleIcon className="w-5 h-5 text-green-500" />
+              <span className="text-white font-medium">Agregar más fotos</span>
+            </button>
           </div>
         )}
 
         <form onSubmit={handleSubmit} className="space-y-4 mt-4">
           <div className="space-y-2">
-            <h3 className="font-medium text-black">Producto</h3>
-            <input
+            <h3 className="font-medium text-white">Producto</h3>
+
+            <Inputs
               type="text"
               name="productos.nombre"
               placeholder="Nombre del Producto"
               value={formData.productos.nombre}
               onChange={handleChange}
-              className="w-full p-2 border rounded-lg bg-white placeholder:text-gray-400 text-black"
             />
-            <input
+            <Inputs
               type="number"
               name="productos.precio"
               placeholder="Precio del Producto"
               value={formData.productos.precio}
               onChange={handleChange}
-              className="w-full p-2 border rounded-lg bg-white placeholder:text-gray-400 text-black"
             />
-            <input
+            <Inputs
               type="number"
               name="productos.cantidad"
               placeholder="Cantidad del Producto"
               value={formData.productos.cantidad}
               onChange={handleChange}
-              className="w-full p-2 border rounded-lg bg-white placeholder:text-gray-400 text-black"
             />
           </div>
+
           <textarea
             name="productos.descripcion"
             placeholder="Descripción"
             value={formData.productos.descripcion}
             onChange={handleChange}
-            className="w-full p-2 border rounded-lg bg-white placeholder:text-gray-400 text-black"
+            className="w-full h-12 rounded-xl bg-gray-800 text-white px-4 p-2 placeholder-white/80 focus:outline-none focus:ring-2 focus:ring-green-600 transition-all"
           />
 
           <div className="space-y-2">
-            <h3 className="font-medium text-black">Localización</h3>
-            <input
+            <h3 className="font-medium text-white">Localización</h3>
+          
+            <Inputs
               type="text"
               name="localizacion.ciudad"
               placeholder="Ciudad"
               value={formData.localizacion.ciudad}
               onChange={handleChange}
-              className="w-full p-2 border rounded-lg bg-white placeholder:text-gray-400 text-black"
             />
-            <input
+            <Inputs
               type="text"
               name="localizacion.estado"
               placeholder="Estado"
               value={formData.localizacion.estado}
               onChange={handleChange}
-              className="w-full p-2 border rounded-lg bg-white placeholder:text-gray-400 text-black"
             />
-            <input
+            <Inputs
               type="text"
               name="localizacion.pais"
               placeholder="País"
               value={formData.localizacion.pais}
               onChange={handleChange}
-              className="w-full p-2 border rounded-lg bg-white placeholder:text-gray-400 text-black"
             />
-            <input
+            <Inputs
               type="text"
               name="localizacion.codigoPostal"
               placeholder="Código Postal"
               value={formData.localizacion.codigoPostal}
               onChange={handleChange}
-              className="w-full p-2 border rounded-lg bg-white placeholder:text-gray-400 text-black"
             />
           </div>
+
           <button
             type="submit"
-            className="w-full bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 transition-colors"
+            className="w-full p-2 rounded-lg bg-green-500 text-white font-medium hover:bg-green-600 transition-colors"
           >
             {id ? "Actualizar Producto" : "Crear Producto"}
           </button>
+
           {id && (
             <button
               type="button"
-              className="w-full mt-4 bg-red-600 text-white py-2 rounded-lg hover:bg-red-700 transition-colors"
               onClick={() => handleDelete(id)}
+              className="w-full p-2 rounded-lg bg-red-500 text-white font-medium hover:bg-red-600 transition-colors mt-2"
             >
               Eliminar Producto
             </button>

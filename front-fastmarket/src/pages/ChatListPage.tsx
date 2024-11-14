@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import "tailwindcss/tailwind.css";
 import { ChatBubbleBottomCenterIcon } from "@heroicons/react/24/outline";
-import { IonPage } from "@ionic/react";
+import { IonPage, useIonViewDidEnter } from "@ionic/react";
 import Header from "../components/Header";
 import { useHistory } from "react-router";
 import chatService from "../services/ChatServices";
+import LoadingWave from "../components/Loader";
 
-// Definición del tipo para los datos de chat
 interface Chat {
     id: number;
     idOferta: number;
@@ -26,15 +26,17 @@ interface Chat {
 
 const ChatList: React.FC = () => {
     const [chats, setChats] = useState<Chat[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
     const history = useHistory();
 
-    useEffect(() => {
-        // Función para obtener los chats al cargar el componente
+    useIonViewDidEnter(() => {
         const fetchChats = async () => {
+            setIsLoading(true);
             const data = await chatService.getChats();
             if (data) {
-                setChats(data); // Actualiza el estado con los chats recibidos
+                setChats(data);
             }
+            setIsLoading(false);
         };
         fetchChats();
     }, []);
@@ -42,25 +44,29 @@ const ChatList: React.FC = () => {
     return (
         <IonPage>
             <Header title="Chats" />
-            <div className="w-full max-w-md mx-auto px-4 bg-white h-screen shadow-lg">
+            <div className="w-full max-w-md mx-auto px-4 bg-slate-900 h-screen shadow-lg">
                 {/* Lista de chats */}
                 <ul className="space-y-4 w-full mt-4">
                     {chats.map((chat) => (
                         <li
                             key={chat.id}
                             onClick={() => history.push(`${history.location.pathname}/chat/${chat.idOferta}`)}
-                            className="flex items-center justify-between p-3 border rounded-lg hover:bg-gray-100 transition cursor-pointer"
+                            className="flex items-center  justify-between p-3 border rounded-lg border-gray-600 hover:bg-gray-600 transition cursor-pointer"
                         >
                             <div className="flex items-center space-x-3">
                                 <div className="bg-blue-500 text-white rounded-full p-2">
                                     <ChatBubbleBottomCenterIcon className="w-6 h-6" />
                                 </div>
                                 <div>
-                                    <p className="font-semibold text-black">{chat.nombreChat}</p>
-                                    <p className="text-gray-600 text-sm">{chat.ultimoMensaje}: {chat.contenido}</p>
-                                </div>
+                                    <p className="font-semibold text-white">{chat.nombreChat}</p>
+                                    <p className="text-gray-400 text-sm pr-2">
+                                        {chat.ultimoMensaje.slice(0, 30)}
+                                        {chat.ultimoMensaje.length > 30 ? '...' : ''}:
+                                        {chat.contenido.slice(0, 30)}
+                                        {chat.contenido.length > 30 ? '...' : ''}
+                                    </p>                                </div>
                             </div>
-                            <p className="text-xs text-gray-500">{new Date(chat.fechaEnvio).toLocaleTimeString()}</p>
+                            <p className="text-xs text-gray-400">{new Date(chat.fechaEnvio).toLocaleTimeString()}</p>
                         </li>
                     ))}
                 </ul>

@@ -48,14 +48,14 @@ const MyOffert: React.FC = () => {
   return (
     <IonPage>
       {isLoading && (
-        <div className="fixed h-screen  inset-0 z-10 flex items-center justify-center bg-white">
+        <div className="fixed h-screen  inset-0 z-10 flex items-center justify-center ">
           <LoadingWave />
         </div>
       )}
-      <div className="min-h-screen bg-gray-100">
+      <div className="min-h-screen bg-slate-900">
         <Header title="Mis Ofertas" />
         <div className="max-w-4xl mx-auto px-4 py-4">
-          <h2 className="text-2xl text-black text-center font-medium mb-3">
+          <h2 className="text-2xl text-white text-center font-medium mb-3">
             Mis ofertas
           </h2>
           <div className="max-w-4xl mx-auto px-4 py-4 overflow-y-auto h-[75vh]">
@@ -65,7 +65,7 @@ const MyOffert: React.FC = () => {
                   <div
                     onClick={() => history.push(route.pathname + "/ViewProduct/" + oferta.anuncio.id)}
                     key={oferta.Id}
-                    className="flex flex-col bg-white rounded-2xl overflow-hidden shadow-lg"
+                    className="flex flex-col bg-slate-800 rounded-2xl overflow-hidden shadow-2xl p-2"
                   >
                     <div className="relative w-full aspect-square">
                       <img
@@ -73,18 +73,18 @@ const MyOffert: React.FC = () => {
                           oferta.anuncio?.productos?.fotos?.[0]?.url ||
                           "https://via.placeholder.com/150"
                         }
-                        className="w-full h-full object-cover bg-gray-200"
+                        className="w-full h-full object-cover bg-gray-900 rounded-2xl"
                         alt={oferta.anuncio?.productos?.nombre || "Producto"}
                       />
                     </div>
                     <div className="p-2 space-y-1">
-                      <h3 className="text-xl font-bold text-gray-600">
+                      <h3 className="text-xl font-bold text-gray-200">
                         {oferta.anuncio?.productos?.nombre || "Sin nombre"}
                       </h3>
-                      <p className="text-gray-500">
-                        Monto Ofrecido: MX$
+                      <p className="text-gray-300">
+                        Monto Ofrecido: $ 
                         <span className="text-green-400 font-bold">
-                          {oferta.monto}
+                          {oferta.monto} MXM
                         </span>
                       </p>
                       <button

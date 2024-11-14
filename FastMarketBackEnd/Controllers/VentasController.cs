@@ -14,7 +14,7 @@ public class VentasController : ControllerBase
     }
 
     [HttpGet("Ventas")]
-    public async Task<IActionResult> GetVenats(int idOferta)
+    public async Task<IActionResult> GetVenats()
     {
         // Usar el helper para obtener el IdPersona del token
         int idPersona = TokenHelper.ObtenerIdPersona(User);

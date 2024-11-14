@@ -35,6 +35,7 @@ namespace Services.Services
                     .Include(a => a.Productos)
                         .ThenInclude(p => p.ProductosEtiquetas)
                             .ThenInclude(pe => pe.Etiquetas)
+                    .Where(x => x.Estado == "activo")
                     .Select(a => new AnunciosDto
                     {
                         Id = a.Id,
@@ -191,6 +192,7 @@ namespace Services.Services
                     .Include(a => a.Productos)
                         .ThenInclude(p => p.ProductosEtiquetas)
                             .ThenInclude(pe => pe.Etiquetas)
+                                                .Where(x => x.Estado == "activo")
                     .Select(a => new AnunciosDto
                     {
                         Id = a.Id,
