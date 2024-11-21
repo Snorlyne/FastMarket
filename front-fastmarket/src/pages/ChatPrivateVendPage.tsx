@@ -136,54 +136,144 @@ const PrivateChat: React.FC = () => {
                     ))}
                 </div>
             </IonContent>
-            {(oferta && oferta.estado == 'aceptada') && (
-                <IonFooter className="fixed bottom-0 w-full py-1 bg-slate-900 ">
-                    <div className="flex items-center space-x-2 p-1">
+            {(oferta && oferta.estado === 'aceptada') && (
+            <IonFooter className="bg-slate-900 shadow-2xl rounded-t-3xl">
+                <div className="flex items-center p-4 space-x-3">
+                    <div className="flex-grow">
                         <input
                             value={newMessage}
                             onChange={(e) => setNewMessage(e.target.value)}
                             placeholder="Escribe tu mensaje..."
-                            className="text-sm text-black placeholder:text-gray-500 bg-white w-4/6 focus:border-none rounded-xl p-2 "
+                            className="
+                                w-full 
+                                px-4 
+                                py-3 
+                                text-sm 
+                                bg-gray-100 
+                                text-black
+                                rounded-full 
+                                border-2 
+                                border-transparent
+                                focus:outline-none 
+                                focus:border-green-300 
+                                transition-all
+                                duration-300
+                            "
                         />
-                        <div className="w-2/6 space-y-2">
-                            <button onClick={sendMessage} className="w-full p-1 rounded-md bg-green-600 text-white font-medium">
-                                Enviar
-                            </button>
-                        </div>
                     </div>
-                    <button onClick={() => setShowModal(true)} className="w-full p-1 rounded-md bg-indigo-600 text-white font-medium">
-                        Acciones de oferta
+                    <button 
+                        onClick={sendMessage} 
+                        disabled={!newMessage.trim()}
+                        className="
+                            bg-green-500 
+                            text-white 
+                            p-3 
+                            rounded-full 
+                            hover:bg-green-600 
+                            active:scale-95
+                            transition-all
+                            duration-300
+                            disabled:opacity-50
+                            disabled:cursor-not-allowed
+                            shadow-md
+                            hover:shadow-lg
+                        "
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 9.5a59.768 59.768 0 0 1-3.216 5.803C15.443 17.905 12.172 20 8.786 20 5.55 20 2.867 18.114 2 15" />
+                        </svg>
                     </button>
-                </IonFooter>
-            )}
-
-            <IonModal
-                isOpen={showModal}
-                onDidDismiss={() => setShowModal(false)}
-                breakpoints={[0, 0.30]}
-                initialBreakpoint={0.30}
-                className="p-4"
-            >
-                <div className="p-4">
-                    <h2 className="text-lg font-semibold mb-4 text-center text-white">Selecciona una acción</h2>
-                    {oferta && oferta.idPersona === idUser ? (
-                        <div>
-                            <button onClick={() => handleOptionSelect(EstadoOferta.Pagada)} className="mt-4 p-2 rounded-md font-bold text-white w-full bg-green-600">
-                                Pagar oferta
-                            </button>
-                            <button onClick={() => handleOptionSelect(EstadoOferta.Cancelada)} className="mt-4 p-2 rounded-md font-bold text-white w-full bg-red-600">
-                                Cancelar oferta
-                            </button>
-                        </div>
-                    ) : (
-                        <div>
-                            <button onClick={() => handleOptionSelect(EstadoOferta.Rechazada)} className="mt-4 p-2 rounded-md font-bold text-white w-full bg-red-600">
-                                Rechazar oferta
-                            </button>
-                        </div>
-                    )}
                 </div>
-            </IonModal>
+                <button 
+                    onClick={() => setShowModal(true)} 
+                    className="
+                        w-full 
+                        py-4 
+                        bg-indigo-600 
+                        text-white 
+                        font-semibold 
+                        hover:bg-indigo-700 
+                        active:bg-indigo-800
+                        transition-colors
+                        duration-300
+                    "
+                >
+                    Acciones de oferta
+                </button>
+            </IonFooter>
+        )}
+
+<IonModal
+            isOpen={showModal}
+            onDidDismiss={() => setShowModal(false)}
+            breakpoints={[0, 0.30]}
+            initialBreakpoint={0.30}
+            className="rounded-t-3xl"
+        >
+            <div className="p-6 bg-slate-950 rounded-t-3xl">
+                <h2 className="text-xl font-bold mb-6 text-center text-white">
+                    Selecciona una acción
+                </h2>
+                {oferta && oferta.idPersona === idUser ? (
+                    <div className="space-y-4">
+                        <button 
+                            onClick={() => handleOptionSelect(EstadoOferta.Pagada)} 
+                            className="
+                                w-full 
+                                p-4 
+                                rounded-2xl 
+                                bg-green-500 
+                                text-white 
+                                font-semibold 
+                                border-2 
+                                transition-all
+                                duration-300
+                            "
+                        >
+                            Pagar oferta
+                        </button>
+                        <button 
+                            onClick={() => handleOptionSelect(EstadoOferta.Cancelada)} 
+                            className="
+                                w-full 
+                                p-4 
+                                rounded-2xl 
+                                bg-red-500 
+                                text-white
+                                font-semibold 
+                                border-2 
+                               
+                                transition-all
+                                duration-300
+                            "
+                        >
+                            Cancelar oferta
+                        </button>
+                    </div>
+                ) : (
+                    <div>
+                        <button 
+                            onClick={() => handleOptionSelect(EstadoOferta.Rechazada)} 
+                            className="
+                                w-full 
+                                p-4 
+                                rounded-2xl 
+                                bg-red-50 
+                                text-red-700 
+                                font-semibold 
+                                border-2 
+                                border-red-200
+                                hover:bg-red-100
+                                transition-all
+                                duration-300
+                            "
+                        >
+                            Rechazar oferta
+                        </button>
+                    </div>
+                )}
+            </div>
+        </IonModal>
 
             <Modal
                 isOpen={isModalOpen}

@@ -39,18 +39,25 @@ const SearchPage: React.FC = () => {
     };
 
     useEffect(() => {
+
         const fetchAnuncios = async () => {
             try {
+                setIsLoading(true);
                 const response: IResponse = await anunciosService.getByParams({
                     nombreProducto: searchTerm,
                 });
 
                 if (response.isSuccess) {
                     setFilteredItems(response.result);
+                } else{
+                    console.log("Error fetching anuncios: " + response.message);
+
                 }
             } catch (error) {
                 console.error("Error fetching anuncios:", error);
-            }
+            } finally {
+                setIsLoading(false);
+              }
         };
 
         if (searchTerm.trim()) {
@@ -58,12 +65,20 @@ const SearchPage: React.FC = () => {
         } else {
             setFilteredItems([]);
         }
+        setIsLoading(false);
+
+        
+
     }, [searchTerm]);
 
     return (
         <IonPage>
-            {/* Contenedor principal con altura fija */}
-            <div className="h-screen bg-gray-950 flex flex-col">
+              {isLoading && (
+        <div className="fixed inset-0 z-10 flex items-center justify-center bg-slate-900 ">
+          <LoadingWave />
+        </div>
+      )}
+            <div className="h-screen bg-gray-900 flex flex-col">
                 <HeaderHome title="FastMarket" />
                 <div className="w-full px-4 py-4 bg-transparent">
                     <div className="max-w-xl mx-auto">

@@ -1,17 +1,20 @@
 import React from 'react';
+import Lottie from "lottie-react";
+import animationData from './Animation - 1731973840283.json'
 
-const LoadingWave:React.FC = () => {
+const Loader: React.FC = () => {
   return (
-    <div className="w-full h-screen flex justify-center items-center bg-gray-950">
-
-      <div className="w-[300px] h-[100px] flex justify-center items-end">
-        <div className="w-5 h-[10px] mx-[5px] bg-green-700 rounded-md animate-wave"></div>
-        <div className="w-5 h-[10px] mx-[5px] bg-green-700 rounded-md animate-wave delay-100"></div>
-        <div className="w-5 h-[10px] mx-[5px] bg-green-700 rounded-md animate-wave delay-200"></div>
-        <div className="w-5 h-[10px] mx-[5px] bg-green-700 rounded-md animate-wave delay-300"></div>
+    <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-75">
+      <div className="w-50 h-50"> 
+        <Lottie 
+          animationData={animationData} 
+          loop={true} 
+          autoplay={true}
+          style={{ width: '100%', height: '100%' }}
+        />
       </div>
     </div>
   );
 };
 
-export default LoadingWave;
+export default Loader;
