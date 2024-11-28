@@ -91,10 +91,12 @@ const MyAdvert: React.FC = () => {
                       {anuncio.productos?.nombre || "Sin nombre"}
                     </h3>
                     <div className="flex items-baseline gap-1">
-                      <span className="text-slate-400 text-sm">MX$</span>
+                      <span className="text-slate-400 text-lg font-bold">$</span>
                       <span className="text-green-400 text-lg font-bold">
                       {anuncio?.productos?.precio?.toLocaleString()}
                       </span>
+                      <span className="text-slate-400 text-lg font-bold">MXM</span>
+
                     </div>
                     <button
                       className="w-full bg-slate-800 text-white text-sm font-medium py-2 px-4 rounded-lg hover:bg-slate-700 transition-colors duration-300 border border-slate-700 hover:border-indigo-500"
