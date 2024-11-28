@@ -1,8 +1,6 @@
 import { IonPage, useIonViewDidEnter } from "@ionic/react";
 import React, { useState } from "react";
 import { useHistory } from "react-router";
-import { BuildingStorefrontIcon } from '@heroicons/react/24/outline';
-import { IonCard, IonCardHeader, IonCardTitle } from "@ionic/react";
 import LoadingWave from "../../components/Loader";
 import authService from "../../services/AuthService";
 import { useAuth } from "../../services/auth/AuthContext";
