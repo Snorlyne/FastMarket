@@ -4,9 +4,7 @@ import anunciosService from "../../services/AnunciosServices";
 import { IonPage } from "@ionic/react";
 import LoadingWave from "../../components/Loader";
 import { useHistory } from "react-router";
-import Modal from "../../components/Modals/Modal";
 import { IAnuncio } from "../../interfaces/IAnuncio";
-import HeaderHome from "../../components/Header copy";
 
 const HomePage: React.FC = () => {
   const [anuncios, setAnuncios] = useState<IAnuncio[]>([]);
@@ -42,15 +40,16 @@ const HomePage: React.FC = () => {
   return (
     <IonPage>
       {isLoading && (
-        <div className="fixed inset-0 z-10 flex items-center justify-center bg-white">
+        <div className="fixed inset-0 z-10 flex items-center justify-center bg-slate-900 ">
           <LoadingWave />
         </div>
       )}
       <div className="bg-slate-900 h-screen text-white p-4 overflow-y-auto">
         <header className="flex justify-between items-center mb-6">
           <div className="items-center gap-2 p-2">
-            <h1 className="text-2xl font-bold">FastMarket</h1>
-
+          <h1 className="text-3xl font-bold bg-gradient-to-r from-green-400 to-blue-500 bg-clip-text text-transparent">
+              FastMarket
+            </h1>
             <p className="text-md ">
               Encuentra tus productos
             </p>
@@ -59,64 +58,69 @@ const HomePage: React.FC = () => {
         </header>
 
         {/* Carousel Section */}
-        <div className=" relative mb-8 rounded-xl overflow-hidden">
-          <div className="relative h-48">
-            <div className="absolute w-full h-full transition-transform duration-500 ease-in-out"
-              style={{ transform: `translateX(-${currentSlide * 100}%)` }}>
-              {anuncios.map((anuncio, index) => (
-                <div
-                  key={anuncio.id}
-                  className="absolute top-0 left-0 w-full h-full"
-                  style={{ left: `${index * 100}%` }}
-                >
-                  <img
-                    src={anuncio.productos.fotos[0]?.url || 'default-image.jpg'}
-                    alt={anuncio.productos.nombre || 'Producto'}
-                    className="w-full h-full object-cover"
-                  />
-                  <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-4">
-                    <h3 className="text-lg font-bold">{anuncio.productos.nombre}</h3>
-                    <p className="text-sm text-gray-200">
-                      {anuncio.descripcion.slice(0, 30)}
-                      {anuncio.descripcion.length > 30 ? '...' : ''}:
-                      {anuncio.descripcion.slice(0, 30)}
-                      {anuncio.descripcion.length > 30 ? '...' : ''}
-                    </p>
-                    <button className="w-full bg-transparent text-green-600 py-1 rounded-lg mt-2 hover:text-green-700 transition-colors"
-                      onClick={() => history.push(route.pathname + "/ViewProduct/" + anuncio.id)}
-                    > Entrar</button>
+        <div className="mt-4 rounded-2xl overflow-hidden shadow-xl">
+            <div className="relative h-64">
+              <div 
+                className="absolute w-full h-full transition-transform duration-500 ease-out"
+                style={{ transform: `translateX(-${currentSlide * 100}%)` }}
+              >
+                {anuncios.map((anuncio, index) => (
+                  <div
+                    key={anuncio.id}
+                    className="absolute top-0 left-0 w-full h-full"
+                    style={{ left: `${index * 100}%` }}
+                  >
+                    <img
+                      src={anuncio.productos.fotos[0]?.url || 'default-image.jpg'}
+                      alt={anuncio.productos.nombre || 'Producto'}
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent">
+                      <div className="absolute bottom-0 p-4 w-full">
+                        <h3 className="text-xl font-bold mb-1">{anuncio.productos.nombre}</h3>
+                        <p className="text-sm text-gray-200 line-clamp-2 mb-3">{anuncio.descripcion}</p>
+                        <button 
+                          className="w-full bg-green-600/90 hover:bg-green-500 text-white font-medium py-2 px-4 rounded-lg transition-all active:scale-95 shadow-lg"
+                          onClick={() => history.push(route.pathname + "/ViewProduct/" + anuncio.id)}
+                        >
+                          Ver Detalles
+                        </button>
+                      </div>
+                    </div>
                   </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
 
-            {/* Navigation Buttons */}
-            <button
-              onClick={prevSlide}
-              className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/30 p-2 rounded-full"
-            >
-              ‹
-            </button>
-            <button
-              onClick={nextSlide}
-              className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/30 p-2 rounded-full"
-            >
-              ›
-            </button>
+              {/* Botones de navegación mejorados */}
+              <button
+                onClick={prevSlide}
+                className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 w-8 h-8 rounded-full flex items-center justify-center text-2xl backdrop-blur-sm transition-all active:scale-90"
+              >
+                ‹
+              </button>
+              <button
+                onClick={nextSlide}
+                className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 w-8 h-8 rounded-full flex items-center justify-center text-2xl backdrop-blur-sm transition-all active:scale-90"
+              >
+                ›
+              </button>
 
-            {/* Dots Indicator */}
-            <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-2">
-              {anuncios.map((_, index) => (
-                <button
-                  key={index}
-                  onClick={() => setCurrentSlide(index)}
-                  className={`w-2 h-2 rounded-full ${currentSlide === index ? 'bg-white' : 'bg-white/50'
+              {/* Indicadores mejorados */}
+              <div className="absolute bottom-20 left-1/2 -translate-x-1/2 flex gap-1.5">
+                {anuncios.map((_, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setCurrentSlide(index)}
+                    className={`w-2 h-2 rounded-full transition-all ${
+                      currentSlide === index 
+                        ? 'bg-white w-4' 
+                        : 'bg-white/40 hover:bg-white/60'
                     }`}
-                />
-              ))}
+                  />
+                ))}
+              </div>
             </div>
           </div>
-        </div>
 
         {/* Popular Section */}
         <div className="mb-8">
