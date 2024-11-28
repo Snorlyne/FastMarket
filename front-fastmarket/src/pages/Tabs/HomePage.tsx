@@ -144,7 +144,7 @@ const HomePage: React.FC = () => {
                 </div>
                 <h3 className="text-gray-400 mb-2">{anuncio.productos.nombre}</h3>
                 <div className="flex justify-between items-center">
-                  <span className="font-semibold text-green-600">
+                  <span className="font-semibold text-green-400">
                     {anuncio.precio_anuncio} MXN
                   </span>
                 </div>
