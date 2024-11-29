@@ -36,14 +36,13 @@ const MyAdvert: React.FC = () => {
   return (
     <IonPage>
       {isLoading && (
-        <div className="fixed h-screen inset-0 z-10 flex items-center justify-center bg-slate-950">
+        <div className="fixed h-screen inset-0 z-10 flex items-center justify-center bg-slate-900">
           <LoadingWave />
         </div>
       )}
       <div className="min-h-screen bg-slate-900">
         <Header title="Mis Anuncios" />
 
-        {/* Botón de crear nuevo anuncio */}
         <div className="p-4">
           <button
             className="w-full max-w-lg mx-auto py-3 px-6 bg-green-600 text-white rounded-xl hover:bg-green-700 transition-colors duration-300 flex items-center justify-center gap-2 font-medium shadow-lg shadow-indigo-900/20"
@@ -77,7 +76,7 @@ const MyAdvert: React.FC = () => {
                   className="flex flex-col bg-slate-900 rounded-xl overflow-hidden border border-slate-800 hover:border-green-500 transition-all duration-300 shadow-xl"
                   onClick={() => history.push(route.pathname + "/ViewProduct/" + anuncio.id)}
                 >
-                  <div className="relative w-full aspect-square">
+                  <div className="aspect-square rounded-xl overflow-hidden mb-3">
                     <img
                       src={
                         anuncio.productos?.fotos[0]?.url ||
@@ -92,10 +91,12 @@ const MyAdvert: React.FC = () => {
                       {anuncio.productos?.nombre || "Sin nombre"}
                     </h3>
                     <div className="flex items-baseline gap-1">
-                      <span className="text-slate-400 text-sm">MX$</span>
+                      <span className="text-slate-400 text-lg font-bold">$</span>
                       <span className="text-green-400 text-lg font-bold">
-                        {anuncio.precio_anuncio}
+                      {anuncio?.productos?.precio?.toLocaleString()}
                       </span>
+                      <span className="text-slate-400 text-lg font-bold">MXM</span>
+
                     </div>
                     <button
                       className="w-full bg-slate-800 text-white text-sm font-medium py-2 px-4 rounded-lg hover:bg-slate-700 transition-colors duration-300 border border-slate-700 hover:border-indigo-500"

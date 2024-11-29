@@ -266,6 +266,7 @@ namespace Services.Services
                     .Include(a => a.Productos)
                         .ThenInclude(p => p.ProductosEtiquetas)
                             .ThenInclude(pe => pe.Etiquetas)
+                    .Where(x => x.Estado == "activo")
                     .AsQueryable();
 
                 // Normalizar el nombre del producto

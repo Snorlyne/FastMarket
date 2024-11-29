@@ -131,7 +131,7 @@ const OffersHubPage: React.FC = () => {
   return (
     <IonPage>
       {isLoading && (
-        <div className="fixed h-screen inset-0 z-10 flex items-center justify-center bg-white">
+        <div className="fixed h-screen inset-0 z-10 flex items-center justify-center bg-slate-900 ">
           <LoadingWave />
         </div>
       )}

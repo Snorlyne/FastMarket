@@ -7,8 +7,8 @@ import { storage } from "../firebaseConfig";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import anunciosService from "../services/AnunciosServices";
 import LoadingWave from "../components/Loader";
-import { IFoto } from "../interfaces/IFoto";
 import Inputs from "../components/Inputs";
+import Modal from "../components/Modals/Modal";
 
 interface ImageData {
   url: string;
@@ -60,6 +60,14 @@ const ProductForm: React.FC = () => {
   });
   const [images, setImages] = useState<ImageData[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalData, setModalData] = useState({
+    type: "info",
+    title: "",
+    message: "",
+    onConfirm: () => { },
+  });
+
 
   useEffect(() => {
     if (id) {
@@ -73,6 +81,131 @@ const ProductForm: React.FC = () => {
       });
     }
   }, [id]);
+  const validateForm = () => {
+    // Validar nombre del producto
+    if (!formData.productos.nombre.trim()) {
+      setModalData({
+        type: "error",
+        title: "Error de Validación",
+        message: "El nombre del producto es requerido.",
+        onConfirm: () => {
+          setIsModalOpen(false);
+        },
+      });
+      setIsModalOpen(true);
+      return;
+    }
+
+    if (!formData.productos.precio || parseFloat(formData.productos.precio) <= 0) {
+      setModalData({
+        type: "error",
+        title: "Error de Validación",
+        message: "Por favor, introduce un precio válido",
+        onConfirm: () => {
+          setIsModalOpen(false);
+        },
+      });
+      setIsModalOpen(true);
+      return;
+    }
+
+    // Validar cantidad
+    if (!formData.productos.cantidad || parseInt(formData.productos.cantidad) <= 0) {
+      setModalData({
+        type: "error",
+        title: "Error de Validación",
+        message: "Por favor, introduce la cantidad del producto.",
+        onConfirm: () => {
+          setIsModalOpen(false);
+        },
+      });
+      setIsModalOpen(true);
+      return;
+    }
+
+    // Validar descripción
+    if (!formData.productos.descripcion.trim()) {
+      setModalData({
+        type: "error",
+        title: "Error de Validación",
+        message: "La descripción del producto es requerida.",
+        onConfirm: () => {
+          setIsModalOpen(false);
+        },
+      });
+      setIsModalOpen(true);
+      return;
+    }
+
+    // Validar localización
+    if (!formData.localizacion.ciudad.trim()) {
+      setModalData({
+        type: "error",
+        title: "Error de Validación",
+        message: "La ciudad es requerida.",
+        onConfirm: () => {
+          setIsModalOpen(false);
+        },
+      });
+      setIsModalOpen(true);
+      return;
+    }
+
+    if (!formData.localizacion.estado.trim()) {
+      setModalData({
+        type: "error",
+        title: "Error de Validación",
+        message: "El estado es requerido.",
+       onConfirm: () => {
+            setIsModalOpen(false);
+          },
+        });
+        setIsModalOpen(true);
+        return;
+    }
+
+    if (!formData.localizacion.pais.trim()) {
+      setModalData({
+        type: "error",
+        title: "Error de Validación",
+        message: "El país es requerido.",
+       onConfirm: () => {
+            setIsModalOpen(false);
+          },
+        });
+        setIsModalOpen(true);
+        return;
+    }
+
+    // Validar código postal
+    if (!formData.localizacion.codigoPostal.trim()) {
+      setModalData({
+        type: "error",
+        title: "Error de Validación",
+        message: "El código postal es requerido.",
+       onConfirm: () => {
+            setIsModalOpen(false);
+          },
+        });
+        setIsModalOpen(true);
+        return;
+    }
+
+    // Validar imágenes
+    if (images.length === 0) {
+      setModalData({
+        type: "error",
+        title: "Error de Validación",
+        message: "Debe agregar al menos una imagen del producto.",
+        onConfirm: () => setIsModalOpen(false),
+      });
+      setIsModalOpen(true);
+      return ;
+    }
+
+    return true;
+  };
+
 
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>): void => {
     const { name, value } = e.target;
@@ -152,6 +285,9 @@ const ProductForm: React.FC = () => {
           fotos: imageUrls.map((url) => ({ url })),
         },
       };
+      if (!validateForm()) {
+        return; 
+      }
 
       if (id) {
         const response = await anunciosService.put(parseInt(id), formDataWithImages);
@@ -176,11 +312,16 @@ const ProductForm: React.FC = () => {
       setIsLoading(false);
     }
   };
+  const handleModalClose = () => {
+    setIsModalOpen(false);
+    setIsLoading(false); // Aseguramos que el loading se detenga al cerrar el modal
+  };
+
 
   return (
     <IonPage>
       {isLoading && (
-        <div className="fixed h-screen inset-0 z-10 flex items-center justify-center bg-gray-100">
+        <div className="fixed h-screen inset-0 z-10 flex items-center justify-center bg-slate-900">
           <LoadingWave />
         </div>
       )}
@@ -199,7 +340,7 @@ const ProductForm: React.FC = () => {
           <button
             type="button"
             onClick={() => fileInputRef.current?.click()}
-            className="w-full h-48 bg-gray-900 border-2 border-dashed border-gray-950 rounded-lg flex flex-col items-center justify-center space-y-3 hover:bg-gray-800 transition-colors group"
+            className="w-full h-48 bg-gray-800 border-2 border-dashed border-gray-950 rounded-lg flex flex-col items-center justify-center space-y-3 hover:bg-gray-800 transition-colors group"
           >
             <div className="text-center">
               <p className="text-gray-400 font-medium">Agregar fotos</p>
@@ -321,6 +462,17 @@ const ProductForm: React.FC = () => {
           )}
         </form>
       </div>
+      <Modal
+        isOpen={isModalOpen}
+        onClose={handleModalClose}
+        type={modalData.type as any}
+        title={modalData.title}
+        message={modalData.message}
+        onConfirm={() => {
+          modalData.onConfirm();
+          setIsLoading(false); // Aseguramos que el loading se detenga al confirmar
+        }}
+      />
     </IonPage>
   );
 };
