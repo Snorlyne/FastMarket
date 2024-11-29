@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Common.Utilities;
 using Microsoft.AspNetCore.Identity;
+using Serilog;
 
 namespace Services.Services
 {
@@ -25,21 +26,29 @@ namespace Services.Services
         // Implementación de ValidarUsuario con comparación de contraseñas cifradas
         public async Task<UsuariosDto> ValidarUsuario(string correo, string contraseña)
         {
-            var usuario = await _context.usuarios
-                .SingleOrDefaultAsync(u => u.Correo == correo);
-
-            if (usuario == null) return null;
-
-            // Verificamos si la contraseña ingresada coincide con la almacenada
-            var resultado = _passwordHasher.VerifyHashedPassword(usuario, usuario.Contraseña, contraseña);
-            if (resultado == PasswordVerificationResult.Failed) return null;
-
-            return new UsuariosDto
+            try
             {
-                Id = usuario.Id,
-                Correo = usuario.Correo,
-                IdRol = usuario.IdRol
-            };
+                var usuario = await _context.usuarios
+                    .SingleOrDefaultAsync(u => u.Correo == correo);
+
+                if (usuario == null) throw new Exception("Credenciales incorrectas");
+
+                // Verificamos si la contraseña ingresada coincide con la almacenada
+                var resultado = _passwordHasher.VerifyHashedPassword(usuario, usuario.Contraseña, contraseña);
+                if (resultado == PasswordVerificationResult.Failed) throw new Exception("Credenciales incorrectas");
+
+                return new UsuariosDto
+                {
+                    Id = usuario.Id,
+                    Correo = usuario.Correo,
+                    IdRol = usuario.IdRol
+                };
+            }
+            catch (Exception ex)
+            {
+                Log.Error("Error durante autenticación: {Error}", ex.Message);
+                return null;
+            }
         }
 
         public async Task<string> ObtenerNombreRolPorId(int idRol)

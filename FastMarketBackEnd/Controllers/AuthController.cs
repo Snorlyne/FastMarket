@@ -7,7 +7,8 @@ using Services.IServices;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-
+using Serilog;
+using System.Text.RegularExpressions;
 namespace FastMarketBackEnd.Controllers
 {
     [Route("[controller]")]
@@ -28,10 +29,21 @@ namespace FastMarketBackEnd.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] UsuarioLoginDto usuarioLogin)
         {
+            Log.Information("Intento de inicio de sesión para el usuario con correo: "+ usuarioLogin.Correo);
+
+
+            if (!EsCorreoValido(usuarioLogin.Correo))
+            {
+                Log.Error("El correo proporcionado tiene un formato inválido: " + usuarioLogin.Correo);
+                return BadRequest("El formato del correo electrónico es inválido.");
+            }
+
             // Verifica las credenciales del usuario
             var usuario = await _usuariosServices.ValidarUsuario(usuarioLogin.Correo, usuarioLogin.Contraseña);
+
             if (usuario == null)
             {
+
                 return Unauthorized("Credenciales incorrectas");
             }
 
@@ -66,7 +78,21 @@ namespace FastMarketBackEnd.Controllers
             var token = tokenHandler.CreateToken(tokenDescriptor);
             var jwtToken = tokenHandler.WriteToken(token);
 
+            Log.Information("Inicio de sesión para el usuario con ID: " + usuario.Id);
+
             return Ok(new { Token = jwtToken, persona.Id });
+        }
+
+        private bool EsCorreoValido(string correo)
+        {
+            if (string.IsNullOrWhiteSpace(correo))
+            {
+                return false;
+            }
+
+            // Expresión regular para validar correo electrónico
+            var regex = new Regex(@"^[^@\s]+@[^@\s]+\.[^@\s]+$");
+            return regex.IsMatch(correo);
         }
     }
 }
