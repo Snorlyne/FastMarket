@@ -36,7 +36,7 @@ const ImageCarousel: React.FC<{ images: Array<{ url: string }>, productName: str
 );
 
 const OffersSection: React.FC<{ offers: Array<{ monto: number }> }> = ({ offers }) => (
-  <div className="mb-4">
+  <div className="mb-1">
     <h2 className="text-lg font-semibold text-gray-100 mb-2 flex items-center">
       <span className="mr-2">Mejores Ofertas</span>
       <span className="text-sm bg-green-600 text-white px-2 py-1 rounded-full">
@@ -45,8 +45,8 @@ const OffersSection: React.FC<{ offers: Array<{ monto: number }> }> = ({ offers 
     </h2>
     <div className="flex flex-wrap gap-2">
       {offers.map((oferta, index) => (
-        <div 
-          key={index} 
+        <div
+          key={index}
           className="bg-gradient-to-r from-green-600 to-green-500 text-white py-2 px-4 rounded-lg shadow-lg transition-transform hover:scale-105"
         >
           ${oferta.monto?.toLocaleString()}
@@ -162,15 +162,15 @@ const ViewProduct: React.FC = () => {
 
   return (
     <IonPage>
-      <div className="flex flex-col min-h-screen bg-slate-900">
+      <div className="flex flex-col h-screen bg-slate-900">
         <div className="flex-1 pb-24">
           <Header title={anuncio?.productos?.nombre ?? 'Detalles del Producto'} />
 
           {/* Image Carousel */}
           {anuncio?.productos?.fotos && (
-            <ImageCarousel 
-              images={anuncio.productos.fotos} 
-              productName={anuncio.productos.nombre} 
+            <ImageCarousel
+              images={anuncio.productos.fotos}
+              productName={anuncio.productos.nombre}
             />
           )}
 
@@ -191,6 +191,11 @@ const ViewProduct: React.FC = () => {
               </div>
             </div>
 
+            {/* Offers Section */}
+            {anuncio?.ofertas && anuncio.ofertas.length > 0 && (
+              <OffersSection offers={anuncio.ofertas} />
+            )}
+
             {/* Description */}
             <div className="bg-slate-800/50 rounded-lg p-4">
               <h3 className="text-lg font-semibold text-gray-100 mb-2">
@@ -201,10 +206,6 @@ const ViewProduct: React.FC = () => {
               </p>
             </div>
 
-            {/* Offers Section */}
-            {anuncio?.ofertas && anuncio.ofertas.length > 0 && (
-              <OffersSection offers={anuncio.ofertas} />
-            )}
           </div>
         </div>
 
