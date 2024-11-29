@@ -146,7 +146,8 @@ const HomePage: React.FC = () => {
                 <div className="flex justify-between items-center">
                 <span className="text-slate-400 text-lg font-bold">$
                   <span className="text-green-400 text-lg font-bold">
-                    {anuncio.precio_anuncio} <span className="text-slate-400 text-lg font-bold">MXM</span>
+                  {anuncio?.productos?.precio?.toLocaleString()}
+                  <span className="text-slate-400 text-lg font-bold"> MXM</span>
                   </span>
                   </span>
                 </div>

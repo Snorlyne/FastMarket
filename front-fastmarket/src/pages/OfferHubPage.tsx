@@ -148,7 +148,7 @@ const OffersHubPage: React.FC = () => {
                   <p className="text-lg text-white font-semibold">
                     Propuesta #{index + 1}
                   </p>
-                  <p className="text-gray-400">Monto:$<span className=" text-green-600">{propuesta.monto} MXM</span></p>
+                  <p className="text-gray-400 text-lg font-bold ">Monto:$<span className=" text-green-600 text-lg font-bold">{propuesta?.monto?.toLocaleString()} MXM</span></p>
                 </div>
               </div>
             ))}
