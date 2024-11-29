@@ -34,7 +34,7 @@ const ChatList: React.FC = () => {
             setIsLoading(true);
             const data = await chatService.getChats();
             if (data) {
-                setChats(data);
+                setChats(data.reverse()); // Invertir la lista
             }
             setIsLoading(false);
         };
@@ -58,10 +58,10 @@ const ChatList: React.FC = () => {
                                     <ChatBubbleBottomCenterIcon className="w-6 h-6" />
                                 </div>
                                 <div>
-                                    <p className="font-semibold text-white">{chat.nombreChat}</p>
+                                    <p className="font-semibold text-white">{chat.nombreChat} </p>
                                     <p className="text-gray-400 text-sm pr-2">
                                         {chat.ultimoMensaje.slice(0, 30)}
-                                        {chat.ultimoMensaje.length > 30 ? '...' : ''}:
+                                        {chat.ultimoMensaje.length > 30 ? '...' : ''}: {' '}
                                         {chat.contenido.slice(0, 30)}
                                         {chat.contenido.length > 30 ? '...' : ''}
                                     </p>                                </div>
