@@ -25,6 +25,7 @@ import ProfileView from "../ProfileViewPage";
 import OffersHubPage from "../OfferHubPage";
 import ChatList from "../ChatListPage";
 import PrivateChat from "../ChatPrivateVendPage";
+import MyBuy from "../MyBuysPage";
 const IndexTabs: React.FC = () => {
   const location = useLocation();
 
@@ -53,6 +54,7 @@ const IndexTabs: React.FC = () => {
           <Route path="/dashboard/profile/MyAdvert" component={MyAdvert} exact />
           <Route path="/dashboard/profile/MyOffert" component={MyOffert} exact />
           <Route path="/dashboard/profile/Mysale" component={Mysale} exact />
+          <Route path="/dashboard/profile/MyBuys" component={MyBuy} exact />
           <Route path="/dashboard/profile/MyAdvert/ProductCreate" component={ProductCreate} exact />
 
           {/* Redirige a /home si no coincide ninguna ruta */}

@@ -87,7 +87,7 @@ const ProfileView: React.FC = () => {
           <LoadingWave />
         </div>
       )}
-      <Header title="perfil" />
+      <Header title="Perfil" />
       <IonContent className="ion-padding">
         <div className="flex flex-col items-center w-full h-full">
           {/* Profile Picture */}

@@ -85,14 +85,13 @@ const Mysale: React.FC = () => {
                           </span>
                         </div>
                         <div className="flex justify-between items-center">
-                          <span className="text-gray-400">Oferta actual:</span>
+                          <span className="text-gray-400">Vendido por:</span>
                           <span className="text-2xl font-bold text-green-500">
                             $ {venta.ofertas[0].monto}
                           </span>
                         </div>
                         <div className="mt-2">
-                          <span className={`px-3 py-1 rounded-full text-sm font-medium ${
-                            venta.estado === "vendido" ? 'bg-red-500/20 text-red-400' : 'bg-green-500/20 text-green-400'
+                        <span className={`px-3 py-1 rounded-full text-sm font-medium ${venta.estado === "vendido" ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400' 
                           }`}>
                             {venta.estado.charAt(0).toUpperCase() + venta.estado.slice(1)}
                           </span>
